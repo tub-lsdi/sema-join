@@ -27,7 +27,8 @@ Run these scripts *once* to build the database and statistics.
 **Step 1: Ingest Corpus**
 This script reads all `.json` files from `data/corpus`, normalizes the data,
 and inserts all unique tables and their cells into the DuckDB database. It expects `.json` files that contains one 
-json structure per line.
+json structure per line. Per default the `data/corpus_test` directory is used. You may change that, by adjusting the
+path at the top of the file.
 
 ```bash
 python scripts/01_ingest_corpus.py
@@ -45,7 +46,7 @@ python scripts/02_calculate_stats.py
 After pre-processing, the src library can be used by any app (Streamlit, API, etc.) to perform fast, on-demand joins.
 An example script is provided:
 ```bash
-python scripts/03_run_join_rsjp.py
+python scripts/03_test_rsjp.py
 ```
 
 ## Database Schema

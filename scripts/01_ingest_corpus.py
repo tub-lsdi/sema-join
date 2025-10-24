@@ -8,8 +8,8 @@ from sema_join.db import get_db_connection
 from sema_join.corpus import stream_json_tables, extract_rows_from_wdc_dict, table_hash, set_normalization_strategy, \
     NormalizationStrategy
 
-INPUT_DIR = "data/corpus"
-BATCH_SIZE = 100000
+INPUT_DIR = "data/corpus_test"
+BATCH_SIZE = 50000
 set_normalization_strategy(NormalizationStrategy.ALPHANUMERIC_STRICT)
 
 def create_schema(con: duckdb.DuckDBPyConnection):
