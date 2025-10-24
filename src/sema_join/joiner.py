@@ -3,14 +3,19 @@ import polars as pl
 from .db import get_db_connection
 from typing import Optional
 
+
 def _get_pmi_score(v1: str, v2: str, con: duckdb.DuckDBPyConnection) -> float:
     """Private helper to lookup a precomputed PMI score."""
-    q = con.execute("""
+    q = con.execute(
+        """
                     SELECT pmi FROM pmi_scores
                     WHERE v1 = ? AND v2 = ?
-                    """, (min(v1, v2), max(v1, v2)))
+                    """,
+        (min(v1, v2), max(v1, v2)),
+    )
     row = q.fetchone()
     return row[0] if row else float("-inf")
+
 
 def rs_jp_join(R: list[str], S: list[str]) -> dict[str, Optional[str]]:
     """

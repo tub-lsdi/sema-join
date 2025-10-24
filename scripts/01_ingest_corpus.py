@@ -5,12 +5,18 @@ from loguru import logger
 import polars as pl
 
 from sema_join.db import get_db_connection
-from sema_join.corpus import stream_json_tables, extract_rows_from_wdc_dict, table_hash, set_normalization_strategy, \
-    NormalizationStrategy
+from sema_join.corpus import (
+    stream_json_tables,
+    extract_rows_from_wdc_dict,
+    table_hash,
+    set_normalization_strategy,
+    NormalizationStrategy,
+)
 
 INPUT_DIR = "data/corpus_test"
 BATCH_SIZE = 50000
 set_normalization_strategy(NormalizationStrategy.ALPHANUMERIC_STRICT)
+
 
 def create_schema(con: duckdb.DuckDBPyConnection):
     """Creates the core tables for storing corpus metadata and cells."""
@@ -34,6 +40,7 @@ def create_schema(con: duckdb.DuckDBPyConnection):
     con.commit()
     logger.info("Schema created successfully.")
 
+
 def main():
     con = get_db_connection()
     create_schema(con)
@@ -54,7 +61,8 @@ def main():
     json_files = [
         os.path.join(root, f)
         for root, _, files in os.walk(INPUT_DIR)
-        for f in files if f.endswith(".json")
+        for f in files
+        if f.endswith(".json")
     ]
 
     if not json_files:
@@ -66,10 +74,14 @@ def main():
     for file_path in json_files:
         logger.info(f"Processing file: {file_path}")
 
-        for table_json in tqdm(stream_json_tables(file_path), desc=f"Loading {os.path.basename(file_path)}"):
+        for table_json in tqdm(
+            stream_json_tables(file_path), desc=f"Loading {os.path.basename(file_path)}"
+        ):
             rows = extract_rows_from_wdc_dict(table_json)
             if not rows:
-                logger.warning(f"No rows found in one of the tables in {file_path}. Skipping.")
+                logger.warning(
+                    f"No rows found in one of the tables in {file_path}. Skipping."
+                )
                 continue
 
             h = table_hash(rows)
@@ -104,8 +116,7 @@ def main():
         # con.executemany("INSERT INTO cells VALUES (?, ?, ?, ?)", cell_batch)
         # speed up with polars code above is the shorter, slightly slower way
         df_cell = pl.DataFrame(
-            cell_batch,
-            schema=["table_id", "row_id", "col_id", "value"]
+            cell_batch, schema=["table_id", "row_id", "col_id", "value"]
         )
         con.register("cell_batch_df", df_cell)
         con.execute("INSERT INTO cells SELECT * FROM cell_batch_df")
@@ -113,6 +124,7 @@ def main():
     con.commit()
     con.close()
     logger.info(f"✅ Ingestion complete. Total tables in database: {table_counter}")
+
 
 if __name__ == "__main__":
     main()

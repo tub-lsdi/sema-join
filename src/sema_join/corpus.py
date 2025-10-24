@@ -7,19 +7,20 @@ import regex as re_unicode
 
 from loguru import logger
 
+
 class NormalizationStrategy(Enum):
     """
     Defines the available normalization strategies.
     The value of each member is the compiled regex pattern.
     """
 
-    ALPHANUMERIC_STRICT = re.compile(r'[^a-z0-9]+')
+    ALPHANUMERIC_STRICT = re.compile(r"[^a-z0-9]+")
     """Only allows basic a-z and 0-9. (Fastest)"""
 
-    UNICODE_WORDS = re.compile(r'[^\w]+')
+    UNICODE_WORDS = re.compile(r"[^\w]+")
     """Allows Unicode letters, numbers, and underscores."""
 
-    ALPHANUMERIC_LOOSE = re_unicode.compile(r'[^\p{L}\p{N}]+', re_unicode.UNICODE)
+    ALPHANUMERIC_LOOSE = re_unicode.compile(r"[^\p{L}\p{N}]+", re_unicode.UNICODE)
     """Allows only Unicode letters and numbers. (Recommended)"""
 
     def normalize(self, v: Any) -> str:
@@ -28,11 +29,13 @@ class NormalizationStrategy(Enum):
             v = str(v)
         v = v.strip().lower()
         # self.value is the compiled regex
-        v = self.value.sub(' ', v)
+        v = self.value.sub(" ", v)
         return v.strip()
+
 
 # Pre-compile regex for efficiency
 _CURRENT_STRATEGY = NormalizationStrategy.ALPHANUMERIC_LOOSE
+
 
 def set_normalization_strategy(strategy: NormalizationStrategy):
     """
@@ -42,6 +45,7 @@ def set_normalization_strategy(strategy: NormalizationStrategy):
     logger.info(f"Setting normalization strategy to: {strategy.name}")
     _CURRENT_STRATEGY = strategy
 
+
 def normalize_value(v: Any) -> str:
     """
     Lowercase, alphanumeric normalization for cell values
@@ -49,15 +53,16 @@ def normalize_value(v: Any) -> str:
     """
     return _CURRENT_STRATEGY.normalize(v)
 
+
 def extract_rows_from_wdc_dict(table: dict[str, Any]) -> list[list[str]]:
     """Extract rows from WDC-style table JSON."""
-    relation = table.get('relation', [])
+    relation = table.get("relation", [])
     if not relation or not isinstance(relation, list):
-        logger.warning(f'Table relation {relation} not found or empty.')
+        logger.warning(f"Table relation {relation} not found or empty.")
         return []
 
     # Transpose if vertical
-    if table.get('tableOrientation', '').upper() == 'VERTICAL':
+    if table.get("tableOrientation", "").upper() == "VERTICAL":
         try:
             relation = list(zip(*relation))
         except TypeError:
@@ -67,12 +72,14 @@ def extract_rows_from_wdc_dict(table: dict[str, Any]) -> list[list[str]]:
     rows = relation
 
     # Skip header row if detected
-    if table.get('hasHeader', False):
-        header_idx = table.get('headerRowIndex')
+    if table.get("hasHeader", False):
+        header_idx = table.get("headerRowIndex")
         if header_idx is not None and 0 <= header_idx < len(rows):
             rows = [r for i, r in enumerate(rows) if i != header_idx]
         else:
-            logger.warning(f"Table headerRowIndex {header_idx} not found, even though hasHeader is 'true'. Skipping table.")
+            logger.warning(
+                f"Table headerRowIndex {header_idx} not found, even though hasHeader is 'true'. Skipping table."
+            )
             return []
 
     # Normalize and clean
@@ -87,6 +94,7 @@ def extract_rows_from_wdc_dict(table: dict[str, Any]) -> list[list[str]]:
         if cleaned:
             normalized.append(cleaned)
     return normalized
+
 
 def stream_json_tables(path: str) -> Iterator[dict[str, Any]]:
     """
@@ -109,10 +117,11 @@ def stream_json_tables(path: str) -> Iterator[dict[str, Any]]:
         # This would now only catch non-decoding errors (e.g., permissions)
         logger.error(f"Could not read {path}: {e}")
 
+
 def table_hash(rows: list[list[str]]) -> str:
     """
     Compute a stable hash for a table given normalized rows.
     Rows should already be cleaned via extract_rows_from_dict().
     """
-    normalized_json = json.dumps(rows, separators=(',', ':'), sort_keys=True)
+    normalized_json = json.dumps(rows, separators=(",", ":"), sort_keys=True)
     return hashlib.sha1(normalized_json.encode("utf-8")).hexdigest()

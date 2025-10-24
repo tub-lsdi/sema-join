@@ -16,11 +16,13 @@ Implementation of the SEMA-JOIN paper for semantic table joins.
 ## Setup
 1. run `uv sync` to create virtual environment and install dependencies
 2. Activate the virtual environment (if this is not done automatically): `source .venv/bin/activate`
+
+- when committing changes, run `uvx ruff format` to format the code with ruff (until we defined a pre-commit hook for that)
 ## Workflow
 
 This project has a two-stage workflow:
 
-### 1. Offline Pre-processing
+### 1. Pre-processing
 
 Run these scripts *once* to build the database and statistics.
 
@@ -41,6 +43,8 @@ and pre-computes the final pmi_scores table.
 ```bash
 python scripts/02_calculate_stats.py
 ```
+
+### 2. On-Demand Joining
 
 **Step 3: Joining**
 After pre-processing, the src library can be used by any app (Streamlit, API, etc.) to perform fast, on-demand joins.

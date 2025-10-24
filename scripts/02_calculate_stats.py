@@ -2,6 +2,7 @@ import duckdb
 from loguru import logger
 from sema_join.db import get_db_connection
 
+
 def main():
     con = get_db_connection()
 
@@ -44,7 +45,9 @@ def main():
     logger.info("⏳ Pre-computing PMI scores...")
     # Get total number of tables (n)
     try:
-        N = con.execute("SELECT COUNT(DISTINCT table_id) FROM tables_meta;").fetchone()[0]
+        N = con.execute("SELECT COUNT(DISTINCT table_id) FROM tables_meta;").fetchone()[
+            0
+        ]
     except Exception as e:
         logger.error(f"Could not get table count. Error: {e}")
         return
@@ -75,11 +78,14 @@ def main():
     # --- 4. Add Indexes ---
     logger.info("⏳ Creating indexes on values, row-co-occurence and pmi-scores...")
     con.execute("CREATE INDEX IF NOT EXISTS idx_values_val ON values_index(value);")
-    con.execute("CREATE INDEX IF NOT EXISTS idx_pairs_v1v2 ON row_cooccurrences(v1, v2);")
+    con.execute(
+        "CREATE INDEX IF NOT EXISTS idx_pairs_v1v2 ON row_cooccurrences(v1, v2);"
+    )
     con.execute("CREATE INDEX IF NOT EXISTS idx_pmi_v1v2 ON pmi_scores(v1, v2);")
     con.commit()
     con.close()
     logger.info("✅ All statistics and PMI scores are computed and indexed.")
+
 
 if __name__ == "__main__":
     main()
