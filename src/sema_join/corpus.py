@@ -7,7 +7,6 @@ import regex as re_unicode
 
 from loguru import logger
 
-# Pre-compile regex for efficiency
 class NormalizationStrategy(Enum):
     """
     Defines the available normalization strategies.
@@ -32,6 +31,7 @@ class NormalizationStrategy(Enum):
         v = self.value.sub(' ', v)
         return v.strip()
 
+# Pre-compile regex for efficiency
 _CURRENT_STRATEGY = NormalizationStrategy.ALPHANUMERIC_LOOSE
 
 def set_normalization_strategy(strategy: NormalizationStrategy):
@@ -56,8 +56,8 @@ def extract_rows_from_wdc_dict(table: dict[str, Any]) -> list[list[str]]:
         logger.warning(f'Table relation {relation} not found or empty.')
         return []
 
-    # Transpose if horizontal
-    if table.get('tableOrientation', '').upper() == 'HORIZONTAL':
+    # Transpose if vertical
+    if table.get('tableOrientation', '').upper() == 'VERTICAL':
         try:
             relation = list(zip(*relation))
         except TypeError:
@@ -68,9 +68,12 @@ def extract_rows_from_wdc_dict(table: dict[str, Any]) -> list[list[str]]:
 
     # Skip header row if detected
     if table.get('hasHeader', False):
-        header_idx = table.get('headerRowIndex', 0)
-        if 0 <= header_idx < len(rows):
+        header_idx = table.get('headerRowIndex')
+        if header_idx is not None and 0 <= header_idx < len(rows):
             rows = [r for i, r in enumerate(rows) if i != header_idx]
+        else:
+            logger.warning(f"Table headerRowIndex {header_idx} not found, even though hasHeader is 'true'. Skipping table.")
+            return []
 
     # Normalize and clean
     normalized = []
