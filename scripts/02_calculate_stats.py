@@ -1,9 +1,9 @@
 import duckdb
 from loguru import logger
-from sema_join.db import get_db_conn
+from sema_join.db import get_db_connection
 
 def main():
-    con = get_db_conn()
+    con = get_db_connection()
 
     # --- 1. Compute Value Counts (|T(r_i)|) ---
     logger.info("⏳ Computing value counts (values_index)...")

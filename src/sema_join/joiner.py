@@ -1,7 +1,7 @@
 import duckdb
 import polars as pl
-from .db import get_db_conn
-from typing import List, Dict, Optional
+from .db import get_db_connection
+from typing import Optional
 
 def _get_pmi_score(v1: str, v2: str, con: duckdb.DuckDBPyConnection) -> float:
     """Private helper to lookup a precomputed PMI score."""
@@ -12,13 +12,13 @@ def _get_pmi_score(v1: str, v2: str, con: duckdb.DuckDBPyConnection) -> float:
     row = q.fetchone()
     return row[0] if row else float("-inf")
 
-def rs_jp_join(R: List[str], S: List[str]) -> Dict[str, Optional[str]]:
+def rs_jp_join(R: list[str], S: list[str]) -> dict[str, Optional[str]]:
     """
     Performs an RS-JP join on two lists of values using precomputed stats.
 
     This is an efficient, database-side implementation.
     """
-    conn = get_db_conn()
+    conn = get_db_connection()
 
     # Use Polars to efficiently register inputs as temp tables
     conn.register("input_r", pl.DataFrame({"r_val": R}))

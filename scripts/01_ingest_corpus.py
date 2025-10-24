@@ -4,7 +4,7 @@ from tqdm import tqdm
 from loguru import logger
 import polars as pl
 
-from sema_join.db import get_db_conn
+from sema_join.db import get_db_connection
 from sema_join.corpus import stream_json_tables, extract_rows_from_wdc_dict, table_hash, set_normalization_strategy, \
     NormalizationStrategy
 
@@ -35,7 +35,7 @@ def create_schema(con: duckdb.DuckDBPyConnection):
     logger.info("Schema created successfully.")
 
 def main():
-    con = get_db_conn()
+    con = get_db_connection()
     create_schema(con)
 
     # Load existing hashes to prevent re-inserting tables

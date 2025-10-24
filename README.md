@@ -15,7 +15,6 @@ Implementation of the SEMA-JOIN paper for semantic table joins.
 
 ## Setup
 1. run `uv sync` to create virtual environment and install dependencies
-  - use `uv sync --no-dev` to skip dev dependencies
 2. Activate the virtual environment (if this is not done automatically): `source .venv/bin/activate`
 ## Workflow
 
@@ -26,8 +25,9 @@ This project has a two-stage workflow:
 Run these scripts *once* to build the database and statistics.
 
 **Step 1: Ingest Corpus**
-This script reads all `.ndjson` files from `data/corpus`, normalizes the data,
-and inserts all unique tables and their cells into the DuckDB database.
+This script reads all `.json` files from `data/corpus`, normalizes the data,
+and inserts all unique tables and their cells into the DuckDB database. It expects `.json` files that contains one 
+json structure per line.
 
 ```bash
 python scripts/01_ingest_corpus.py
@@ -46,4 +46,38 @@ After pre-processing, the src library can be used by any app (Streamlit, API, et
 An example script is provided:
 ```bash
 python scripts/03_run_join_rsjp.py
+```
+
+## Database Schema
+```
+cells:
+    table_id: BIGINT(64)
+    row_id: INTEGER
+    col_id: INTEGER
+    value: VARCHAR(0)
+    
+pmi_scores: 
+    v1: VARCHAR(0)
+    v2: VARCHAR(0)
+    num_tables_pair: BIGINT(64)
+    num_tables_v1: BIGINT(64)
+    num_tables_v2: BIGINT(64)
+    pmi: DOUBLE(53)
+    
+row_cooccurrences:
+    v1: VARCHAR(0)
+    v2: VARCHAR(0)
+    num_tables: BIGINT(64)
+    
+tables_meta:
+    table_id: BIGINT(64) NN
+    table_hash: VARCHAR(0)
+    source_file: VARCHAR(0)
+    url: VARCHAR(0)
+    + keys
+        #1: PK (table_id)
+        
+values_index:
+    value: VARCHAR(0)
+    num_tables: BIGINT(64)
 ```
