@@ -5,10 +5,10 @@ Implementation of the SEMA-JOIN paper for semantic table joins.
 ## Project Structure
 
 * `/backend`: Self-contained FastAPI backend application
-  * `/services`: Business logic (SemanticJoinService, CorpusService)
+  * `/services`: Business logic
   * `/routes`: API endpoints
   * `/corpus`: Corpus data and setup scripts
-* `db.py`: DuckDB database file (created after setup)
+* `db.py`: DuckDB database 
 
 ## Prerequisites
 - Python 3.13
