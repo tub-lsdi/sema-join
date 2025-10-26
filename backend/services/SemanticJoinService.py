@@ -50,14 +50,14 @@ class SemanticJoinService:
         list_s: list[str],
     ) -> list[dict]:
         """
-        Create a bridge table with all candidate matches and PMI scores.
+        Create a bridge table with the highest PMI match for each r_val.
 
         Args:
             list_r: First list of strings (R set - to be matched)
             list_s: Second list of strings (S set - candidates)
 
         Returns:
-            List of dictionaries with r_val, s_val, and pmi fields
+            List of dictionaries with r_val, s_val, and pmi fields (only highest PMI per r_val)
 
         Raises:
             ValueError: If either list is empty
@@ -75,60 +75,108 @@ class SemanticJoinService:
         conn.register("input_r", pl.DataFrame({"r_val": list_r}))
         conn.register("input_s", pl.DataFrame({"s_val": list_s}))
 
-        # Query to get all candidate matches with PMI scores
+        # Query to get only the highest PMI candidate for each r_val
         bridge_query = """
+            WITH all_candidates AS (
+                SELECT
+                    r.r_val,
+                    s.s_val,
+                    pmi.pmi,
+                    ROW_NUMBER() OVER (PARTITION BY r.r_val ORDER BY pmi.pmi DESC) as rn
+                FROM input_r AS r
+                JOIN pmi_scores AS pmi
+                    ON r.r_val = pmi.v1 OR r.r_val = pmi.v2
+                JOIN input_s AS s
+                    ON (s.s_val = pmi.v1 OR s.s_val = pmi.v2)
+                WHERE
+                    (r.r_val = pmi.v1 AND s.s_val = pmi.v2) OR
+                    (r.r_val = pmi.v2 AND s.s_val = pmi.v1)
+                    AND pmi.pmi > 0
+            )
             SELECT
-                r.r_val,
-                s.s_val,
-                pmi.pmi
-            FROM input_r AS r
-            JOIN pmi_scores AS pmi
-                ON r.r_val = pmi.v1 OR r.r_val = pmi.v2
-            JOIN input_s AS s
-                ON (s.s_val = pmi.v1 OR s.s_val = pmi.v2)
-            WHERE
-                (r.r_val = pmi.v1 AND s.s_val = pmi.v2) OR
-                (r.r_val = pmi.v2 AND s.s_val = pmi.v1)
-                AND pmi.pmi > 0
-            ORDER BY r.r_val, pmi.pmi DESC
+                r_val,
+                s_val,
+                pmi
+            FROM all_candidates
+            WHERE rn = 1
+            ORDER BY r_val
         """
         bridge_df = conn.execute(bridge_query).pl()
         return bridge_df.to_dicts()
 
     def perform_join_from_bridge(
         self,
-        list_r: list[str],
+        list_r: list[dict],
+        r_join_col: str,
         bridge_table: list[dict],
-    ) -> dict[str, Optional[str]]:
+        list_s: list[dict],
+        s_join_col: str,
+    ) -> list[dict]:
         """
-        Perform a join using a pre-computed bridge table.
+        Perform a three-way join using a pre-computed bridge table.
+
+        This performs: list_r JOIN bridge_table ON r_join_col = r_val
+                              JOIN list_s ON s_val = s_join_col
 
         Args:
-            list_r: List of values from R set
-            bridge_table: Pre-computed bridge table with r_val, s_val, pmi
+            list_r: List of records from R dataset
+            r_join_col: Column name in list_r to join with bridge_table.r_val
+            bridge_table: Bridge table with r_val, s_val, pmi
+            list_s: List of records from S dataset
+            s_join_col: Column name in list_s to join with bridge_table.s_val
 
         Returns:
-            Dictionary mapping each R value to its best matching S value
+            List of joined records containing all columns from R, bridge, and S
+
+        Raises:
+            ValueError: If inputs are invalid or join columns don't exist
         """
+        # Validation
         if not list_r:
             raise ValueError("list_r cannot be empty")
+        if not list_s:
+            raise ValueError("list_s cannot be empty")
+        if not bridge_table:
+            raise ValueError("bridge_table cannot be empty")
 
-        # Group by r_val and find best match (highest PMI)
-        join_map = {}
-        for entry in bridge_table:
-            r_val = entry["r_val"]
-            s_val = entry["s_val"]
+        # Check if join columns exist
+        if r_join_col not in list_r[0]:
+            raise ValueError(f"Column '{r_join_col}' not found in list_r")
+        if s_join_col not in list_s[0]:
+            raise ValueError(f"Column '{s_join_col}' not found in list_s")
 
-            # Since bridge_table is ordered by PMI DESC, first occurrence is best
-            if r_val not in join_map:
-                join_map[r_val] = s_val
+        # Use the database connection from main.py
+        conn = self.db_connection
 
-        # Add back r_values that had no match, setting them to None
-        for r in list_r:
-            if r not in join_map:
-                join_map[r] = None
+        # Register inputs as temp tables using Polars
+        conn.register("temp_r", pl.DataFrame(list_r))
+        conn.register("temp_bridge", pl.DataFrame(bridge_table))
+        conn.register("temp_s", pl.DataFrame(list_s))
 
-        return join_map
+        # Perform three-way join
+        join_query = f"""
+            SELECT 
+                r.*,
+                bridge.r_val,
+                bridge.s_val,
+                bridge.pmi,
+                s.*
+            FROM temp_r AS r
+            INNER JOIN temp_bridge AS bridge
+                ON r.{r_join_col} = bridge.r_val
+            INNER JOIN temp_s AS s
+                ON bridge.s_val = s.{s_join_col}
+            ORDER BY r.{r_join_col}
+        """
+
+        result_df = conn.execute(join_query).pl()
+
+        # Clean up temp tables
+        conn.unregister("temp_r")
+        conn.unregister("temp_bridge")
+        conn.unregister("temp_s")
+
+        return result_df.to_dicts()
 
     def validate_inputs(self, list_r: list[str], list_s: list[str]) -> tuple[bool, str]:
         """

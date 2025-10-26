@@ -46,7 +46,7 @@ class BridgeTableResponse(BaseModel):
     
     bridge_table: list[BridgeTableEntry] = Field(
         ...,
-        description="All candidate matches with PMI scores",
+        description="Best match for each R value (highest PMI score)",
     )
     total_r_values: int = Field(
         ...,
@@ -58,7 +58,7 @@ class BridgeTableResponse(BaseModel):
     )
     total_candidates: int = Field(
         ...,
-        description="Total number of candidate matches found",
+        description="Total number of matches found (one per R value)",
     )
 
     model_config = {
@@ -80,29 +80,54 @@ class BridgeTableResponse(BaseModel):
 
 
 class JoinWithBridgeRequest(BaseModel):
-    """Request model for joining with a pre-computed bridge table."""
+    """Request model for three-way join with a pre-computed bridge table."""
     
-    list_r: list[str] = Field(
+    list_r: list[dict] = Field(
         ...,
-        description="First list of strings (R set)",
+        description="First list of records (R dataset)",
         min_length=1,
-        examples=[["US", "UK", "DE"]],
+        examples=[[{"id": 1, "country_code": "US"}, {"id": 2, "country_code": "UK"}]],
+    )
+    r_join_col: str = Field(
+        ...,
+        description="Column name in list_r to join with bridge table r_val",
+        examples=["country_code"],
     )
     bridge_table: list[BridgeTableEntry] = Field(
         ...,
         description="Pre-computed bridge table with candidates and PMI scores",
         min_length=1,
     )
+    list_s: list[dict] = Field(
+        ...,
+        description="Second list of records (S dataset)",
+        min_length=1,
+        examples=[[{"country_name": "USA", "population": 331000000}]],
+    )
+    s_join_col: str = Field(
+        ...,
+        description="Column name in list_s to join with bridge table s_val",
+        examples=["country_name"],
+    )
 
     model_config = {
         "json_schema_extra": {
             "examples": [
                 {
-                    "list_r": ["US", "UK"],
+                    "list_r": [
+                        {"id": 1, "country_code": "US"},
+                        {"id": 2, "country_code": "UK"}
+                    ],
+                    "r_join_col": "country_code",
                     "bridge_table": [
                         {"r_val": "US", "s_val": "USA", "pmi": 5.32},
                         {"r_val": "UK", "s_val": "United Kingdom", "pmi": 6.12},
                     ],
+                    "list_s": [
+                        {"country_name": "USA", "population": 331000000},
+                        {"country_name": "United Kingdom", "population": 67000000}
+                    ],
+                    "s_join_col": "country_name"
                 }
             ]
         }
@@ -110,42 +135,52 @@ class JoinWithBridgeRequest(BaseModel):
 
 
 class JoinResponse(BaseModel):
-    """Response model for the semantic join endpoint."""
+    """Response model for the three-way semantic join endpoint."""
     
-    result: dict[str, Optional[str]] = Field(
+    result: list[dict] = Field(
         ...,
-        description="Mapping of R values to their best matching S values (or null if no match)",
+        description="List of joined records (R JOIN bridge JOIN S)",
     )
-    total_r_values: int = Field(
+    total_records: int = Field(
         ...,
-        description="Total number of values in list R",
+        description="Total number of records in the result",
     )
-    total_s_values: int = Field(
+    total_r_records: int = Field(
         ...,
-        description="Total number of values in list S",
+        description="Total number of records in list R",
     )
     matched_count: int = Field(
         ...,
-        description="Number of R values that found a match in S",
-    )
-    unmatched_count: int = Field(
-        ...,
-        description="Number of R values that did not find a match in S",
+        description="Number of R records that found a match in S",
     )
 
     model_config = {
         "json_schema_extra": {
             "examples": [
                 {
-                    "result": {
-                        "US": "USA",
-                        "UK": "United Kingdom",
-                        "DE": "Germany",
-                    },
-                    "total_r_values": 3,
-                    "total_s_values": 3,
-                    "matched_count": 3,
-                    "unmatched_count": 0,
+                    "result": [
+                        {
+                            "id": 1,
+                            "country_code": "US",
+                            "r_val": "US",
+                            "s_val": "USA",
+                            "pmi": 5.32,
+                            "country_name": "USA",
+                            "population": 331000000
+                        },
+                        {
+                            "id": 2,
+                            "country_code": "UK",
+                            "r_val": "UK",
+                            "s_val": "United Kingdom",
+                            "pmi": 6.12,
+                            "country_name": "United Kingdom",
+                            "population": 67000000
+                        }
+                    ],
+                    "total_records": 2,
+                    "total_r_records": 2,
+                    "matched_count": 2,
                 }
             ]
         }

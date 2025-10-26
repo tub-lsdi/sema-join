@@ -16,17 +16,17 @@ def test_health_check():
     print(f"Response: {response.json()}\n")
 
 
-def test_two_step_join():
-    """Test the two-step join process."""
-    print("Testing two-step join process...")
+def test_simple_bridge_table():
+    """Test creating a bridge table."""
+    print("Testing bridge table creation...")
     print()
     
     # Example data
     list_r = ["US", "UK", "DE", "FR"]
     list_s = ["USA", "United Kingdom", "Germany", "France"]
     
-    # Step 1: Create bridge table
-    print("Step 1: Creating bridge table...")
+    # Create bridge table
+    print("Creating bridge table...")
     bridge_response = requests.post(
         "http://localhost:8000/bridge-table",
         headers={"Content-Type": "application/json"},
@@ -38,39 +38,26 @@ def test_two_step_join():
     
     print(f"Status: {bridge_response.status_code}")
     bridge_data = bridge_response.json()
-    print(f"Bridge table created with {bridge_data['total_candidates']} candidates")
-    print()
-    
-    # Step 2: Perform join from bridge table
-    print("Step 2: Performing join from bridge table...")
-    join_response = requests.post(
-        "http://localhost:8000/join-from-bridge",
-        headers={"Content-Type": "application/json"},
-        json={
-            "list_r": list_r,
-            "bridge_table": bridge_data["bridge_table"]
-        }
-    )
-    
-    print(f"Status: {join_response.status_code}")
-    print("\nFinal Result:")
-    print(json.dumps(join_response.json(), indent=2))
+    print(f"Bridge table created with {bridge_data['total_candidates']} matches")
+    print("\nBridge table entries:")
+    for entry in bridge_data["bridge_table"]:
+        print(f"  '{entry['r_val']}' → '{entry['s_val']}' (PMI: {entry['pmi']:.3f})")
     print()
 
 
 def test_full_table_join():
     """
-    Demonstrate joining two full tables using semantic join.
+    Demonstrate joining two full tables using the three-way semantic join.
     
     Scenario: Join sales data (with country names) to tax rates (with country codes).
     These tables CANNOT be joined with traditional equi-join because:
     - Sales table has: "germany", "austria", "united kingdom"
-    - Tax table has: "gm", "de", "at", "au", "uk"
+    - Tax table has: "de", "gm", "at", "au", "uk"
     
     Semantic join solves this by finding the semantic relationship.
     """
     print("=" * 60)
-    print("FULL TABLE JOIN DEMONSTRATION")
+    print("THREE-WAY SEMANTIC JOIN DEMONSTRATION")
     print("=" * 60)
     print()
     
@@ -98,10 +85,6 @@ def test_full_table_join():
     print(json.dumps(tax_table, indent=2))
     print()
     
-    print("❌ Traditional JOIN would fail:")
-    print("   SELECT * FROM sales JOIN tax ON sales.country = tax.code")
-    print("   → No matches because 'germany' ≠ 'de', 'austria' ≠ 'at', etc.")
-    print()
     
     # Extract join keys
     list_r = [row["country"] for row in sales_table]
@@ -121,79 +104,36 @@ def test_full_table_join():
     )
     bridge_data = bridge_response.json()
     
-    print(f"Found {bridge_data['total_candidates']} candidate matches:")
+    print(f"Found {bridge_data['total_candidates']} best matches:")
     for entry in bridge_data["bridge_table"]:
         print(f"  '{entry['r_val']}' → '{entry['s_val']}' (PMI: {entry['pmi']:.3f})")
     print()
     
-    # Step 2: Perform join
-    print("Step 2: Selecting best matches...")
+    # Step 2: Perform three-way join
+    print("Step 2: Performing three-way join (sales ⋈ bridge ⋈ tax)...")
     join_response = requests.post(
         "http://localhost:8000/join-from-bridge",
         headers={"Content-Type": "application/json"},
-        json={"list_r": list_r, "bridge_table": bridge_data["bridge_table"]}
+        json={
+            "list_r": sales_table,
+            "r_join_col": "country",
+            "bridge_table": bridge_data["bridge_table"],
+            "list_s": tax_table,
+            "s_join_col": "code"
+        }
     )
-    join_map = join_response.json()["result"]
     
-    print("Best matches:")
-    for country, code in join_map.items():
-        print(f"  '{country}' → '{code}'")
+    join_data = join_response.json()
+    print(f"Status: {join_response.status_code}")
+    print(f"Matched {join_data['matched_count']} out of {join_data['total_r_records']} records")
     print()
-    
-    # Step 3: Combine the tables
-    print("Step 3: Combining tables...")
-    joined_result = []
-    for sales_row in sales_table:
-        country = sales_row["country"]
-        matched_code = join_map.get(country)
-        
-        if matched_code:
-            # Find the matching tax row
-            tax_row = next((t for t in tax_table if t["code"] == matched_code), None)
-            if tax_row:
-                joined_result.append({
-                    **sales_row,
-                    "matched_code": matched_code,
-                    "tax_rate": tax_row["tax_rate"],
-                    "region": tax_row["region"],
-                })
-        else:
-            # No match found
-            joined_result.append({
-                **sales_row,
-                "matched_code": None,
-                "tax_rate": None,
-                "region": None,
-            })
     
     print("FINAL JOINED TABLE:")
-    print(json.dumps(joined_result, indent=2))
+    print(json.dumps(join_data["result"], indent=2))
     print()
     
-    print("✅ Successfully joined tables using semantic matching!")
+    print("✅ Successfully joined tables using three-way semantic join!")
     print("=" * 60)
-    print()
-
-
-def test_error_handling():
-    """Test error handling with invalid input."""
-    print("Testing error handling...")
-    
-    # Empty list_r
-    data = {
-        "list_r": [],
-        "bridge_table": []
-    }
-    
-    response = requests.post(
-        "http://localhost:8000/join-from-bridge",
-        headers={"Content-Type": "application/json"},
-        json=data
-    )
-    
-    print(f"Status: {response.status_code}")
-    print("Response:")
-    print(json.dumps(response.json(), indent=2))
     print()
 
 
@@ -205,9 +145,8 @@ if __name__ == "__main__":
         print()
         
         test_health_check()
-        test_two_step_join()
+        test_simple_bridge_table()
         test_full_table_join()
-        test_error_handling()
         
         print("=" * 60)
         print("All tests completed!")

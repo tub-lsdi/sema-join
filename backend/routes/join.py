@@ -26,12 +26,12 @@ async def root():
         "version": "0.1.0",
         "endpoints": {
             "/health": "GET - Health check endpoint",
-            "/bridge-table": "POST - Create bridge table with all candidates and PMI scores",
-            "/join-from-bridge": "POST - Perform join using a pre-computed bridge table",
+            "/bridge-table": "POST - Create bridge table with highest PMI matches",
+            "/join-from-bridge": "POST - Perform three-way join (R ⋈ bridge ⋈ S)",
         },
         "workflow": [
-            "1. POST /bridge-table → Get all candidates with PMI scores",
-            "2. POST /join-from-bridge → Select best matches from bridge table"
+            "1. POST /bridge-table → Get best match for each R value (highest PMI)",
+            "2. POST /join-from-bridge → Three-way join: list_r ⋈ bridge_table ⋈ list_s"
         ]
     }
 
@@ -45,28 +45,29 @@ async def health_check():
 @router.post("/bridge-table", response_model=BridgeTableResponse)
 async def create_bridge_table(request_data: BridgeTableRequest, request: Request):
     """
-    Create a bridge table with all candidate matches and PMI scores.
-    
-    This endpoint generates all possible matches between two lists based on
-    corpus co-occurrence data, with PMI scores indicating match confidence.
-    
+    Create a bridge table with the highest PMI match for each R value.
+
+    This endpoint finds the best match for each value in list_r from list_s
+    based on corpus co-occurrence data, with PMI scores indicating match confidence.
+    Only the candidate with the highest PMI score per R value is returned.
+
     Args:
         request_data: BridgeTableRequest containing two lists (list_r and list_s)
         request: FastAPI request object to access app state
-    
+
     Returns:
-        BridgeTableResponse with all candidate matches and their PMI scores
-        
+        BridgeTableResponse with the highest PMI match for each R value
+
     Raises:
         HTTPException: If the operation fails
     """
     try:
         join_service: SemanticJoinService = request.app.state.join_service
         bridge_table = join_service.create_bridge_table(
-            request_data.list_r, 
+            request_data.list_r,
             request_data.list_s
         )
-        
+
         return BridgeTableResponse(
             bridge_table=bridge_table,
             total_r_values=len(request_data.list_r),
@@ -83,44 +84,50 @@ async def create_bridge_table(request_data: BridgeTableRequest, request: Request
 @router.post("/join-from-bridge", response_model=JoinResponse)
 async def join_from_bridge(request_data: JoinWithBridgeRequest, request: Request):
     """
-    Perform a semantic join using a pre-computed bridge table.
-    
-    This endpoint takes a bridge table (from /bridge-table) and selects the
-    best match for each R value based on PMI scores.
-    
+    Perform a three-way semantic join using a bridge table.
+
+    This endpoint performs: list_r JOIN bridge_table JOIN list_s
+    The bridge table connects R and S records using the specified join columns.
+
     Args:
-        request_data: JoinWithBridgeRequest containing list_r and bridge_table
+        request_data: JoinWithBridgeRequest containing:
+            - list_r: records from R dataset
+            - r_join_col: column in R to join with bridge table
+            - bridge_table: bridge with r_val, s_val, pmi
+            - list_s: records from S dataset
+            - s_join_col: column in S to join with bridge table
         request: FastAPI request object to access app state
-    
+
     Returns:
-        JoinResponse with mapping of R values to their best matching S values
-        
+        JoinResponse with joined records from all three tables
+
     Raises:
         HTTPException: If the operation fails
     """
     try:
         join_service: SemanticJoinService = request.app.state.join_service
-        
+
         # Convert Pydantic models to dicts
-        bridge_table_dicts = [entry.model_dump() for entry in request_data.bridge_table]
-        
+        bridge_table_dicts = [entry.model_dump()
+                              for entry in request_data.bridge_table]
+
+        # Perform three-way join
         result = join_service.perform_join_from_bridge(
-            request_data.list_r,
-            bridge_table_dicts,
+            list_r=request_data.list_r,
+            r_join_col=request_data.r_join_col,
+            bridge_table=bridge_table_dicts,
+            list_s=request_data.list_s,
+            s_join_col=request_data.s_join_col,
         )
-        
+
         return JoinResponse(
             result=result,
-            total_r_values=len(request_data.list_r),
-            total_s_values=len(set(entry.s_val for entry in request_data.bridge_table)),
-            matched_count=sum(1 for v in result.values() if v is not None),
-            unmatched_count=sum(1 for v in result.values() if v is None),
+            total_records=len(result),
+            total_r_records=len(request_data.list_r),
+            matched_count=len(result),
         )
     except Exception as e:
         raise HTTPException(
             status_code=500,
             detail=f"Error performing join from bridge: {str(e)}",
         )
-
-
-
