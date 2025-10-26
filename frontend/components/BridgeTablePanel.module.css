@@ -1,0 +1,88 @@
+.panel {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.empty {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.description {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.createButton,
+.joinButton {
+  padding: 0.75rem 2rem;
+  color: white;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  font-size: 1.125rem;
+  transition: background-color 0.2s;
+}
+
+.createButton {
+  background-color: #2563eb;
+}
+
+.createButton:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+.joinButton {
+  background-color: #16a34a;
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+.joinButton:hover:not(:disabled) {
+  background-color: #15803d;
+}
+
+.createButton:disabled,
+.joinButton:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+.recreateButton {
+  padding: 0.5rem 1rem;
+  background-color: #2563eb;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.recreateButton:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+.recreateButton:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}

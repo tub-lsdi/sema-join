@@ -1,0 +1,62 @@
+.container {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.table thead {
+  background-color: #f3f4f6;
+}
+
+.table th {
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.clickable {
+  color: #6b7280;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.clickable:hover {
+  background-color: #dbeafe;
+}
+
+.selected {
+  background-color: #3b82f6;
+  color: white;
+  cursor: pointer;
+}
+
+.selected:hover {
+  background-color: #2563eb;
+}
+
+.table td {
+  padding: 0.75rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.table tbody tr:hover:not(.empty) {
+  background-color: #f9fafb;
+}
+
+.empty {
+  background-color: #fafafa;
+  color: #d1d5db;
+}
+
+.highlighted {
+  background-color: #eff6ff;
+  font-weight: 500;
+  color: #1e3a8a;
+}

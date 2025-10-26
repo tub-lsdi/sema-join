@@ -1,0 +1,33 @@
+[
+  {
+    "code": "de",
+    "tax_rate": 0.19,
+    "region": "EU"
+  },
+  {
+    "code": "gm",
+    "tax_rate": 0.19,
+    "region": "EU"
+  },
+  {
+    "code": "at",
+    "tax_rate": 0.20,
+    "region": "EU"
+  },
+  {
+    "code": "au",
+    "tax_rate": 0.20,
+    "region": "EU"
+  },
+  {
+    "code": "uk",
+    "tax_rate": 0.20,
+    "region": "EU"
+  },
+  {
+    "code": "fr",
+    "tax_rate": 0.20,
+    "region": "EU"
+  }
+]
+
