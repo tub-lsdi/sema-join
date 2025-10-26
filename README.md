@@ -8,7 +8,6 @@ Implementation of the SEMA-JOIN paper for semantic table joins.
   * `/services`: Business logic
   * `/routes`: API endpoints
   * `/corpus`: Corpus data and setup scripts
-* `db.py`: DuckDB database 
 
 ## Prerequisites
 - Python 3.13
@@ -38,11 +37,25 @@ Run this once to ingest corpus data and calculate PMI statistics:
 ./backend/setup_database.sh
 ```
 
+Or run the setup scripts individually:
+```bash
+# Step 1: Ingest corpus data
+python backend/corpus/setup_db/01_ingest_corpus.py
+
+# Step 2: Calculate PMI statistics
+python backend/corpus/setup_db/02_calculate_stats.py
+```
+
 This will create the `db.py` database file in the project root.
 
 ### 4. Start the API Server
 ```bash
 ./backend/run_server.sh
+```
+
+Or run directly:
+```bash
+uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 The API will be available at: http://localhost:8000
