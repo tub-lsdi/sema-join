@@ -1,11 +1,17 @@
 import os
+import sys
+from pathlib import Path
+
+# Add backend to path
+sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
+
 import duckdb
 from tqdm import tqdm
 from loguru import logger
 import polars as pl
 
-from sema_join.db import get_db_connection
-from sema_join.corpus import (
+from backend.services import (
+    get_db_connection,
     stream_json_tables,
     extract_rows_from_wdc_dict,
     table_hash,
@@ -13,7 +19,10 @@ from sema_join.corpus import (
     NormalizationStrategy,
 )
 
-INPUT_DIR = "data/corpus_test"
+# Updated path to point to corpus/data/
+INPUT_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)), "data"
+)
 BATCH_SIZE = 50000
 set_normalization_strategy(NormalizationStrategy.ALPHANUMERIC_STRICT)
 
@@ -49,7 +58,8 @@ def main():
     existing_hashes = set(
         h[0] for h in con.execute("SELECT table_hash FROM tables_meta;").fetchall()
     )
-    logger.info(f"Found {len(existing_hashes)} existing tables. Resuming ingestion.")
+    logger.info(
+        f"Found {len(existing_hashes)} existing tables. Resuming ingestion.")
 
     # Get the next available table_id
     table_counter = con.execute(
@@ -106,7 +116,8 @@ def main():
             # Flush batch if too large
             if len(cell_batch) >= BATCH_SIZE:
                 logger.debug(f"Ingesting {len(cell_batch)} rows...")
-                con.executemany("INSERT INTO cells VALUES (?, ?, ?, ?)", cell_batch)
+                con.executemany(
+                    "INSERT INTO cells VALUES (?, ?, ?, ?)", cell_batch)
                 logger.debug(f"Ingested latest batch")
 
                 cell_batch = []
@@ -123,8 +134,10 @@ def main():
 
     con.commit()
     con.close()
-    logger.info(f"✅ Ingestion complete. Total tables in database: {table_counter}")
+    logger.info(
+        f"✅ Ingestion complete. Total tables in database: {table_counter}")
 
 
 if __name__ == "__main__":
     main()
+

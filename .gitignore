@@ -1,5 +1,11 @@
 .idea/
 .venv
+uv.lock
 
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
 
-data/corpus
+# Database file
+db.py

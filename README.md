@@ -4,85 +4,74 @@ Implementation of the SEMA-JOIN paper for semantic table joins.
 
 ## Project Structure
 
-* `/src/sema_join`: The core Python library. Contains parsing, DB logic, and the join algorithms.
-* `/scripts`: Executable, one-time-use scripts for data processing.
-* `/data/corpus`: Location for input JSON (NDJSON) table files.
-* `/data/db`: Location for the generated DuckDB database.
+* `/backend`: Self-contained FastAPI backend application
+  * `/services`: Business logic (SemanticJoinService, CorpusService)
+  * `/routes`: API endpoints
+  * `/corpus`: Corpus data and setup scripts
+* `db.py`: DuckDB database file (created after setup)
 
 ## Prerequisites
 - Python 3.13
 - uv
 
-## Setup
-1. run `uv sync` to create virtual environment and install dependencies
-2. Activate the virtual environment (if this is not done automatically): `source .venv/bin/activate`
+## Quick Start
 
-- when committing changes, run `uvx ruff format` to format the code with ruff (until we defined a pre-commit hook for that)
-## Workflow
-
-This project has a two-stage workflow:
-
-### 1. Pre-processing
-
-Run these scripts *once* to build the database and statistics.
-
-**Step 1: Ingest Corpus**
-This script reads all `.json` files from `data/corpus`, normalizes the data,
-and inserts all unique tables and their cells into the DuckDB database. It expects `.json` files that contains one 
-json structure per line. Per default the `data/corpus_test` directory is used. You may change that, by adjusting the
-path at the top of the file.
-
+### 1. Install Dependencies
 ```bash
-python scripts/01_ingest_corpus.py
+uv sync --extra backend
 ```
 
-**Step 2: Calculate Statistics**
-This script uses the ingested cell data to build the aggregate tables (values_index, row_cooccurrences) 
-and pre-computes the final pmi_scores table.
-
+### 2. Activate Virtual Environment
+Before running any scripts or commands, activate the virtual environment:
 ```bash
-python scripts/02_calculate_stats.py
+source .venv/bin/activate
 ```
 
-### 2. On-Demand Joining
-
-**Step 3: Joining**
-After pre-processing, the src library can be used by any app (Streamlit, API, etc.) to perform fast, on-demand joins.
-An example script is provided:
+Or use `uv run` to run commands in the virtual environment without activating it:
 ```bash
-python scripts/03_test_rsjp.py
+uv run <command>
 ```
 
-## Database Schema
+### 3. Setup Database
+Run this once to ingest corpus data and calculate PMI statistics:
+```bash
+./backend/setup_database.sh
 ```
-cells:
-    table_id: BIGINT(64)
-    row_id: INTEGER
-    col_id: INTEGER
-    value: VARCHAR(0)
-    
-pmi_scores: 
-    v1: VARCHAR(0)
-    v2: VARCHAR(0)
-    num_tables_pair: BIGINT(64)
-    num_tables_v1: BIGINT(64)
-    num_tables_v2: BIGINT(64)
-    pmi: DOUBLE(53)
-    
-row_cooccurrences:
-    v1: VARCHAR(0)
-    v2: VARCHAR(0)
-    num_tables: BIGINT(64)
-    
-tables_meta:
-    table_id: BIGINT(64) NN
-    table_hash: VARCHAR(0)
-    source_file: VARCHAR(0)
-    url: VARCHAR(0)
-    + keys
-        #1: PK (table_id)
-        
-values_index:
-    value: VARCHAR(0)
-    num_tables: BIGINT(64)
+
+This will create the `db.py` database file in the project root.
+
+### 4. Start the API Server
+```bash
+./backend/run_server.sh
+```
+
+The API will be available at: http://localhost:8000
+
+### 5. Test the API
+```bash
+# View API documentation
+open http://localhost:8000/docs
+
+# Or run the example client
+python backend/example_client.py
+```
+
+## API Endpoints
+
+The API provides a two-step semantic join workflow:
+
+### POST /bridge-table
+Creates a bridge table with all candidate matches and PMI scores.
+```bash
+curl -X POST "http://localhost:8000/bridge-table" \
+  -H "Content-Type: application/json" \
+  -d '{"list_r": ["US", "UK"], "list_s": ["USA", "United Kingdom"]}'
+```
+
+### POST /join-from-bridge
+Performs the join using a pre-computed bridge table.
+```bash
+curl -X POST "http://localhost:8000/join-from-bridge" \
+  -H "Content-Type: application/json" \
+  -d '{"list_r": ["US", "UK"], "bridge_table": [...]}'
 ```
