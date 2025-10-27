@@ -278,7 +278,7 @@ class SemanticJoinService:
         for (r_i, s_i, r_j, s_j), y_var in y_vars.items():
             x_ij = x_vars.get((r_i, s_i))
             x_kl = x_vars.get((r_j, s_j))
-            if x_ij and x_kl:
+            if x_ij is not None and x_kl is not None:
                 prob += y_var <= x_ij, f"y_leq_x1_{r_i}_{s_i}_{r_j}_{s_j}"
                 prob += y_var <= x_kl, f"y_leq_x2_{r_i}_{s_i}_{r_j}_{s_j}"
                 prob += y_var >= x_ij + x_kl - \
