@@ -5,6 +5,8 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 // Types
+export type JoinMethod = 'row' | 'column';
+
 export interface BridgeTableEntry {
   r_val: string;
   s_val: string;
@@ -28,12 +30,13 @@ interface JoinResponse {
 // API Functions
 export async function createBridgeTable(
   listR: string[],
-  listS: string[]
+  listS: string[],
+  joinMethod: JoinMethod = 'row'
 ): Promise<BridgeTableResponse> {
   const response = await fetch(`${API_BASE_URL}/bridge-table`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ list_r: listR, list_s: listS }),
+    body: JSON.stringify({ list_r: listR, list_s: listS, join_method: joinMethod }),
   });
 
   if (!response.ok) {

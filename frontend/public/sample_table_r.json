@@ -1,27 +1,20 @@
 [
   {
     "id": 1,
-    "country": "germany",
-    "revenue": 50000,
-    "year": 2024
+    "country": "Germany",
+    "sales": 125000,
+    "quarter": "Q1 2024"
   },
   {
     "id": 2,
-    "country": "austria",
-    "revenue": 30000,
-    "year": 2024
+    "country": "United Kingdom",
+    "sales": 98000,
+    "quarter": "Q1 2024"
   },
   {
     "id": 3,
-    "country": "united kingdom",
-    "revenue": 75000,
-    "year": 2024
-  },
-  {
-    "id": 4,
-    "country": "france",
-    "revenue": 60000,
-    "year": 2024
+    "country": "France",
+    "sales": 87000,
+    "quarter": "Q1 2024"
   }
 ]
-

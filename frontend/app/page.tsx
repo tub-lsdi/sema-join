@@ -6,7 +6,7 @@ import ErrorAlert from '@/components/ErrorAlert';
 import TableUploadPanel from '@/components/TableUploadPanel';
 import BridgeTablePanel from '@/components/BridgeTablePanel';
 import JoinResultPanel from '@/components/JoinResultPanel';
-import { createBridgeTable, joinFromBridge, type BridgeTableEntry } from '@/lib/api';
+import { createBridgeTable, joinFromBridge, type BridgeTableEntry, type JoinMethod } from '@/lib/api';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -15,6 +15,7 @@ export default function Home() {
   const [tableS, setTableS] = useState<Array<Record<string, any>>>([]);
   const [rJoinCol, setRJoinCol] = useState('');
   const [sJoinCol, setSJoinCol] = useState('');
+  const [joinMethod, setJoinMethod] = useState<JoinMethod>('row');
   const [bridgeTable, setBridgeTable] = useState<BridgeTableEntry[]>([]);
   const [joinResult, setJoinResult] = useState<Array<Record<string, any>>>([]);
   const [loading, setLoading] = useState(false);
@@ -49,7 +50,7 @@ export default function Home() {
     try {
       const listR = tableR.map(row => String(row[rJoinCol]));
       const listS = tableS.map(row => String(row[sJoinCol]));
-      const response = await createBridgeTable(listR, listS);
+      const response = await createBridgeTable(listR, listS, joinMethod);
       setBridgeTable(response.bridge_table);
       setJoinResult([]);
     } catch (err) {
@@ -107,6 +108,8 @@ export default function Home() {
         {(tableR.length > 0 || tableS.length > 0) && (
           <BridgeTablePanel
             bridgeTable={bridgeTable}
+            joinMethod={joinMethod}
+            onJoinMethodChange={setJoinMethod}
             onCreateBridge={handleCreateBridge}
             onPerformJoin={handleJoin}
             canCreate={!!(tableR.length && tableS.length && rJoinCol && sJoinCol)}

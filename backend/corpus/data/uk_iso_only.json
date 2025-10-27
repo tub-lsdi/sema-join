@@ -1,0 +1,6 @@
+{"relation": [["Country", "ISO", "Value1"], ["United Kingdom", "GB", "100"]], "pageTitle": "Table 1", "title": "UK ISO Table 1", "hasHeader": true, "headerPosition": "FIRST_ROW", "tableType": "ENTITY", "tableOrientation": "HORIZONTAL", "headerRowIndex": 0}
+{"relation": [["Nation", "Code", "Value2"], ["United Kingdom", "GB", "200"]], "pageTitle": "Table 2", "title": "UK ISO Table 2", "hasHeader": true, "headerPosition": "FIRST_ROW", "tableType": "ENTITY", "tableOrientation": "HORIZONTAL", "headerRowIndex": 0}
+{"relation": [["Country", "ISO", "Value3"], ["United Kingdom", "GB", "300"]], "pageTitle": "Table 3", "title": "UK ISO Table 3", "hasHeader": true, "headerPosition": "FIRST_ROW", "tableType": "ENTITY", "tableOrientation": "HORIZONTAL", "headerRowIndex": 0}
+{"relation": [["State", "Code", "Value4"], ["United Kingdom", "GB", "400"]], "pageTitle": "Table 4", "title": "UK ISO Table 4", "hasHeader": true, "headerPosition": "FIRST_ROW", "tableType": "ENTITY", "tableOrientation": "HORIZONTAL", "headerRowIndex": 0}
+{"relation": [["Country", "ISO", "Value5"], ["United Kingdom", "GB", "500"]], "pageTitle": "Table 5", "title": "UK ISO Table 5", "hasHeader": true, "headerPosition": "FIRST_ROW", "tableType": "ENTITY", "tableOrientation": "HORIZONTAL", "headerRowIndex": 0}
+

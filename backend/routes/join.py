@@ -23,16 +23,22 @@ async def root():
     """Root endpoint with API information."""
     return {
         "message": "Semantic Join API",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "endpoints": {
             "/health": "GET - Health check endpoint",
-            "/bridge-table": "POST - Create bridge table with highest PMI matches",
+            "/bridge-table": "POST - Create bridge table (supports RS-JP and CS-JP)",
             "/join-from-bridge": "POST - Perform three-way join (R ⋈ bridge ⋈ S)",
         },
         "workflow": [
-            "1. POST /bridge-table → Get best match for each R value (highest PMI)",
+            "1. POST /bridge-table → Get best matches using selected algorithm",
+            "   • join_method='row': RS-JP",
+            "   • join_method='column': CS-JP",
             "2. POST /join-from-bridge → Three-way join: list_r ⋈ bridge_table ⋈ list_s"
-        ]
+        ],
+        "algorithms": {
+            "RS-JP (row)": "Fast greedy algorithm using row-level co-occurrence",
+            "CS-JP (column)": "Global optimization considering semantic compatibility between matched pairs"
+        }
     }
 
 
@@ -45,18 +51,23 @@ async def health_check():
 @router.post("/bridge-table", response_model=BridgeTableResponse)
 async def create_bridge_table(request_data: BridgeTableRequest, request: Request):
     """
-    Create a bridge table with the highest PMI match for each R value.
+    Create a bridge table using RS-JP or CS-JP algorithm.
 
-    This endpoint finds the best match for each value in list_r from list_s
-    based on corpus co-occurrence data, with PMI scores indicating match confidence.
-    Only the candidate with the highest PMI score per R value is returned.
+    This endpoint finds the best matches for each value in list_r from list_s
+    based on corpus co-occurrence data.
+
+    - RS-JP (row): Greedy algorithm, each R value independently picks best S
+    - CS-JP (column): Global optimization considering semantic compatibility
 
     Args:
-        request_data: BridgeTableRequest containing two lists (list_r and list_s)
+        request_data: BridgeTableRequest containing:
+            - list_r: values to be matched
+            - list_s: candidate values
+            - join_method: "row" for RS-JP or "column" for CS-JP
         request: FastAPI request object to access app state
 
     Returns:
-        BridgeTableResponse with the highest PMI match for each R value
+        BridgeTableResponse with the best matches
 
     Raises:
         HTTPException: If the operation fails
@@ -65,7 +76,8 @@ async def create_bridge_table(request_data: BridgeTableRequest, request: Request
         join_service: SemanticJoinService = request.app.state.join_service
         bridge_table = join_service.create_bridge_table(
             request_data.list_r,
-            request_data.list_s
+            request_data.list_s,
+            request_data.join_method
         )
 
         return BridgeTableResponse(

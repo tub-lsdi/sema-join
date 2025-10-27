@@ -2,12 +2,12 @@
 Pydantic models for request/response validation.
 """
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, Literal
 
 
 class BridgeTableRequest(BaseModel):
     """Request model for creating a bridge table."""
-    
+
     list_r: list[str] = Field(
         ...,
         description="First list of strings (R set)",
@@ -20,6 +20,11 @@ class BridgeTableRequest(BaseModel):
         min_length=1,
         examples=[["USA", "United Kingdom", "Germany"]],
     )
+    join_method: Literal["row", "column"] = Field(
+        default="row",
+        description="Join algorithm: 'row' for RS-JP or 'column' for CS-JP-LP",
+        examples=["row"],
+    )
 
     model_config = {
         "json_schema_extra": {
@@ -27,6 +32,7 @@ class BridgeTableRequest(BaseModel):
                 {
                     "list_r": ["US", "UK", "DE"],
                     "list_s": ["USA", "United Kingdom", "Germany"],
+                    "join_method": "row",
                 }
             ]
         }
@@ -35,15 +41,16 @@ class BridgeTableRequest(BaseModel):
 
 class BridgeTableEntry(BaseModel):
     """Single entry in the bridge table showing a candidate match."""
-    
+
     r_val: str = Field(..., description="Value from list R")
     s_val: str = Field(..., description="Candidate value from list S")
-    pmi: float = Field(..., description="PMI score (confidence) for this match")
+    pmi: float = Field(...,
+                       description="PMI score (confidence) for this match")
 
 
 class BridgeTableResponse(BaseModel):
     """Response model for bridge table creation."""
-    
+
     bridge_table: list[BridgeTableEntry] = Field(
         ...,
         description="Best match for each R value (highest PMI score)",
@@ -81,12 +88,13 @@ class BridgeTableResponse(BaseModel):
 
 class JoinWithBridgeRequest(BaseModel):
     """Request model for three-way join with a pre-computed bridge table."""
-    
+
     list_r: list[dict] = Field(
         ...,
         description="First list of records (R dataset)",
         min_length=1,
-        examples=[[{"id": 1, "country_code": "US"}, {"id": 2, "country_code": "UK"}]],
+        examples=[[{"id": 1, "country_code": "US"},
+                   {"id": 2, "country_code": "UK"}]],
     )
     r_join_col: str = Field(
         ...,
@@ -136,7 +144,7 @@ class JoinWithBridgeRequest(BaseModel):
 
 class JoinResponse(BaseModel):
     """Response model for the three-way semantic join endpoint."""
-    
+
     result: list[dict] = Field(
         ...,
         description="List of joined records (R JOIN bridge JOIN S)",
