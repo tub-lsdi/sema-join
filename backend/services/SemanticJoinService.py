@@ -159,8 +159,15 @@ class SemanticJoinService:
         """
         CS-JP-LP (Column-based Semantic Join Processing with Linear Programming).
 
-        Implements the exact algorithm using Integer Linear Programming
-        to find the globally optimal matching that maximizes both row-level and column-level scores.
+        - Algorithm 1: Round half-integral solution to CLP
+        - Algorithm 2: Solve CILP
+
+        Paper formulation (Equations 9-13 - CILP):
+        min Σ w_ijkl * (1 - z_ijkl)
+        s.t. Σ x_ij ≤ 1, ∀i
+             z_ijkl ≤ 1/2 * (x_ij + x_kl), ∀i,k ∈ R (i≠k), ∀j,l ∈ S
+             x_ij, x_kl ∈ {0,1}
+             z_ijkl ∈ {0,1}
         """
         conn = self.db_connection
 
@@ -189,12 +196,12 @@ class SemanticJoinService:
         if not viable_pairs:
             return []
 
-        # Step 2: Build row-level score lookup
+        # Step 2: Build row-level score lookup (for output only)
         row_score_dict = {}
         for r_val, s_val, row_score in viable_pairs:
             row_score_dict[(r_val, s_val)] = row_score
 
-        # Step 3: Build column-level score lookup
+        # Step 3: Build column-level score lookup (w_ijkl weights)
         r_values_str = "','".join(list_r)
         s_values_str = "','".join(list_s)
 
@@ -208,8 +215,8 @@ class SemanticJoinService:
         """
         col_scores = conn.execute(col_scores_query).fetchall()
 
-        # Build column score lookup for pairs of matches
-        col_score_dict = defaultdict(lambda: 0.0)
+        # Build column score lookup w_ijkl for pairs of matches
+        w_ijkl = defaultdict(lambda: 0.0)
         for v1, v2, v3, v4, score in col_scores:
             # Store all permutations for easy lookup
             for perm in [
@@ -222,81 +229,146 @@ class SemanticJoinService:
                 ((v4, v3), (v1, v2)),
                 ((v4, v3), (v2, v1)),
             ]:
-                col_score_dict[perm] = max(col_score_dict[perm], score)
+                w_ijkl[perm] = max(w_ijkl[perm], score)
 
-        # Step 4: Formulate and solve Integer Linear Program
-        # Create the LP problem
-        prob = pulp.LpProblem("CS_JP_LP", pulp.LpMaximize)
+        # Step 4: Solve CLP (Continuous Linear Program relaxation)
+        # Paper Algorithm 1, Step 1: Solve CLP using standard LP
+        prob_clp = pulp.LpProblem("CLP", pulp.LpMinimize)
 
-        # Create binary variables x_ij for each viable (r_i, s_j) pair
-        x_vars = {}
+        # Create continuous variables x_ij ∈ [0,1] for LP relaxation
+        x_vars_clp = {}
         for r_val, s_val, _ in viable_pairs:
             var_name = f"x_{r_val}_{s_val}"
-            x_vars[(r_val, s_val)] = pulp.LpVariable(var_name, cat='Binary')
+            x_vars_clp[(r_val, s_val)] = pulp.LpVariable(
+                var_name, lowBound=0, upBound=1, cat='Continuous')
 
-        # Create auxiliary binary variables y_ijkl for products x_ij * x_kl
-        y_vars = {}
+        # Create continuous variables z_ijkl ∈ [0,1] for LP relaxation
+        z_vars_clp = {}
         r_pairs = [(r1, s1) for r1, s1, _ in viable_pairs]
         for i, (r_i, s_i) in enumerate(r_pairs):
             for j, (r_j, s_j) in enumerate(r_pairs):
-                if i < j and r_i != r_j:  # Different r values
-                    var_name = f"y_{r_i}_{s_i}_{r_j}_{s_j}"
-                    y_vars[(r_i, s_i, r_j, s_j)] = pulp.LpVariable(
-                        var_name, cat='Binary')
+                if r_i != r_j:  # Different r values (i ≠ k in paper notation)
+                    var_name = f"z_{r_i}_{s_i}_{r_j}_{s_j}"
+                    z_vars_clp[(r_i, s_i, r_j, s_j)] = pulp.LpVariable(
+                        var_name, lowBound=0, upBound=1, cat='Continuous')
 
-        # Objective function: maximize row scores + column scores
-        objective = []
+        # Objective function: min Σ w_ijkl * (1 - z_ijkl)
+        objective_clp = []
+        for (r_i, s_i, r_j, s_j), z_var in z_vars_clp.items():
+            weight = w_ijkl.get(((r_i, s_i), (r_j, s_j)), 0.0)
+            if weight > 0:
+                # w_ijkl * (1 - z_ijkl) = w_ijkl - w_ijkl * z_ijkl
+                objective_clp.append(weight * (1 - z_var))
 
-        # Add row-level PMI scores
-        for (r_val, s_val), x_var in x_vars.items():
-            row_score = row_score_dict.get((r_val, s_val), 0.0)
-            objective.append(row_score * x_var)
+        prob_clp += pulp.lpSum(objective_clp), "Total_Cost"
 
-        # Add column-level scores (using auxiliary variables)
-        for (r_i, s_i, r_j, s_j), y_var in y_vars.items():
-            col_score = col_score_dict.get(((r_i, s_i), (r_j, s_j)), 0.0)
-            if col_score > 0:
-                objective.append(col_score * y_var)
-
-        prob += pulp.lpSum(objective), "Total_Score"
-
-        # Constraint 1: Each r_i matches to at most one s_j
+        # Constraint: Σ x_ij ≤ 1, ∀i (each r_i matches to at most one s_j)
         for r_val in list_r:
-            matching_vars = [x_vars[(r, s)]
+            matching_vars = [x_vars_clp[(r, s)]
                              for r, s, _ in viable_pairs if r == r_val]
             if matching_vars:
-                prob += pulp.lpSum(matching_vars) <= 1, f"r_constraint_{r_val}"
+                prob_clp += pulp.lpSum(
+                    matching_vars) <= 1, f"r_constraint_{r_val}"
 
-        # Constraint 2: Each s_j matches to at most one r_i
-        for s_val in list_s:
-            matching_vars = [x_vars[(r, s)]
-                             for r, s, _ in viable_pairs if s == s_val]
-            if matching_vars:
-                prob += pulp.lpSum(matching_vars) <= 1, f"s_constraint_{s_val}"
-
-        # Constraint 3: Linearization constraints for y_ijkl = x_ij * x_kl
-        for (r_i, s_i, r_j, s_j), y_var in y_vars.items():
-            x_ij = x_vars.get((r_i, s_i))
-            x_kl = x_vars.get((r_j, s_j))
+        # Constraint: z_ijkl ≤ 1/2 * (x_ij + x_kl), ∀i,k ∈ R (i≠k), ∀j,l ∈ S
+        for (r_i, s_i, r_j, s_j), z_var in z_vars_clp.items():
+            x_ij = x_vars_clp.get((r_i, s_i))
+            x_kl = x_vars_clp.get((r_j, s_j))
             if x_ij is not None and x_kl is not None:
-                prob += y_var <= x_ij, f"y_leq_x1_{r_i}_{s_i}_{r_j}_{s_j}"
-                prob += y_var <= x_kl, f"y_leq_x2_{r_i}_{s_i}_{r_j}_{s_j}"
-                prob += y_var >= x_ij + x_kl - \
-                    1, f"y_geq_sum_{r_i}_{s_i}_{r_j}_{s_j}"
+                prob_clp += z_var <= 0.5 * \
+                    (x_ij + x_kl), f"z_constraint_{r_i}_{s_i}_{r_j}_{s_j}"
 
-        # Solve the ILP
-        prob.solve(pulp.PULP_CBC_CMD(msg=0))  # Use CBC solver silently
+        # Solve CLP
+        prob_clp.solve(pulp.PULP_CBC_CMD(msg=0))
 
-        # Step 5: Extract solution and build result bridge table
-        if prob.status != pulp.LpStatusOptimal:
+        if prob_clp.status != pulp.LpStatusOptimal:
             raise RuntimeError(
-                f"CS-JP-LP: Linear programming solver failed with status: {pulp.LpStatus[prob.status]}. "
-                "Unable to find optimal solution."
+                f"CS-JP-LP: CLP solver failed with status: {pulp.LpStatus[prob_clp.status]}")
+
+        # Step 5: Algorithm 1 - Round half-integral solution
+        # Paper Algorithm 1, Lines 2-11
+        x_star = {}  # Optimal LP solution
+        for key, var in x_vars_clp.items():
+            x_star[key] = pulp.value(var)
+
+        x_tilde = {}  # Half-integral solution after rounding
+
+        # For each r_i (Line 2)
+        for r_val in list_r:
+            r_pairs_for_i = [(r, s) for r, s, _ in viable_pairs if r == r_val]
+
+            if not r_pairs_for_i:
+                continue
+
+            # Check if all x*_ij are already integral (Line 3)
+            all_integral = all(
+                x_star.get((r, s), 0) in [0.0, 1.0]
+                for r, s in r_pairs_for_i
             )
 
+            if all_integral:
+                # Line 4: Keep integral values
+                for r, s in r_pairs_for_i:
+                    x_tilde[(r, s)] = x_star.get((r, s), 0)
+            else:
+                # Lines 5-9: Round fractional solution
+                # Line 6: Compute c_ij = Σ_{r_k ∈ R, k≠i, s_l ∈ S} 1/2 * w_ijkl
+                c_ij = {}
+                for r, s in r_pairs_for_i:
+                    total = 0.0
+                    # Sum over all other r_k and all s_l
+                    for r_k, s_l, _ in viable_pairs:
+                        if r_k != r:  # k ≠ i
+                            weight = w_ijkl.get(((r, s), (r_k, s_l)), 0.0)
+                            total += 0.5 * weight
+                    c_ij[s] = total
+
+                # Line 7: p = argmax_j c_ij
+                if c_ij:
+                    p = max(c_ij, key=c_ij.get)
+                    # Line 8: x̃*_ip ← 1
+                    x_tilde[(r_val, p)] = 1.0
+                    # Line 9: x̃*_ij ← 0, ∀j ≠ p
+                    for r, s in r_pairs_for_i:
+                        if s != p:
+                            x_tilde[(r, s)] = 0.0
+                else:
+                    # No weights, set all to 0
+                    for r, s in r_pairs_for_i:
+                        x_tilde[(r, s)] = 0.0
+
+        # Lines 10-11: Compute z̃*_ijkl = 1/2 * (x̃*_ij + x̃*_kl)
+        z_tilde = {}
+        for r_i, s_i, r_j, s_j in z_vars_clp.keys():
+            x_ij = x_tilde.get((r_i, s_i), 0.0)
+            x_kl = x_tilde.get((r_j, s_j), 0.0)
+            z_tilde[(r_i, s_i, r_j, s_j)] = 0.5 * (x_ij + x_kl)
+
+        # Step 6: Algorithm 2 - Solve CILP (Convert to integral solution)
+        # Paper Algorithm 2, Lines 3-9
+        x_final = {}
+        z_final = {}
+
+        # Lines 3-4: Copy x̃* to x*
+        for key, value in x_tilde.items():
+            x_final[key] = value
+
+        # Lines 5-9: Compute z*_ijkl
+        for r_i, s_i, r_j, s_j in z_vars_clp.keys():
+            x_ij = x_final.get((r_i, s_i), 0.0)
+            x_kl = x_final.get((r_j, s_j), 0.0)
+
+            # Line 6-7: if x*_ij = 1 and x*_kl = 1 then z*_ijkl ← 1
+            if x_ij == 1.0 and x_kl == 1.0:
+                z_final[(r_i, s_i, r_j, s_j)] = 1.0
+            else:
+                # Line 8-9: else z*_ijkl ← 0
+                z_final[(r_i, s_i, r_j, s_j)] = 0.0
+
+        # Step 7: Extract solution and build result bridge table
         result = []
-        for (r_val, s_val), x_var in x_vars.items():
-            if pulp.value(x_var) == 1:
+        for (r_val, s_val), x_val in x_final.items():
+            if x_val == 1.0:
                 row_score = row_score_dict.get((r_val, s_val), 0.0)
                 result.append({
                     "r_val": r_val,
