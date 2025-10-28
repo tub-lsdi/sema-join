@@ -24,10 +24,11 @@ We provide a convenient management script for easy setup and running:
 # Make the script executable (first time only)
 chmod +x sema-join.sh
 
-# Interactive menu
+# Show help
 ./sema-join.sh
+./sema-join.sh help
 
-# Or use direct commands:
+# Use commands:
 ./sema-join.sh install all        # Install all dependencies
 ./sema-join.sh db                  # Setup database
 ./sema-join.sh run                 # Run both servers
