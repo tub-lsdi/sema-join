@@ -48,7 +48,7 @@ This runs both scripts in the correct order with proper error handling.
 
 ## Database Location
 
-The database is created at: `db.py` (project root)
+The database is created at: `corpus.db` (project root)
 
 This is managed by `backend/services/__init__.py`'s `get_db_connection()` function which automatically:
 - Calculates the project root directory
@@ -125,7 +125,7 @@ ls backend/corpus/data/*.json
 ```
 
 ### Database Connection Issues
-The database will be automatically created at `db.py` in the project root. If you see errors, check:
+The database will be automatically created at `corpus.db` in the project root. If you see errors, check:
 - Write permissions in the project directory
 - Disk space availability
 

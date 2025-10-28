@@ -127,8 +127,8 @@ run_backend() {
     
     cd "$PROJECT_ROOT"
     
-    if [ ! -f "$PROJECT_ROOT/db.py" ]; then
-        log_warning "Database not found at $PROJECT_ROOT/db.py"
+    if [ ! -f "$PROJECT_ROOT/corpus.db" ]; then
+        log_warning "Database not found at $PROJECT_ROOT/corpus.db"
         log_info "You may need to run the setup script first:"
         echo "  ./backend/setup_database.sh"
         echo ""
@@ -277,8 +277,8 @@ show_status() {
     fi
     
     # Check database
-    if [ -f "$PROJECT_ROOT/db.py" ]; then
-        DB_SIZE=$(du -h "$PROJECT_ROOT/db.py" | cut -f1)
+    if [ -f "$PROJECT_ROOT/corpus.db" ]; then
+        DB_SIZE=$(du -h "$PROJECT_ROOT/corpus.db" | cut -f1)
         log_success "Database exists ($DB_SIZE)"
     else
         log_warning "Database not found (run setup)"

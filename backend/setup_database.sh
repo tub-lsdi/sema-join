@@ -86,9 +86,9 @@ else
 fi
 
 # Check if database file was created
-if [ -f "$PROJECT_ROOT/db.py" ]; then
-    DB_SIZE=$(du -h "$PROJECT_ROOT/db.py" | cut -f1)
-    echo -e "${GREEN}✅ Database created: db.py (${DB_SIZE})${NC}"
+if [ -f "$PROJECT_ROOT/corpus.db" ]; then
+    DB_SIZE=$(du -h "$PROJECT_ROOT/corpus.db" | cut -f1)
+    echo -e "${GREEN}✅ Database created: corpus.db (${DB_SIZE})${NC}"
 else
     echo -e "${YELLOW}⚠ Warning: Database file not found at expected location${NC}"
 fi

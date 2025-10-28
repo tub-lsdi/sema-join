@@ -88,7 +88,7 @@ python backend/corpus/setup_db/01_ingest_corpus.py
 python backend/corpus/setup_db/02_calculate_stats.py
 ```
 
-This will create the `db.py` database file in the project root.
+This will create the `corpus.db` database file in the project root.
 
 #### 4. Start the Backend Server
 ```bash

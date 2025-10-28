@@ -8,4 +8,4 @@ __pycache__/
 *$py.class
 
 # Database file
-db.py
+corpus.db

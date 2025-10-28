@@ -30,7 +30,7 @@ def get_db_connection(db_path: str = None) -> duckdb.DuckDBPyConnection:
         project_root = os.path.dirname(
             os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         )
-        db_path = os.path.join(project_root, "db.py")
+        db_path = os.path.join(project_root, "corpus.db")
     
     return duckdb.connect(database=db_path)
 

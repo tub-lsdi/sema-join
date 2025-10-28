@@ -14,7 +14,7 @@ from backend.routes import health_router, bridge_router, join_router
 def get_db_path():
     """Get the database path."""
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    return os.path.join(project_root, "db.py")
+    return os.path.join(project_root, "corpus.db")
 
 
 @asynccontextmanager
