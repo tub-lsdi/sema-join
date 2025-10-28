@@ -4,7 +4,7 @@ Semantic Join Service class with integrated RS-JP and CS-JP-LP join algorithms.
 import duckdb
 import polars as pl
 from typing import Literal
-from backend.utils.normalization import NormalizationStrategy
+from backend.utils.normalization import DEFAULT_NORMALIZATION_STRATEGY
 from backend.services.algorithms import RSJPAlgorithm, CSJPLPAlgorithm
 
 # Type alias for join methods
@@ -25,7 +25,7 @@ class SemanticJoinService:
         """
         self.db_connection = db_connection
         # Use the same normalization strategy as corpus ingestion
-        self.normalizer = NormalizationStrategy.ALPHANUMERIC_STRICT
+        self.normalizer = DEFAULT_NORMALIZATION_STRATEGY
 
         # Initialize algorithm instances
         self.rs_jp_algorithm = RSJPAlgorithm(db_connection)
@@ -126,14 +126,28 @@ class SemanticJoinService:
         # Use the database connection from main.py
         conn = self.db_connection
 
-        # Register inputs as temp tables using Polars
-        conn.register("temp_r", pl.DataFrame(list_r))
-        conn.register("temp_bridge", pl.DataFrame(bridge_table))
-        conn.register("temp_s", pl.DataFrame(list_s))
+        # normalize values before joining using Polars and the classes normalization method
+        r_normalized_col = "r_normalized_join_key"
+        s_normalized_col = "s_normalized_join_key"
+        list_r_normalized = pl.DataFrame(list_r).with_columns(
+            pl.col(r_join_col)
+            .map_elements(self._normalize, return_dtype=pl.String)
+            .alias(r_normalized_col)
+        )
 
-        # Perform three-way join with normalization
+        list_s_normalized = pl.DataFrame(list_s).with_columns(
+            pl.col(s_join_col)
+            .map_elements(self._normalize, return_dtype=pl.String)
+            .alias(s_normalized_col)
+        )
+
+        # Register inputs as temp tables using Polars
+        conn.register("temp_r", list_r_normalized)
+        conn.register("temp_bridge", pl.DataFrame(bridge_table))
+        conn.register("temp_s", list_s_normalized)
+
+        # Perform three-way join
         # Bridge table has normalized values
-        # Normalization: strip -> lowercase -> replace non-alphanumeric -> trim
         join_query = f"""
             SELECT 
                 r.*,
@@ -143,9 +157,9 @@ class SemanticJoinService:
                 s.*
             FROM temp_r AS r
             INNER JOIN temp_bridge AS bridge
-                ON TRIM(REGEXP_REPLACE(LOWER(TRIM(CAST(r.{r_join_col} AS VARCHAR))), '[^a-z0-9]+', ' ', 'g')) = bridge.r_val
+                ON r.{r_normalized_col} = bridge.r_val
             INNER JOIN temp_s AS s
-                ON TRIM(REGEXP_REPLACE(LOWER(TRIM(CAST(s.{s_join_col} AS VARCHAR))), '[^a-z0-9]+', ' ', 'g')) = bridge.s_val
+                ON s.{s_normalized_col} = bridge.s_val
             ORDER BY r.{r_join_col}
         """
 
@@ -156,7 +170,10 @@ class SemanticJoinService:
         conn.unregister("temp_bridge")
         conn.unregister("temp_s")
 
-        return result_df.to_dicts()
+        # Drop the helper columns
+        final_df = result_df.drop([r_normalized_col, s_normalized_col])
+
+        return final_df.to_dicts()
 
     def validate_inputs(self, list_r: list[str], list_s: list[str]) -> tuple[bool, str]:
         """

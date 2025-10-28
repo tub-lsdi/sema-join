@@ -33,7 +33,7 @@ class NormalizationStrategy(Enum):
 
 
 # Global instance for convenience
-_default_strategy = NormalizationStrategy.ALPHANUMERIC_LOOSE
+DEFAULT_NORMALIZATION_STRATEGY = NormalizationStrategy.ALPHANUMERIC_STRICT
 
 
 def set_normalization_strategy(strategy: NormalizationStrategy):
@@ -42,8 +42,8 @@ def set_normalization_strategy(strategy: NormalizationStrategy):
     
     Convenience function for backward compatibility.
     """
-    global _default_strategy
-    _default_strategy = strategy
+    global DEFAULT_NORMALIZATION_STRATEGY
+    DEFAULT_NORMALIZATION_STRATEGY = strategy
 
 
 def normalize_value(v: Any) -> str:
@@ -52,5 +52,5 @@ def normalize_value(v: Any) -> str:
     
     Convenience function for backward compatibility.
     """
-    return _default_strategy.normalize(v)
+    return DEFAULT_NORMALIZATION_STRATEGY.normalize(v)
 
