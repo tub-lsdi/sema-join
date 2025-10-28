@@ -46,9 +46,10 @@ fi
 echo -e "${GREEN}✓ Found ${JSON_COUNT} JSON file(s) in corpus directory${NC}"
 echo ""
 
-# Check if Python is available
-if ! command -v python &> /dev/null; then
-    echo -e "${RED}❌ Error: Python is not installed or not in PATH${NC}"
+# Check if uv is available
+if ! command -v uv &> /dev/null; then
+    echo -e "${RED}❌ Error: uv is not installed${NC}"
+    echo "Install with: curl -LsSf https://astral.sh/uv/install.sh | sh"
     exit 1
 fi
 
@@ -56,7 +57,7 @@ echo -e "${BLUE}Step 1/2: Ingesting corpus data...${NC}"
 echo "This may take a few minutes depending on corpus size."
 echo ""
 
-python "$SCRIPT_DIR/corpus/setup_db/01_ingest_corpus.py"
+uv run python "$SCRIPT_DIR/corpus/setup_db/01_ingest_corpus.py"
 
 if [ $? -eq 0 ]; then
     echo ""
@@ -72,7 +73,7 @@ echo -e "${BLUE}Step 2/2: Calculating PMI statistics...${NC}"
 echo "This will compute value counts, co-occurrences, and PMI scores."
 echo ""
 
-python "$SCRIPT_DIR/corpus/setup_db/02_calculate_stats.py"
+uv run python "$SCRIPT_DIR/corpus/setup_db/02_calculate_stats.py"
 
 if [ $? -eq 0 ]; then
     echo ""
@@ -99,10 +100,10 @@ echo "========================================"
 echo ""
 echo "Next steps:"
 echo "  1. Start the API server:"
-echo "     ./backend/run_server.sh"
+echo "     ./sema-join.sh run"
 echo ""
 echo "  2. Test the API:"
-echo "     python backend/example_client.py"
+echo "     uv run python backend/example_client.py"
 echo ""
 echo "  3. View API docs:"
 echo "     http://localhost:8000/docs"

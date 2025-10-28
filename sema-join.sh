@@ -1,0 +1,415 @@
+#!/bin/bash
+
+set -e
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
+# Project paths
+PROJECT_ROOT="$(cd "$(dirname "$0")" && pwd)"
+BACKEND_DIR="$PROJECT_ROOT/backend"
+FRONTEND_DIR="$PROJECT_ROOT/frontend"
+
+# Log functions
+log_info() {
+    echo -e "${BLUE}ℹ${NC} $1"
+}
+
+log_success() {
+    echo -e "${GREEN}✓${NC} $1"
+}
+
+log_warning() {
+    echo -e "${YELLOW}⚠${NC} $1"
+}
+
+log_error() {
+    echo -e "${RED}✗${NC} $1"
+}
+
+log_header() {
+    echo -e "\n${MAGENTA}═══════════════════════════════════════════${NC}"
+    echo -e "${MAGENTA}  $1${NC}"
+    echo -e "${MAGENTA}═══════════════════════════════════════════${NC}\n"
+}
+
+# Check if a command exists
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+# Check dependencies
+check_dependencies() {
+    local missing_deps=()
+    
+    if ! command_exists uv; then
+        missing_deps+=("uv (Python package manager)")
+    fi
+    
+    if ! command_exists node; then
+        missing_deps+=("node (JavaScript runtime)")
+    fi
+    
+    if ! command_exists npm; then
+        missing_deps+=("npm (Node package manager)")
+    fi
+    
+    if [ ${#missing_deps[@]} -gt 0 ]; then
+        log_error "Missing required dependencies:"
+        for dep in "${missing_deps[@]}"; do
+            echo "  - $dep"
+        done
+        echo ""
+        log_info "Installation instructions:"
+        echo "  • uv: curl -LsSf https://astral.sh/uv/install.sh | sh"
+        echo "  • node/npm: https://nodejs.org/ or use nvm"
+        return 1
+    fi
+    
+    return 0
+}
+
+# Install backend dependencies
+install_backend() {
+    log_header "Installing Backend Dependencies"
+    
+    if ! command_exists uv; then
+        log_error "uv is not installed. Please install it first:"
+        echo "  curl -LsSf https://astral.sh/uv/install.sh | sh"
+        return 1
+    fi
+    
+    cd "$PROJECT_ROOT"
+    
+    log_info "Installing Python dependencies with uv..."
+    uv sync --extra backend
+    
+    log_success "Backend dependencies installed successfully!"
+}
+
+# Install frontend dependencies
+install_frontend() {
+    log_header "Installing Frontend Dependencies"
+    
+    if ! command_exists npm; then
+        log_error "npm is not installed. Please install Node.js and npm first."
+        return 1
+    fi
+    
+    cd "$FRONTEND_DIR"
+    
+    log_info "Installing Node.js dependencies..."
+    npm install
+    
+    log_success "Frontend dependencies installed successfully!"
+}
+
+# Install both
+install_all() {
+    log_header "Installing All Dependencies"
+    
+    install_backend
+    echo ""
+    install_frontend
+    
+    log_success "All dependencies installed successfully!"
+}
+
+# Run backend
+run_backend() {
+    log_header "Starting Backend Server"
+    
+    cd "$PROJECT_ROOT"
+    
+    if [ ! -f "$PROJECT_ROOT/db.py" ]; then
+        log_warning "Database not found at $PROJECT_ROOT/db.py"
+        log_info "You may need to run the setup script first:"
+        echo "  ./backend/setup_database.sh"
+        echo ""
+    fi
+    
+    log_info "Starting FastAPI server on http://localhost:8000"
+    log_info "API docs available at: http://localhost:8000/docs"
+    log_info "Press CTRL+C to stop the server"
+    echo ""
+    
+    uv run uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
+}
+
+# Run frontend
+run_frontend() {
+    log_header "Starting Frontend Development Server"
+    
+    cd "$FRONTEND_DIR"
+    
+    if [ ! -d "$FRONTEND_DIR/node_modules" ]; then
+        log_warning "node_modules not found. Installing dependencies first..."
+        npm install
+        echo ""
+    fi
+    
+    log_info "Starting Next.js development server on http://localhost:3000"
+    log_info "Press CTRL+C to stop the server"
+    echo ""
+    
+    npm run dev
+}
+
+# Run both backend and frontend
+run_both() {
+    log_header "Starting Backend and Frontend Servers"
+    
+    # Check if dependencies are installed
+    if [ ! -d "$FRONTEND_DIR/node_modules" ]; then
+        log_warning "Frontend dependencies not found. Installing..."
+        install_frontend
+        echo ""
+    fi
+    
+    log_info "Starting both servers..."
+    log_info "Backend: http://localhost:8000"
+    log_info "Frontend: http://localhost:3000"
+    log_info "Press CTRL+C to stop both servers"
+    echo ""
+    
+    # Create a trap to kill both processes on exit
+    trap 'kill $(jobs -p) 2>/dev/null' EXIT
+    
+    # Start backend in background
+    cd "$PROJECT_ROOT"
+    uv run uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000 &
+    BACKEND_PID=$!
+    
+    # Wait a bit for backend to start
+    sleep 2
+    
+    # Start frontend in background
+    cd "$FRONTEND_DIR"
+    npm run dev &
+    FRONTEND_PID=$!
+    
+    # Show process IDs
+    log_success "Backend started (PID: $BACKEND_PID)"
+    log_success "Frontend started (PID: $FRONTEND_PID)"
+    echo ""
+    log_info "Monitoring servers... (Press CTRL+C to stop)"
+    
+    # Wait for both processes
+    wait
+}
+
+# Setup database
+setup_database() {
+    log_header "Setting Up Database"
+    
+    if [ -f "$BACKEND_DIR/setup_database.sh" ]; then
+        cd "$BACKEND_DIR"
+        bash setup_database.sh
+    else
+        log_error "setup_database.sh not found in backend directory"
+        return 1
+    fi
+}
+
+# Show project status
+show_status() {
+    log_header "Project Status"
+    
+    echo "📦 Dependencies:"
+    echo ""
+    
+    # Check uv
+    if command_exists uv; then
+        UV_VERSION=$(uv --version 2>/dev/null || echo "unknown")
+        log_success "uv: $UV_VERSION"
+    else
+        log_error "uv: not installed"
+    fi
+    
+    # Check node
+    if command_exists node; then
+        NODE_VERSION=$(node --version)
+        log_success "node: $NODE_VERSION"
+    else
+        log_error "node: not installed"
+    fi
+    
+    # Check npm
+    if command_exists npm; then
+        NPM_VERSION=$(npm --version)
+        log_success "npm: v$NPM_VERSION"
+    else
+        log_error "npm: not installed"
+    fi
+    
+    echo ""
+    echo "📁 Project Structure:"
+    echo ""
+    
+    # Check backend
+    if [ -d "$BACKEND_DIR" ]; then
+        log_success "Backend directory exists"
+        if [ -f "$PROJECT_ROOT/.venv/bin/python" ] || [ -f "$PROJECT_ROOT/.venv/Scripts/python" ]; then
+            log_success "Python virtual environment exists"
+        else
+            log_warning "Python virtual environment not found"
+        fi
+    else
+        log_error "Backend directory not found"
+    fi
+    
+    # Check frontend
+    if [ -d "$FRONTEND_DIR" ]; then
+        log_success "Frontend directory exists"
+        if [ -d "$FRONTEND_DIR/node_modules" ]; then
+            log_success "Node modules installed"
+        else
+            log_warning "Node modules not found"
+        fi
+    else
+        log_error "Frontend directory not found"
+    fi
+    
+    # Check database
+    if [ -f "$PROJECT_ROOT/db.py" ]; then
+        DB_SIZE=$(du -h "$PROJECT_ROOT/db.py" | cut -f1)
+        log_success "Database exists ($DB_SIZE)"
+    else
+        log_warning "Database not found (run setup)"
+    fi
+    
+    echo ""
+}
+
+# Display help
+show_help() {
+    echo -e "${CYAN}Semantic Join Project Management Script${NC}"
+    echo ""
+    echo -e "${YELLOW}Usage:${NC}"
+    echo "  ./sema-join.sh [command]"
+    echo ""
+    echo -e "${YELLOW}Commands:${NC}"
+    echo -e "  ${GREEN}install${NC}"
+    echo "    backend          Install backend dependencies (Python/uv)"
+    echo "    frontend         Install frontend dependencies (Node.js/npm)"
+    echo "    all              Install all dependencies"
+    echo ""
+    echo -e "  ${GREEN}run${NC}"
+    echo "    (no args)        Start both servers simultaneously"
+    echo "    backend          Start backend server only (http://localhost:8000)"
+    echo "    frontend         Start frontend server only (http://localhost:3000)"
+    echo ""
+    echo -e "  ${GREEN}db${NC}"
+    echo "                     Setup and initialize the database"
+    echo ""
+    echo -e "  ${GREEN}info${NC}"
+    echo "    status           Show project status and dependencies"
+    echo "    help             Show this help message"
+    echo ""
+    echo -e "${YELLOW}Examples:${NC}"
+    echo "  ./sema-join.sh install all       # Install everything"
+    echo "  ./sema-join.sh run               # Run both servers"
+    echo "  ./sema-join.sh status            # Check project status"
+    echo ""
+    echo -e "${YELLOW}Quick Start:${NC}"
+    echo "  1. ./sema-join.sh install all"
+    echo "  2. ./sema-join.sh db"
+    echo "  3. ./sema-join.sh run"
+    echo ""
+}
+
+# Interactive menu
+show_menu() {
+    log_header "Semantic Join - Project Manager"
+    
+    echo "Select an option:"
+    echo ""
+    echo "  ${CYAN}Installation:${NC}"
+    echo "    1) Install backend dependencies"
+    echo "    2) Install frontend dependencies"
+    echo "    3) Install all dependencies"
+    echo ""
+    echo "  ${CYAN}Run:${NC}"
+    echo "    4) Run both servers"
+    echo "    5) Run backend server"
+    echo "    6) Run frontend server"
+    echo ""
+    echo "  ${CYAN}Database:${NC}"
+    echo "    7) Setup database"
+    echo ""
+    echo "  ${CYAN}Info:${NC}"
+    echo "    8) Show project status"
+    echo "    9) Show help"
+    echo ""
+    echo "    0) Exit"
+    echo ""
+    
+    read -p "Enter your choice [0-9]: " choice
+    
+    case $choice in
+        1) install_backend ;;
+        2) install_frontend ;;
+        3) install_all ;;
+        4) run_both ;;
+        5) run_backend ;;
+        6) run_frontend ;;
+        7) setup_database ;;
+        8) show_status ;;
+        9) show_help ;;
+        0) log_info "Goodbye!"; exit 0 ;;
+        *) log_error "Invalid option"; show_menu ;;
+    esac
+}
+
+# Main script logic
+main() {
+    # If no arguments, show interactive menu
+    if [ $# -eq 0 ]; then
+        show_menu
+        exit 0
+    fi
+    
+    # Parse command line arguments
+    case "$1" in
+        install)
+            case "$2" in
+                backend) install_backend ;;
+                frontend) install_frontend ;;
+                all) install_all ;;
+                *) log_error "Unknown install target: $2"; show_help; exit 1 ;;
+            esac
+            ;;
+        run)
+            case "$2" in
+                "") run_both ;;  # No argument means run both
+                backend) run_backend ;;
+                frontend) run_frontend ;;
+                *) log_error "Unknown run target: $2"; show_help; exit 1 ;;
+            esac
+            ;;
+        db)
+            setup_database
+            ;;
+        status)
+            show_status
+            ;;
+        help|--help|-h)
+            show_help
+            ;;
+        *)
+            log_error "Unknown command: $1"
+            show_help
+            exit 1
+            ;;
+    esac
+}
+
+# Run main function
+main "$@"
+

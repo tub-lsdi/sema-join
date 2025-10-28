@@ -1,53 +1,26 @@
 """
-Corpus processing service.
+Corpus data processing utilities for WDC table parsing.
 """
-import re
 import json
 import hashlib
-from enum import Enum
 from typing import Iterator, Any
-import regex as re_unicode
-
 from loguru import logger
 
-
-class NormalizationStrategy(Enum):
-    """
-    Defines the available normalization strategies.
-    The value of each member is the compiled regex pattern.
-    """
-
-    ALPHANUMERIC_STRICT = re.compile(r"[^a-z0-9]+")
-    """Only allows basic a-z and 0-9. (Fastest)"""
-
-    UNICODE_WORDS = re.compile(r"[^\w]+")
-    """Allows Unicode letters, numbers, and underscores."""
-
-    ALPHANUMERIC_LOOSE = re_unicode.compile(r"[^\p{L}\p{N}]+", re_unicode.UNICODE)
-    """Allows only Unicode letters and numbers. (Recommended)"""
-
-    def normalize(self, v: Any) -> str:
-        """Helper method to normalize a value using this strategy."""
-        if not isinstance(v, str):
-            v = str(v)
-        v = v.strip().lower()
-        # self.value is the compiled regex
-        v = self.value.sub(" ", v)
-        return v.strip()
+from backend.utils.normalization import NormalizationStrategy
 
 
-class CorpusService:
-    """Service for corpus data processing and normalization."""
+class CorpusParser:
+    """Utility class for parsing and processing corpus tables."""
     
     def __init__(self, strategy: NormalizationStrategy = NormalizationStrategy.ALPHANUMERIC_LOOSE):
         """
-        Initialize the corpus service.
+        Initialize the corpus parser.
         
         Args:
             strategy: Normalization strategy to use
         """
         self.strategy = strategy
-        logger.info(f"Initialized CorpusService with strategy: {strategy.name}")
+        logger.info(f"Initialized CorpusParser with strategy: {strategy.name}")
     
     def set_strategy(self, strategy: NormalizationStrategy):
         """
@@ -162,50 +135,41 @@ class CorpusService:
 
 
 # Global instance for convenience
-_default_service = CorpusService()
+_default_parser = CorpusParser()
 
 
-def set_normalization_strategy(strategy: NormalizationStrategy):
+def set_corpus_strategy(strategy: NormalizationStrategy):
     """
-    Globally sets the normalization strategy.
+    Set the normalization strategy for the global parser.
     
     Convenience function for backward compatibility.
     """
-    _default_service.set_strategy(strategy)
-
-
-def normalize_value(v: Any) -> str:
-    """
-    Normalize a value using the global strategy.
-    
-    Convenience function for backward compatibility.
-    """
-    return _default_service.normalize_value(v)
+    _default_parser.set_strategy(strategy)
 
 
 def extract_rows_from_wdc_dict(table: dict[str, Any]) -> list[list[str]]:
     """
-    Extract rows from WDC-style table JSON using global service.
+    Extract rows from WDC-style table JSON using global parser.
     
     Convenience function for backward compatibility.
     """
-    return _default_service.extract_rows_from_wdc_dict(table)
+    return _default_parser.extract_rows_from_wdc_dict(table)
 
 
 def stream_json_tables(path: str) -> Iterator[dict[str, Any]]:
     """
-    Stream JSON tables from file using global service.
+    Stream JSON tables from file using global parser.
     
     Convenience function for backward compatibility.
     """
-    return _default_service.stream_json_tables(path)
+    return _default_parser.stream_json_tables(path)
 
 
 def table_hash(rows: list[list[str]]) -> str:
     """
-    Compute table hash using global service.
+    Compute table hash.
     
     Convenience function for backward compatibility.
     """
-    return CorpusService.table_hash(rows)
+    return CorpusParser.table_hash(rows)
 

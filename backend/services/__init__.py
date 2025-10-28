@@ -4,8 +4,8 @@ Services layer for semantic join API.
 import os
 import duckdb
 
-from .CorpusService import (
-    CorpusService,
+from .SemanticJoinService import SemanticJoinService
+from backend.utils import (
     NormalizationStrategy,
     normalize_value,
     set_normalization_strategy,
@@ -13,7 +13,6 @@ from .CorpusService import (
     stream_json_tables,
     table_hash,
 )
-from .SemanticJoinService import SemanticJoinService
 
 
 # Utility function for database connection (used by setup scripts)
@@ -28,7 +27,6 @@ def get_db_connection(db_path: str = None) -> duckdb.DuckDBPyConnection:
         DuckDB connection
     """
     if db_path is None:
-        # Calculate project root from backend/services/__init__.py
         project_root = os.path.dirname(
             os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         )
@@ -39,10 +37,9 @@ def get_db_connection(db_path: str = None) -> duckdb.DuckDBPyConnection:
 
 __all__ = [
     # Services
-    "CorpusService",
     "SemanticJoinService",
-    "NormalizationStrategy",
     # Utility functions
+    "NormalizationStrategy",
     "get_db_connection",
     "normalize_value",
     "set_normalization_strategy",

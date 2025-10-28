@@ -10,8 +10,8 @@ from tqdm import tqdm
 from loguru import logger
 import polars as pl
 
-from backend.services import (
-    get_db_connection,
+from backend.services import get_db_connection
+from backend.utils import (
     stream_json_tables,
     extract_rows_from_wdc_dict,
     table_hash,

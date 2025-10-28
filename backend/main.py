@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
 from backend.services import SemanticJoinService
-from backend.routes import join_router
+from backend.routes import health_router, bridge_router, join_router
 
 
 def get_db_path():
@@ -51,4 +51,6 @@ app.add_middleware(
 )
 
 # Register routes
+app.include_router(health_router)
+app.include_router(bridge_router)
 app.include_router(join_router)
