@@ -22,7 +22,7 @@ async def create_bridge_table(request_data: BridgeTableRequest, request: Request
     based on corpus co-occurrence data.
 
     - RS-JP (row): Greedy algorithm, each R value independently picks best S
-    - CS-JP (column): Global optimization considering semantic compatibility
+    - CS-JP (column): Optimization considering semantic compatibility
 
     Args:
         request_data: BridgeTableRequest containing:
@@ -56,4 +56,3 @@ async def create_bridge_table(request_data: BridgeTableRequest, request: Request
             status_code=500,
             detail=f"Error creating bridge table: {str(e)}",
         )
-

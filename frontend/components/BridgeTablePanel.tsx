@@ -47,8 +47,8 @@ export default function BridgeTablePanel({
               disabled={loading}
               className={styles.select}
             >
-              <option value="row">RS-JP (Row-based)</option>
-              <option value="column">CS-JP-LP (Column-based)</option>
+              <option value="row">RS-JP</option>
+              <option value="column">CS-JP-LP</option>
             </select>
           </div>
 
@@ -76,8 +76,8 @@ export default function BridgeTablePanel({
                 disabled={loading}
                 className={styles.selectCompact}
               >
-                <option value="row">RS-JP (Greedy)</option>
-                <option value="column">CS-JP-LP (Optimal)</option>
+                <option value="row">RS-JP</option>
+                <option value="column">CS-JP-LP</option>
               </select>
               <button
                 onClick={onCreateBridge}

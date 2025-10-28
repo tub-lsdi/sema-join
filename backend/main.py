@@ -23,12 +23,12 @@ async def lifespan(app: FastAPI):
     # Startup: create database connection
     db_path = get_db_path()
     app.state.db_connection = duckdb.connect(database=db_path)
-    
+
     # Initialize the service with the connection
     app.state.join_service = SemanticJoinService(app.state.db_connection)
-    
+
     yield
-    
+
     # Shutdown: close database connection
     if hasattr(app.state, 'db_connection'):
         app.state.db_connection.close()
@@ -37,8 +37,8 @@ async def lifespan(app: FastAPI):
 # Initialize FastAPI app
 app = FastAPI(
     title="Semantic Join API",
-    description="API for performing RS-JP semantic joins on two lists of strings",
-    version="0.1.0",
+    description="API for performing semantic joins on two lists of strings",
+    version="0.2.0",
     lifespan=lifespan,
 )
 

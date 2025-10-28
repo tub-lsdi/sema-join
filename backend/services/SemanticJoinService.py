@@ -14,10 +14,6 @@ JoinMethod = Literal["row", "column"]
 class SemanticJoinService:
     """
     Service class that implements semantic join functionality.
-
-    This class provides two join algorithms from the SEMA-JOIN paper:
-    - RS-JP (Row-based Semantic Join Processing): Greedy algorithm using row-level PMI scores
-    - CS-JP-LP (Column-based with Linear Programming): Optimal global matching using ILP solver
     """
 
     def __init__(self, db_connection: duckdb.DuckDBPyConnection):
@@ -30,7 +26,7 @@ class SemanticJoinService:
         self.db_connection = db_connection
         # Use the same normalization strategy as corpus ingestion
         self.normalizer = NormalizationStrategy.ALPHANUMERIC_STRICT
-        
+
         # Initialize algorithm instances
         self.rs_jp_algorithm = RSJPAlgorithm(db_connection)
         self.cs_jp_algorithm = CSJPLPAlgorithm(db_connection)
@@ -59,7 +55,7 @@ class SemanticJoinService:
         Args:
             list_r: First list of strings (R set - to be matched)
             list_s: Second list of strings (S set - candidates)
-            join_method: "row" for RS-JP (row-based) or "column" for CS-JP (column-based)
+            join_method: "row" for RS-JP or "column" for CS-JP
 
         Returns:
             List of dictionaries with r_val, s_val, and pmi/score fields

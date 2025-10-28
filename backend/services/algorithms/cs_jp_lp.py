@@ -10,15 +10,14 @@ from .base import BridgeAlgorithm
 class CSJPLPAlgorithm(BridgeAlgorithm):
     """
     CS-JP-LP algorithm.
-    
-    Global optimization algorithm that considers semantic compatibility between matched pairs.
-    Uses Integer Linear Programming (ILP) solver for optimal matching.
-    
+
+    Algorithm that considers semantic compatibility between matched pairs.
+
     Paper formulation (Equations 9-13 - CILP):
     - Algorithm 1: Round half-integral solution to CLP
     - Algorithm 2: Solve CILP
     """
-    
+
     def create_bridge(
         self,
         list_r: list[str],
@@ -26,36 +25,38 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
     ) -> list[dict]:
         """
         Create a bridge table using CS-JP-LP algorithm.
-        
+
         This implements a two-stage approach:
         1. Solve continuous relaxation (CLP)
         2. Round to integral solution (CILP)
-        
+
         Args:
             list_r: Normalized list of strings from R set
             list_s: Normalized list of strings from S set
-            
+
         Returns:
             List of dictionaries with r_val, s_val, and pmi fields
         """
         conn = self.db_connection
 
         # Step 1: Get all viable (r, s) pairs with positive row-level scores
-        viable_pairs, row_score_dict = self._get_viable_pairs(conn, list_r, list_s)
-        
+        viable_pairs, row_score_dict = self._get_viable_pairs(
+            conn, list_r, list_s)
+
         if not viable_pairs:
             return []
 
         # Step 2: Build column-level score lookup (w_ijkl weights)
         w_ijkl = self._build_column_scores(conn, list_r, list_s)
 
-        # Step 3: Solve CLP (Continuous Linear Program relaxation)
+        # Step 3: Solve CLP
         x_vars_clp, z_vars_clp = self._solve_clp(viable_pairs, list_r, w_ijkl)
 
         # Step 4: Algorithm 1 - Round half-integral solution
-        x_tilde = self._round_solution(x_vars_clp, viable_pairs, list_r, w_ijkl)
+        x_tilde = self._round_solution(
+            x_vars_clp, viable_pairs, list_r, w_ijkl)
 
-        # Step 5: Algorithm 2 - Solve CILP (Convert to integral solution)
+        # Step 5: Algorithm 2 - Solve CILP
         x_final = self._solve_cilp(x_tilde, z_vars_clp)
 
         # Step 6: Extract solution and build result bridge table
@@ -69,12 +70,12 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
     ) -> tuple[list[tuple], dict]:
         """
         Get all viable (r, s) pairs with positive row-level scores.
-        
+
         Args:
             conn: Database connection
             list_r: Normalized R values
             list_s: Normalized S values
-            
+
         Returns:
             Tuple of (viable_pairs, row_score_dict)
         """
@@ -114,12 +115,12 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
     ) -> dict:
         """
         Build column-level score lookup (w_ijkl weights).
-        
+
         Args:
             conn: Database connection
             list_r: Normalized R values
             list_s: Normalized S values
-            
+
         Returns:
             Dictionary mapping pair tuples to column scores
         """
@@ -161,15 +162,15 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         w_ijkl: dict,
     ) -> tuple[dict, dict]:
         """
-        Solve CLP (Continuous Linear Program relaxation).
-        
+        Solve CLP.
+
         Paper Algorithm 1, Step 1: Solve CLP using standard LP.
-        
+
         Args:
             viable_pairs: List of viable (r, s, score) tuples
             list_r: Normalized R values
             w_ijkl: Column score weights
-            
+
         Returns:
             Tuple of (x_vars_clp, z_vars_clp)
         """
@@ -236,15 +237,15 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
     ) -> dict:
         """
         Algorithm 1 - Round half-integral solution.
-        
+
         Paper Algorithm 1, Lines 2-11.
-        
+
         Args:
             x_vars_clp: LP variables from CLP solution
             viable_pairs: List of viable (r, s, score) tuples
             list_r: Normalized R values
             w_ijkl: Column score weights
-            
+
         Returns:
             Rounded solution x_tilde
         """
@@ -307,14 +308,14 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         z_vars_clp: dict,
     ) -> dict:
         """
-        Algorithm 2 - Solve CILP (Convert to integral solution).
-        
+        Algorithm 2 - Solve CILP.
+
         Paper Algorithm 2, Lines 3-9.
-        
+
         Args:
             x_tilde: Rounded solution from Algorithm 1
             z_vars_clp: Z variables from CLP
-            
+
         Returns:
             Final integral solution x_final
         """
@@ -346,11 +347,11 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
     ) -> list[dict]:
         """
         Extract solution and build result bridge table.
-        
+
         Args:
             x_final: Final integral solution
             row_score_dict: Dictionary mapping (r,s) pairs to PMI scores
-            
+
         Returns:
             List of bridge table entries
         """
@@ -365,4 +366,3 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
                 })
 
         return result
-
