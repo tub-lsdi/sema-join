@@ -321,52 +321,12 @@ show_help() {
     echo ""
 }
 
-# Interactive menu
-show_menu() {
-    log_header "Semantic Join - Project Manager"
-    
-    echo "Select an option:"
-    echo ""
-    echo "  ${CYAN}Installation:${NC}"
-    echo "    1) Install backend dependencies"
-    echo "    2) Install frontend dependencies"
-    echo "    3) Install all dependencies"
-    echo ""
-    echo "  ${CYAN}Run:${NC}"
-    echo "    4) Run both servers"
-    echo "    5) Run backend server"
-    echo "    6) Run frontend server"
-    echo ""
-    echo "  ${CYAN}Other:${NC}"
-    echo "    7) Setup database"
-    echo "    8) Show project status"
-    echo "    9) Show help"
-    echo ""
-    echo "    0) Exit"
-    echo ""
-    
-    read -p "Enter your choice [0-9]: " choice
-    
-    case $choice in
-        1) install_backend ;;
-        2) install_frontend ;;
-        3) install_all ;;
-        4) run_both ;;
-        5) run_backend ;;
-        6) run_frontend ;;
-        7) setup_database ;;
-        8) show_status ;;
-        9) show_help ;;
-        0) log_info "Goodbye!"; exit 0 ;;
-        *) log_error "Invalid option"; show_menu ;;
-    esac
-}
 
 # Main script logic
 main() {
-    # If no arguments, show interactive menu
+    # If no arguments, show help
     if [ $# -eq 0 ]; then
-        show_menu
+        show_help
         exit 0
     fi
     
