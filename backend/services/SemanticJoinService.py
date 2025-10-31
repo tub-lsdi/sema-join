@@ -48,6 +48,7 @@ class SemanticJoinService:
         list_r: list[str],
         list_s: list[str],
         join_method: JoinMethod = "row",
+        top_k: int = 1,
     ) -> list[dict]:
         """
         Create a bridge table using the specified join algorithm.
@@ -56,6 +57,7 @@ class SemanticJoinService:
             list_r: First list of strings (R set - to be matched)
             list_s: Second list of strings (S set - candidates)
             join_method: "row" for RS-JP or "column" for CS-JP
+            top_k: Number of top candidates to return per R value
 
         Returns:
             List of dictionaries with r_val, s_val, and pmi/score fields
@@ -71,6 +73,8 @@ class SemanticJoinService:
         if join_method not in ["row", "column"]:
             raise ValueError(
                 f"join_method must be 'row' or 'column', got '{join_method}'")
+        if top_k < 1:
+            raise ValueError("top_k must be at least 1")
 
         # Normalize input values to match database normalization
         normalized_r = [self._normalize(v) for v in list_r]
@@ -78,9 +82,9 @@ class SemanticJoinService:
 
         # Delegate to appropriate algorithm
         if join_method == "row":
-            return self.rs_jp_algorithm.create_bridge(normalized_r, normalized_s)
+            return self.rs_jp_algorithm.create_bridge(normalized_r, normalized_s, top_k)
         else:  # join_method == "column"
-            return self.cs_jp_algorithm.create_bridge(normalized_r, normalized_s)
+            return self.cs_jp_algorithm.create_bridge(normalized_r, normalized_s, top_k)
 
     def perform_join_from_bridge(
         self,

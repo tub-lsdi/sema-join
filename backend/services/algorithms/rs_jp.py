@@ -17,6 +17,7 @@ class RSJPAlgorithm(BridgeAlgorithm):
         self,
         list_r: list[str],
         list_s: list[str],
+        top_k: int = 1,
     ) -> list[dict]:
         """
         Create a bridge table using RS-JP algorithm.
@@ -26,6 +27,7 @@ class RSJPAlgorithm(BridgeAlgorithm):
         Args:
             list_r: Normalized list of strings from R set
             list_s: Normalized list of strings from S set
+            top_k: Number of top candidates to return per R value
             
         Returns:
             List of dictionaries with r_val, s_val, and pmi fields
@@ -36,8 +38,8 @@ class RSJPAlgorithm(BridgeAlgorithm):
         conn.register("input_r", pl.DataFrame({"r_val": list_r}))
         conn.register("input_s", pl.DataFrame({"s_val": list_s}))
 
-        # Query to get only the highest PMI candidate for each r_val
-        bridge_query = """
+        # Query to get top_k highest PMI candidates for each r_val
+        bridge_query = f"""
             WITH all_candidates AS (
                 SELECT
                     r.r_val,
@@ -59,8 +61,8 @@ class RSJPAlgorithm(BridgeAlgorithm):
                 s_val,
                 pmi
             FROM all_candidates
-            WHERE rn = 1
-            ORDER BY r_val
+            WHERE rn <= {top_k}
+            ORDER BY r_val, pmi DESC
         """
         bridge_df = conn.execute(bridge_query).pl()
         return bridge_df.to_dicts()

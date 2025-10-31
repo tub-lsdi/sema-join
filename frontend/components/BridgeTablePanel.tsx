@@ -7,9 +7,15 @@ import styles from "./BridgeTablePanel.module.css";
 interface Props {
   bridgeTable: BridgeTableEntry[];
   joinMethod: JoinMethod;
+  topK: number;
+  selectedEntries: Set<number>;
   onJoinMethodChange: (method: JoinMethod) => void;
+  onTopKChange: (topK: number) => void;
   onCreateBridge: () => void;
   onPerformJoin: () => void;
+  onToggleEntry: (index: number) => void;
+  onSelectAll: () => void;
+  onDeselectAll: () => void;
   canCreate: boolean;
   canJoin: boolean;
   loading: boolean;
@@ -18,9 +24,15 @@ interface Props {
 export default function BridgeTablePanel({
   bridgeTable,
   joinMethod,
+  topK,
+  selectedEntries,
   onJoinMethodChange,
+  onTopKChange,
   onCreateBridge,
   onPerformJoin,
+  onToggleEntry,
+  onSelectAll,
+  onDeselectAll,
   canCreate,
   canJoin,
   loading,
@@ -52,6 +64,22 @@ export default function BridgeTablePanel({
             </select>
           </div>
 
+          <div className={styles.joinMethodSelector}>
+            <label htmlFor="top-k" className={styles.label}>
+              Top K Matches:
+            </label>
+            <input
+              id="top-k"
+              type="number"
+              min="1"
+              max="100"
+              value={topK}
+              onChange={(e) => onTopKChange(parseInt(e.target.value) || 1)}
+              disabled={loading}
+              className={styles.select}
+            />
+          </div>
+
           <button
             onClick={onCreateBridge}
             disabled={!canCreate || loading}
@@ -64,9 +92,20 @@ export default function BridgeTablePanel({
         <>
           <div className={styles.header}>
             <h2 className={styles.title}>
-              Bridge Table ({bridgeTable.length} matches)
+              Bridge Table ({selectedEntries.size}/{bridgeTable.length} selected)
             </h2>
             <div className={styles.headerControls}>
+              <input
+                id="top-k-recreate"
+                type="number"
+                min="1"
+                max="100"
+                value={topK}
+                onChange={(e) => onTopKChange(parseInt(e.target.value) || 1)}
+                disabled={loading}
+                className={styles.selectCompact}
+                style={{ width: '80px' }}
+              />
               <select
                 id="join-method-recreate"
                 value={joinMethod}
@@ -89,14 +128,50 @@ export default function BridgeTablePanel({
             </div>
           </div>
 
-          <DataTable data={bridgeTable} />
+          <div className={styles.selectionControls}>
+            <button onClick={onSelectAll} className={styles.selectButton}>
+              Select All
+            </button>
+            <button onClick={onDeselectAll} className={styles.selectButton}>
+              Deselect All
+            </button>
+          </div>
+
+          <div className={styles.tableWrapper}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th className={styles.checkboxCell}>Select</th>
+                  <th>R Value</th>
+                  <th>S Value</th>
+                  <th>PMI Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {bridgeTable.map((entry, idx) => (
+                  <tr key={idx} className={selectedEntries.has(idx) ? styles.selectedRow : ''}>
+                    <td className={styles.checkboxCell}>
+                      <input
+                        type="checkbox"
+                        checked={selectedEntries.has(idx)}
+                        onChange={() => onToggleEntry(idx)}
+                      />
+                    </td>
+                    <td>{entry.r_val}</td>
+                    <td>{entry.s_val}</td>
+                    <td>{entry.pmi.toFixed(4)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
           <button
             onClick={onPerformJoin}
             disabled={!canJoin || loading}
             className={styles.joinButton}
           >
-            {loading ? "Joining..." : "Perform JOIN"}
+            {loading ? "Joining..." : "Join Tables"}
           </button>
         </>
       )}
