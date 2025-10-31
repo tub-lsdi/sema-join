@@ -16,4 +16,5 @@ dependencies = [
     "pydantic>=2.0.0",
     "pulp>=2.7.0",
     "black>=25.9.0",
+    "pre-commit>=4.3.0",
 ]

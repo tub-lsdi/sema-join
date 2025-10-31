@@ -47,19 +47,19 @@ command_exists() {
 # Check dependencies
 check_dependencies() {
     local missing_deps=()
-    
+
     if ! command_exists uv; then
         missing_deps+=("uv (Python package manager)")
     fi
-    
+
     if ! command_exists node; then
         missing_deps+=("node (JavaScript runtime)")
     fi
-    
+
     if ! command_exists npm; then
         missing_deps+=("npm (Node package manager)")
     fi
-    
+
     if [ ${#missing_deps[@]} -gt 0 ]; then
         log_error "Missing required dependencies:"
         for dep in "${missing_deps[@]}"; do
@@ -71,135 +71,143 @@ check_dependencies() {
         echo "  • node/npm: https://nodejs.org/ or use nvm"
         return 1
     fi
-    
+
     return 0
 }
 
 # Install backend dependencies
 install_backend() {
     log_header "Installing Backend Dependencies"
-    
+
     if ! command_exists uv; then
         log_error "uv is not installed. Please install it first:"
         echo "  curl -LsSf https://astral.sh/uv/install.sh | sh"
         return 1
     fi
-    
+
     cd "$PROJECT_ROOT"
-    
+
     log_info "Installing Python dependencies with uv..."
-        uv sync
-    
+    uv sync
+
+    if ! command_exists pre-commit; then
+        log_error "pre-commit is not installed in the virtual environment."
+        return 1
+    fi
+
+    log_info "Setting up pre-commit hooks..."
+    pre-commit install
+
     log_success "Backend dependencies installed successfully!"
 }
 
 # Install frontend dependencies
 install_frontend() {
     log_header "Installing Frontend Dependencies"
-    
+
     if ! command_exists npm; then
         log_error "npm is not installed. Please install Node.js and npm first."
         return 1
     fi
-    
+
     cd "$FRONTEND_DIR"
-    
+
     log_info "Installing Node.js dependencies..."
     npm install
-    
+
     log_success "Frontend dependencies installed successfully!"
 }
 
 # Install both
 install_all() {
     log_header "Installing All Dependencies"
-    
+
     install_backend
     echo ""
     install_frontend
-    
+
     log_success "All dependencies installed successfully!"
 }
 
 # Run backend
 run_backend() {
     log_header "Starting Backend Server"
-    
+
     cd "$PROJECT_ROOT"
-    
+
     if [ ! -f "$PROJECT_ROOT/corpus.db" ]; then
         log_warning "Database not found at $PROJECT_ROOT/corpus.db"
         log_info "You may need to run the setup script first:"
         echo "  ./backend/setup_database.sh"
         echo ""
     fi
-    
+
     log_info "Starting FastAPI server on http://localhost:8000"
     log_info "API docs available at: http://localhost:8000/docs"
     log_info "Press CTRL+C to stop the server"
     echo ""
-    
+
     uv run uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
 }
 
 # Run frontend
 run_frontend() {
     log_header "Starting Frontend Development Server"
-    
+
     cd "$FRONTEND_DIR"
-    
+
     if [ ! -d "$FRONTEND_DIR/node_modules" ]; then
         log_warning "node_modules not found. Installing dependencies first..."
         npm install
         echo ""
     fi
-    
+
     log_info "Starting Next.js development server on http://localhost:3000"
     log_info "Press CTRL+C to stop the server"
     echo ""
-    
+
     npm run dev
 }
 
 # Run both backend and frontend
 run_both() {
     log_header "Starting Backend and Frontend Servers"
-    
+
     # Check if dependencies are installed
     if [ ! -d "$FRONTEND_DIR/node_modules" ]; then
         log_warning "Frontend dependencies not found. Installing..."
         install_frontend
         echo ""
     fi
-    
+
     log_info "Starting both servers..."
     log_info "Backend: http://localhost:8000"
     log_info "Frontend: http://localhost:3000"
     log_info "Press CTRL+C to stop both servers"
     echo ""
-    
+
     # Create a trap to kill both processes on exit
     trap 'kill $(jobs -p) 2>/dev/null' EXIT
-    
+
     # Start backend in background
     cd "$PROJECT_ROOT"
     uv run uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000 &
     BACKEND_PID=$!
-    
+
     # Wait a bit for backend to start
     sleep 2
-    
+
     # Start frontend in background
     cd "$FRONTEND_DIR"
     npm run dev &
     FRONTEND_PID=$!
-    
+
     # Show process IDs
     log_success "Backend started (PID: $BACKEND_PID)"
     log_success "Frontend started (PID: $FRONTEND_PID)"
     echo ""
     log_info "Monitoring servers... (Press CTRL+C to stop)"
-    
+
     # Wait for both processes
     wait
 }
@@ -207,7 +215,7 @@ run_both() {
 # Setup database
 setup_database() {
     log_header "Setting Up Database"
-    
+
     if [ -f "$BACKEND_DIR/setup_database.sh" ]; then
         cd "$BACKEND_DIR"
         bash setup_database.sh
@@ -220,10 +228,10 @@ setup_database() {
 # Show project status
 show_status() {
     log_header "Project Status"
-    
+
     echo "📦 Dependencies:"
     echo ""
-    
+
     # Check uv
     if command_exists uv; then
         UV_VERSION=$(uv --version 2>/dev/null || echo "unknown")
@@ -231,7 +239,7 @@ show_status() {
     else
         log_error "uv: not installed"
     fi
-    
+
     # Check node
     if command_exists node; then
         NODE_VERSION=$(node --version)
@@ -239,7 +247,7 @@ show_status() {
     else
         log_error "node: not installed"
     fi
-    
+
     # Check npm
     if command_exists npm; then
         NPM_VERSION=$(npm --version)
@@ -247,11 +255,11 @@ show_status() {
     else
         log_error "npm: not installed"
     fi
-    
+
     echo ""
     echo "📁 Project Structure:"
     echo ""
-    
+
     # Check backend
     if [ -d "$BACKEND_DIR" ]; then
         log_success "Backend directory exists"
@@ -263,7 +271,7 @@ show_status() {
     else
         log_error "Backend directory not found"
     fi
-    
+
     # Check frontend
     if [ -d "$FRONTEND_DIR" ]; then
         log_success "Frontend directory exists"
@@ -275,7 +283,7 @@ show_status() {
     else
         log_error "Frontend directory not found"
     fi
-    
+
     # Check database
     if [ -f "$PROJECT_ROOT/corpus.db" ]; then
         DB_SIZE=$(du -h "$PROJECT_ROOT/corpus.db" | cut -f1)
@@ -283,7 +291,7 @@ show_status() {
     else
         log_warning "Database not found (run setup)"
     fi
-    
+
     echo ""
 }
 
@@ -329,7 +337,7 @@ main() {
         show_help
         exit 0
     fi
-    
+
     # Parse command line arguments
     case "$1" in
         install)
@@ -367,4 +375,3 @@ main() {
 
 # Run main function
 main "$@"
-
