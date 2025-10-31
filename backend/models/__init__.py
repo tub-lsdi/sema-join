@@ -1,6 +1,7 @@
 """
 Pydantic models for request/response validation.
 """
+
 from .bridge import (
     BridgeTableEntry,
     BridgeTableRequest,
@@ -20,4 +21,3 @@ __all__ = [
     "JoinWithBridgeRequest",
     "JoinResponse",
 ]
-

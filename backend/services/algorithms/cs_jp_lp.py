@@ -1,6 +1,7 @@
 """
 CS-JP-LP algorithm implementation.
 """
+
 import polars as pl
 from collections import defaultdict
 import pulp
@@ -40,8 +41,7 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         conn = self.db_connection
 
         # Step 1: Get all viable (r, s) pairs with positive row-level scores
-        viable_pairs, row_score_dict = self._get_viable_pairs(
-            conn, list_r, list_s)
+        viable_pairs, row_score_dict = self._get_viable_pairs(conn, list_r, list_s)
 
         if not viable_pairs:
             return []
@@ -53,8 +53,7 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         x_vars_clp, z_vars_clp = self._solve_clp(viable_pairs, list_r, w_ijkl)
 
         # Step 4: Algorithm 1 - Round half-integral solution
-        x_tilde = self._round_solution(
-            x_vars_clp, viable_pairs, list_r, w_ijkl)
+        x_tilde = self._round_solution(x_vars_clp, viable_pairs, list_r, w_ijkl)
 
         # Step 5: Algorithm 2 - Solve CILP
         x_final = self._solve_cilp(x_tilde, z_vars_clp)
@@ -181,7 +180,8 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         for r_val, s_val, _ in viable_pairs:
             var_name = f"x_{r_val}_{s_val}"
             x_vars_clp[(r_val, s_val)] = pulp.LpVariable(
-                var_name, lowBound=0, upBound=1, cat='Continuous')
+                var_name, lowBound=0, upBound=1, cat="Continuous"
+            )
 
         # Create continuous variables z_ijkl ∈ [0,1] for LP relaxation
         z_vars_clp = {}
@@ -191,7 +191,8 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
                 if r_i != r_j:  # Different r values (i ≠ k in paper notation)
                     var_name = f"z_{r_i}_{s_i}_{r_j}_{s_j}"
                     z_vars_clp[(r_i, s_i, r_j, s_j)] = pulp.LpVariable(
-                        var_name, lowBound=0, upBound=1, cat='Continuous')
+                        var_name, lowBound=0, upBound=1, cat="Continuous"
+                    )
 
         # Objective function: min Σ w_ijkl * (1 - z_ijkl)
         objective_clp = []
@@ -205,26 +206,29 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
 
         # Constraint: Σ x_ij ≤ 1, ∀i (each r_i matches to at most one s_j)
         for r_val in list_r:
-            matching_vars = [x_vars_clp[(r, s)]
-                             for r, s, _ in viable_pairs if r == r_val]
+            matching_vars = [
+                x_vars_clp[(r, s)] for r, s, _ in viable_pairs if r == r_val
+            ]
             if matching_vars:
-                prob_clp += pulp.lpSum(
-                    matching_vars) <= 1, f"r_constraint_{r_val}"
+                prob_clp += pulp.lpSum(matching_vars) <= 1, f"r_constraint_{r_val}"
 
         # Constraint: z_ijkl ≤ 1/2 * (x_ij + x_kl), ∀i,k ∈ R (i≠k), ∀j,l ∈ S
         for (r_i, s_i, r_j, s_j), z_var in z_vars_clp.items():
             x_ij = x_vars_clp.get((r_i, s_i))
             x_kl = x_vars_clp.get((r_j, s_j))
             if x_ij is not None and x_kl is not None:
-                prob_clp += z_var <= 0.5 * \
-                    (x_ij + x_kl), f"z_constraint_{r_i}_{s_i}_{r_j}_{s_j}"
+                prob_clp += (
+                    z_var <= 0.5 * (x_ij + x_kl),
+                    f"z_constraint_{r_i}_{s_i}_{r_j}_{s_j}",
+                )
 
         # Solve CLP
         prob_clp.solve(pulp.PULP_CBC_CMD(msg=0))
 
         if prob_clp.status != pulp.LpStatusOptimal:
             raise RuntimeError(
-                f"CS-JP-LP: CLP solver failed with status: {pulp.LpStatus[prob_clp.status]}")
+                f"CS-JP-LP: CLP solver failed with status: {pulp.LpStatus[prob_clp.status]}"
+            )
 
         return x_vars_clp, z_vars_clp
 
@@ -265,8 +269,7 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
 
             # Check if all x*_ij are already integral (Line 3)
             all_integral = all(
-                x_star.get((r, s), 0) in [0.0, 1.0]
-                for r, s in r_pairs_for_i
+                x_star.get((r, s), 0) in [0.0, 1.0] for r, s in r_pairs_for_i
             )
 
             if all_integral:
@@ -359,10 +362,6 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         for (r_val, s_val), x_val in x_final.items():
             if x_val == 1.0:
                 row_score = row_score_dict.get((r_val, s_val), 0.0)
-                result.append({
-                    "r_val": r_val,
-                    "s_val": s_val,
-                    "pmi": row_score
-                })
+                result.append({"r_val": r_val, "s_val": s_val, "pmi": row_score})
 
         return result

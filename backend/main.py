@@ -1,6 +1,7 @@
 """
 FastAPI backend for Semantic Join operations.
 """
+
 import os
 import duckdb
 from fastapi import FastAPI
@@ -30,7 +31,7 @@ async def lifespan(app: FastAPI):
     yield
 
     # Shutdown: close database connection
-    if hasattr(app.state, 'db_connection'):
+    if hasattr(app.state, "db_connection"):
         app.state.db_connection.close()
 
 

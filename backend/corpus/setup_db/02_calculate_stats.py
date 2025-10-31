@@ -15,7 +15,8 @@ def main():
     # --- 1. Compute Value Counts (|T(r_i)|) ---
     logger.info("⏳ Computing value counts (values_index)...")
     con.execute("DROP TABLE IF EXISTS values_index;")
-    con.execute("""
+    con.execute(
+        """
                 CREATE TABLE values_index AS
                 SELECT
                     value,
@@ -23,14 +24,16 @@ def main():
                 FROM cells
                 GROUP BY value
                 HAVING num_tables >= 2; -- Pruning: values, must appear in >1 table
-                """)
+                """
+    )
     con.commit()
     logger.info("✅ Created values_index.")
 
     # --- 2. Compute Co-occurrence Counts (|T(r_i, s_j)|) ---
     logger.info("⏳ Computing row co-occurrences (row_cooccurrences)...")
     con.execute("DROP TABLE IF EXISTS row_cooccurrences;")
-    con.execute("""
+    con.execute(
+        """
                 CREATE TABLE row_cooccurrences AS
                 SELECT
                     LEAST(c1.value, c2.value) AS v1,
@@ -43,7 +46,8 @@ def main():
                                   AND c1.value < c2.value -- Avoid self-joins and duplicates
                 GROUP BY v1, v2
                 HAVING num_tables >= 2; -- Pruning: pairs, must appear in >1 table
-                """)
+                """
+    )
     con.commit()
     logger.info("✅ Created row_cooccurrences.")
 
@@ -51,9 +55,10 @@ def main():
     # For CS-JP: Count how often value pairs (v1,v2) and (v3,v4) appear in same column pair
     logger.info("⏳ Computing column-pair co-occurrences (for CS-JP)...")
     logger.info("   This may take a while for large corpora...")
-    
+
     con.execute("DROP TABLE IF EXISTS column_pair_cooccurrences;")
-    con.execute("""
+    con.execute(
+        """
                 CREATE TABLE column_pair_cooccurrences AS
                 SELECT
                     LEAST(c1.value, c2.value, c3.value, c4.value) AS v1,
@@ -99,7 +104,8 @@ def main():
                   AND (c1.value != c3.value OR c2.value != c4.value)
                 GROUP BY v1, v2, v3, v4
                 HAVING num_tables >= 2
-                """)
+                """
+    )
     con.commit()
     logger.info("✅ Created column_pair_cooccurrences.")
 
@@ -121,7 +127,8 @@ def main():
     logger.info(f"Total tables (N) = {N}")
 
     con.execute("DROP TABLE IF EXISTS pmi_scores;")
-    con.execute(f"""
+    con.execute(
+        f"""
     CREATE TABLE pmi_scores AS
     SELECT
         rc.v1,
@@ -133,14 +140,16 @@ def main():
     FROM row_cooccurrences rc
     JOIN values_index v1s ON rc.v1 = v1s.value
     JOIN values_index v2s ON rc.v2 = v2s.value;
-    """)
+    """
+    )
     con.commit()
     logger.info("✅ Created pmi_scores (RS-JP).")
 
     # --- 5. Pre-compute Column-Level Scores (CS-JP) ---
     logger.info("⏳ Pre-computing column-level scores (for CS-JP)...")
     con.execute("DROP TABLE IF EXISTS column_scores;")
-    con.execute(f"""
+    con.execute(
+        f"""
     CREATE TABLE column_scores AS
     SELECT
         cp.v1,
@@ -155,7 +164,8 @@ def main():
         ON (cp.v1 = rc1.v1 AND cp.v2 = rc1.v2) OR (cp.v1 = rc1.v2 AND cp.v2 = rc1.v1)
     LEFT JOIN row_cooccurrences rc2
         ON (cp.v3 = rc2.v1 AND cp.v4 = rc2.v2) OR (cp.v3 = rc2.v2 AND cp.v4 = rc2.v1);
-    """)
+    """
+    )
     con.commit()
     logger.info("✅ Created column_scores (CS-JP).")
 
@@ -179,4 +189,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

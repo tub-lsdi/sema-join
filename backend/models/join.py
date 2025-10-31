@@ -1,6 +1,7 @@
 """
 Join operation models for semantic join API.
 """
+
 from pydantic import BaseModel, Field
 from .bridge import BridgeTableEntry
 
@@ -12,8 +13,7 @@ class JoinWithBridgeRequest(BaseModel):
         ...,
         description="First list of records (R dataset)",
         min_length=1,
-        examples=[[{"id": 1, "country_code": "US"},
-                   {"id": 2, "country_code": "UK"}]],
+        examples=[[{"id": 1, "country_code": "US"}, {"id": 2, "country_code": "UK"}]],
     )
     r_join_col: str = Field(
         ...,
@@ -43,7 +43,7 @@ class JoinWithBridgeRequest(BaseModel):
                 {
                     "list_r": [
                         {"id": 1, "country_code": "US"},
-                        {"id": 2, "country_code": "UK"}
+                        {"id": 2, "country_code": "UK"},
                     ],
                     "r_join_col": "country_code",
                     "bridge_table": [
@@ -52,9 +52,9 @@ class JoinWithBridgeRequest(BaseModel):
                     ],
                     "list_s": [
                         {"country_name": "USA", "population": 331000000},
-                        {"country_name": "United Kingdom", "population": 67000000}
+                        {"country_name": "United Kingdom", "population": 67000000},
                     ],
-                    "s_join_col": "country_name"
+                    "s_join_col": "country_name",
                 }
             ]
         }
@@ -93,7 +93,7 @@ class JoinResponse(BaseModel):
                             "s_val": "USA",
                             "pmi": 5.32,
                             "country_name": "USA",
-                            "population": 331000000
+                            "population": 331000000,
                         },
                         {
                             "id": 2,
@@ -102,8 +102,8 @@ class JoinResponse(BaseModel):
                             "s_val": "United Kingdom",
                             "pmi": 6.12,
                             "country_name": "United Kingdom",
-                            "population": 67000000
-                        }
+                            "population": 67000000,
+                        },
                     ],
                     "total_records": 2,
                     "total_r_records": 2,
@@ -112,4 +112,3 @@ class JoinResponse(BaseModel):
             ]
         }
     }
-

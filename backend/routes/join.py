@@ -1,6 +1,7 @@
 """
 Join operation endpoints.
 """
+
 from fastapi import APIRouter, HTTPException, Request
 
 from backend.models import JoinResponse, JoinWithBridgeRequest
@@ -40,8 +41,7 @@ async def join_from_bridge(request_data: JoinWithBridgeRequest, request: Request
         join_service: SemanticJoinService = request.app.state.join_service
 
         # Convert Pydantic models to dicts
-        bridge_table_dicts = [entry.model_dump()
-                              for entry in request_data.bridge_table]
+        bridge_table_dicts = [entry.model_dump() for entry in request_data.bridge_table]
 
         # Perform three-way join
         result = join_service.perform_join_from_bridge(

@@ -1,6 +1,7 @@
 """
 Health check and API information endpoints.
 """
+
 from fastapi import APIRouter
 
 
@@ -20,7 +21,7 @@ async def root():
             "/health": "GET - Health check endpoint",
             "/bridge-table": "POST - Create bridge table (supports RS-JP and CS-JP)",
             "/join-from-bridge": "POST - Perform three-way join (R ⋈ bridge ⋈ S)",
-        }
+        },
     }
 
 

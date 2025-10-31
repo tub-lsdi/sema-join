@@ -1,6 +1,7 @@
 """
 Bridge table models for semantic join API.
 """
+
 from pydantic import BaseModel, Field
 from typing import Literal
 
@@ -10,8 +11,7 @@ class BridgeTableEntry(BaseModel):
 
     r_val: str = Field(..., description="Value from list R")
     s_val: str = Field(..., description="Candidate value from list S")
-    pmi: float = Field(...,
-                       description="PMI score (confidence) for this match")
+    pmi: float = Field(..., description="PMI score (confidence) for this match")
 
 
 class BridgeTableRequest(BaseModel):
@@ -84,4 +84,3 @@ class BridgeTableResponse(BaseModel):
             ]
         }
     }
-

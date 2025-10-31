@@ -1,6 +1,7 @@
 """
 Bridge table creation endpoints.
 """
+
 from fastapi import APIRouter, HTTPException, Request
 
 from backend.models import BridgeTableRequest, BridgeTableResponse
@@ -40,9 +41,7 @@ async def create_bridge_table(request_data: BridgeTableRequest, request: Request
     try:
         join_service: SemanticJoinService = request.app.state.join_service
         bridge_table = join_service.create_bridge_table(
-            request_data.list_r,
-            request_data.list_s,
-            request_data.join_method
+            request_data.list_r, request_data.list_s, request_data.join_method
         )
 
         return BridgeTableResponse(

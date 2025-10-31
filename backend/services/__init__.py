@@ -1,6 +1,7 @@
 """
 Services layer for semantic join API.
 """
+
 import os
 import duckdb
 
@@ -19,10 +20,10 @@ from backend.utils import (
 def get_db_connection(db_path: str = None) -> duckdb.DuckDBPyConnection:
     """
     Get a connection to the DuckDB database.
-    
+
     Args:
         db_path: Optional custom database path. If None, uses default location.
-        
+
     Returns:
         DuckDB connection
     """
@@ -31,7 +32,7 @@ def get_db_connection(db_path: str = None) -> duckdb.DuckDBPyConnection:
             os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         )
         db_path = os.path.join(project_root, "corpus.db")
-    
+
     return duckdb.connect(database=db_path)
 
 

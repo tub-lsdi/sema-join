@@ -1,6 +1,7 @@
 """
 Semantic Join Service class with integrated RS-JP and CS-JP-LP join algorithms.
 """
+
 import duckdb
 import polars as pl
 from typing import Literal
@@ -70,7 +71,8 @@ class SemanticJoinService:
             raise ValueError("list_s cannot be empty")
         if join_method not in ["row", "column"]:
             raise ValueError(
-                f"join_method must be 'row' or 'column', got '{join_method}'")
+                f"join_method must be 'row' or 'column', got '{join_method}'"
+            )
 
         # Normalize input values to match database normalization
         normalized_r = [self._normalize(v) for v in list_r]
