@@ -88,7 +88,7 @@ install_backend() {
     cd "$PROJECT_ROOT"
     
     log_info "Installing Python dependencies with uv..."
-    uv sync --extra backend
+        uv sync
     
     log_success "Backend dependencies installed successfully!"
 }
