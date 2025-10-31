@@ -212,6 +212,35 @@ run_both() {
     wait
 }
 
+# Docker compose helpers
+docker_run() {
+    log_header "Starting Docker Compose (build & up)"
+
+    cd "$PROJECT_ROOT"
+
+    if ! command_exists docker; then
+        log_error "docker is not installed. Please install Docker Desktop or the docker CLI."
+        return 1
+    fi
+
+    log_info "Running: docker compose up --build"
+    docker compose up --build
+}
+
+docker_down() {
+    log_header "Stopping Docker Compose"
+
+    cd "$PROJECT_ROOT"
+
+    if ! command_exists docker; then
+        log_error "docker is not installed. Please install Docker Desktop or the docker CLI."
+        return 1
+    fi
+
+    log_info "Running: docker compose down"
+    docker compose down
+}
+
 # Setup database
 setup_database() {
     log_header "Setting Up Database"
@@ -313,6 +342,10 @@ show_help() {
     echo "    backend          Start backend server only (http://localhost:8000)"
     echo "    frontend         Start frontend server only (http://localhost:3000)"
     echo ""
+        echo -e "  ${GREEN}docker${NC} <target>"
+        echo "    run              Start services with 'docker compose up --build'"
+        echo "    down             Stop and remove services with 'docker compose down'"
+        echo ""
     echo -e "  ${GREEN}db${NC}"
     echo "                     Setup and initialize the database"
     echo ""
@@ -356,6 +389,13 @@ main() {
                 *) log_error "Unknown run target: $2"; show_help; exit 1 ;;
             esac
             ;;
+            docker)
+                case "$2" in
+                    run) docker_run ;;
+                    down) docker_down ;;
+                    *) log_error "Unknown docker target: $2"; show_help; exit 1 ;;
+                esac
+                ;;
         db)
             setup_database
             ;;
