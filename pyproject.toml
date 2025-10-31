@@ -19,4 +19,5 @@ dependencies = [
     "pre-commit>=4.3.0",
     "sqlalchemy>=2.0.44",
     "pymysql>=1.1.2",
+    "alembic>=1.17.1",
 ]
