@@ -1,5 +1,8 @@
 from logging.config import fileConfig
 
+import os
+import sys
+
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
@@ -28,11 +31,20 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
+# ensure the project root is on PYTHONPATH so we can import models
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 # add your model's MetaData object here
 # for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
-target_metadata = None
+# import the project's Base so Alembic can reflect models
+try:
+    # package `backend.persistence` exposes `Base` in __init__.py
+    from backend.persistence import Base
+except Exception:
+    # fallback: import directly from module
+    from backend.persistence.base import Base
+
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
