@@ -92,6 +92,52 @@ class CorpusParser:
             if cleaned:
                 normalized.append(cleaned)
         return normalized
+
+    def extract_rows_from_wiki_dict(self, table: dict[str, Any]) -> list[list[str]]:
+        """
+        Extract and normalize rows from Wikipedia-style table JSON.
+
+        This format has 'tableData' as a list of rows, where each row
+        is a list of cell objects.
+
+        Args:
+            table: Wikipedia format table dictionary
+
+        Returns:
+            List of normalized rows
+        """
+        number_of_data_rows = table.get("numDataRows", 0)
+        if number_of_data_rows <= 0:
+            # logger.debug(f" NumDataRows: {number_of_data_rows} No data rows to extract.")
+            return []
+        table_data = table.get("tableData", [])
+        if not table_data or not isinstance(table_data, list):
+            logger.warning(f"Table 'tableData' {table_data} not found or empty.")
+            return []
+
+        # Normalize and clean
+        normalized_rows = []
+        for row in table_data:
+            if not isinstance(row, list):
+                logger.warning(f"Skipping malformed row (not a list): {row}")
+                continue
+
+            cleaned_row = []
+            for cell in row:
+                # Each cell is a dictionary; we need the 'text' key
+                if isinstance(cell, dict):
+                    value = cell.get("text")
+                    if value is not None:
+                        normalized_val = self.normalize_value(value)
+                        if normalized_val:
+                            cleaned_row.append(normalized_val)
+                else:
+                    logger.warning(f"Skipping malformed cell (not a dict): {cell}")
+
+            if cleaned_row:
+                normalized_rows.append(cleaned_row)
+
+        return normalized_rows
     
     def stream_json_tables(self, path: str) -> Iterator[dict[str, Any]]:
         """
@@ -147,13 +193,30 @@ def set_corpus_strategy(strategy: NormalizationStrategy):
     _default_parser.set_strategy(strategy)
 
 
-def extract_rows_from_wdc_dict(table: dict[str, Any]) -> list[list[str]]:
+def extract_rows(table: dict[str, Any]) -> list[list[str]]:
     """
-    Extract rows from WDC-style table JSON using global parser.
-    
-    Convenience function for backward compatibility.
-    """
-    return _default_parser.extract_rows_from_wdc_dict(table)
+        Extracts rows from a table, automatically detecting WDC or Wiki format.
+
+        Args:
+            table: The table dictionary.
+
+        Returns:
+            A list of normalized rows.
+        """
+
+    # WDC format
+    if "relation" in table:
+        return _default_parser.extract_rows_from_wdc_dict(table)
+
+    # Wikipedia format
+    elif "tableData" in table:
+        return _default_parser.extract_rows_from_wiki_dict(table)
+
+    else:
+        logger.warning(
+            f"Unknown table format. No 'relation' or 'tableData' key found."
+        )
+        return []
 
 
 def stream_json_tables(path: str) -> Iterator[dict[str, Any]]:

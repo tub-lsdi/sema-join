@@ -6,18 +6,24 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
 import duckdb
-from tqdm import tqdm
+from dotenv import load_dotenv
 from loguru import logger
 import polars as pl
+from tqdm import tqdm
 
 from backend.services import get_db_connection
 from backend.utils import (
     stream_json_tables,
-    extract_rows_from_wdc_dict,
+    extract_rows,
     table_hash,
     set_normalization_strategy,
     NormalizationStrategy,
 )
+# Load . env and configure logging level
+load_dotenv()
+LOG_LEVEL = os. getenv("LOG_LEVEL", "DEBUG").upper()
+logger. remove ()
+logger.add(sys. stderr, level=LOG_LEVEL)
 
 # Updated path to point to corpus/data/
 INPUT_DIR = os.path.join(
@@ -84,12 +90,25 @@ def main():
     for file_path in json_files:
         logger.info(f"Processing file: {file_path}")
 
+        # Quickly count total tables for logging progress
+        total_tables = 0
+        try:
+            with open(file_path, "r", encoding="utf-8", errors="replace") as f:
+                total_tables = sum(1 for line in f if line.strip())
+
+        except Exception as e:
+            logger.error(f"Could not read or count lines in {file_path}: {e}")
+            continue
+
+        if total_tables == 0:
+            continue
+
         for table_json in tqdm(
-            stream_json_tables(file_path), desc=f"Loading {os.path.basename(file_path)}"
+            stream_json_tables(file_path), desc=f"Loading {os.path.basename(file_path)}", total=total_tables
         ):
-            rows = extract_rows_from_wdc_dict(table_json)
+            rows = extract_rows(table_json)
             if not rows:
-                logger.warning(
+                logger.debug(
                     f"No rows found in one of the tables in {file_path}. Skipping."
                 )
                 continue
@@ -115,7 +134,7 @@ def main():
 
             # Flush batch if too large
             if len(cell_batch) >= BATCH_SIZE:
-                logger.debug(f"Ingesting {len(cell_batch)} rows...")
+                logger.debug(f"{table_counter}/{total_tables - len(existing_hashes)} rows ingested")
                 con.executemany(
                     "INSERT INTO cells VALUES (?, ?, ?, ?)", cell_batch)
                 logger.debug(f"Ingested latest batch")
