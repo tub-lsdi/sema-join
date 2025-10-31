@@ -23,6 +23,7 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         self,
         list_r: list[str],
         list_s: list[str],
+        top_k: int = 1,
     ) -> list[dict]:
         """
         Create a bridge table using CS-JP-LP algorithm.
@@ -31,9 +32,12 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         1. Solve continuous relaxation (CLP)
         2. Round to integral solution (CILP)
 
+        For top_k > 1, returns the top_k viable candidates per r_val by PMI score.
+
         Args:
             list_r: Normalized list of strings from R set
             list_s: Normalized list of strings from S set
+            top_k: Number of top candidates to return per R value
 
         Returns:
             List of dictionaries with r_val, s_val, and pmi fields
@@ -45,6 +49,12 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
 
         if not viable_pairs:
             return []
+
+        # If top_k > 1, return top_k candidates per r_val instead of optimizing
+        if top_k > 1:
+            return self._extract_top_k_candidates(
+                viable_pairs, row_score_dict, list_r, top_k
+            )
 
         # Step 2: Build column-level score lookup (w_ijkl weights)
         w_ijkl = self._build_column_scores(conn, list_r, list_s)
@@ -129,7 +139,7 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         col_scores_query = f"""
             SELECT v1, v2, v3, v4, score
             FROM column_scores
-            WHERE (v1 IN ('{r_values_str}') OR v2 IN ('{r_values_str}') 
+            WHERE (v1 IN ('{r_values_str}') OR v2 IN ('{r_values_str}')
                    OR v3 IN ('{r_values_str}') OR v4 IN ('{r_values_str}'))
               AND (v1 IN ('{s_values_str}') OR v2 IN ('{s_values_str}')
                    OR v3 IN ('{s_values_str}') OR v4 IN ('{s_values_str}'))
@@ -342,6 +352,41 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
                 z_final[(r_i, s_i, r_j, s_j)] = 0.0
 
         return x_final
+
+    def _extract_top_k_candidates(
+        self,
+        viable_pairs: list[tuple],
+        row_score_dict: dict,
+        list_r: list[str],
+        top_k: int,
+    ) -> list[dict]:
+        """
+        Extract top_k candidates per r_val from viable pairs.
+
+        Args:
+            viable_pairs: List of viable (r, s, score) tuples
+            row_score_dict: Dictionary mapping (r,s) pairs to PMI scores
+            list_r: List of r values
+            top_k: Number of top candidates to return per r_val
+
+        Returns:
+            List of bridge table entries
+        """
+        # Group candidates by r_val
+        candidates_by_r = defaultdict(list)
+        for r_val, s_val, row_score in viable_pairs:
+            candidates_by_r[r_val].append((s_val, row_score))
+
+        result = []
+        for r_val in list_r:
+            # Sort by PMI score descending and take top_k
+            candidates = sorted(
+                candidates_by_r[r_val], key=lambda x: x[1], reverse=True
+            )[:top_k]
+            for s_val, pmi in candidates:
+                result.append({"r_val": r_val, "s_val": s_val, "pmi": pmi})
+
+        return result
 
     def _extract_result(
         self,

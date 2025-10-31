@@ -23,6 +23,7 @@ class BridgeAlgorithm(ABC):
         self,
         list_r: list[str],
         list_s: list[str],
+        top_k: int = 1,
     ) -> list[dict]:
         """
         Create a bridge table connecting values from list_r to list_s.
@@ -30,6 +31,7 @@ class BridgeAlgorithm(ABC):
         Args:
             list_r: Normalized list of strings from R set
             list_s: Normalized list of strings from S set
+            top_k: Number of top candidates to return per R value
 
         Returns:
             List of dictionaries with r_val, s_val, and pmi fields

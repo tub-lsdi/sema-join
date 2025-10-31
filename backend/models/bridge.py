@@ -34,6 +34,13 @@ class BridgeTableRequest(BaseModel):
         description="Join algorithm: 'row' for RS-JP or 'column' for CS-JP-LP",
         examples=["row"],
     )
+    top_k: int = Field(
+        default=1,
+        ge=1,
+        le=100,
+        description="Number of top candidates to return per R value",
+        examples=[5],
+    )
 
     model_config = {
         "json_schema_extra": {
@@ -42,6 +49,7 @@ class BridgeTableRequest(BaseModel):
                     "list_r": ["US", "UK", "DE"],
                     "list_s": ["USA", "United Kingdom", "Germany"],
                     "join_method": "row",
+                    "top_k": 5,
                 }
             ]
         }

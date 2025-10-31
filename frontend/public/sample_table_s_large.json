@@ -1,0 +1,65 @@
+[
+  {
+    "entity": "Germany",
+    "code": "DE",
+    "type": "Country",
+    "population": "83M",
+    "gdp": "3.8T"
+  },
+  {
+    "entity": "Delaware",
+    "code": "DE",
+    "type": "US State",
+    "population": "0.99M",
+    "area": "6452 sq km"
+  },
+  {
+    "entity": "Development",
+    "code": "DE",
+    "type": "Department",
+    "employees": "150",
+    "budget": "2.5M"
+  },
+  {
+    "entity": "France",
+    "code": "FR",
+    "type": "Country",
+    "population": "67M",
+    "gdp": "2.6T"
+  },
+  {
+    "entity": "Franklin County",
+    "code": "FR",
+    "type": "US Location",
+    "population": "0.15M",
+    "area": "1404 sq km"
+  },
+  {
+    "entity": "Finance",
+    "code": "FR",
+    "type": "Department",
+    "employees": "80",
+    "budget": "1.8M"
+  },
+  {
+    "entity": "United Kingdom",
+    "code": "GB",
+    "type": "Country",
+    "population": "67M",
+    "gdp": "2.7T"
+  },
+  {
+    "entity": "Green Bay",
+    "code": "GB",
+    "type": "US City",
+    "population": "0.11M",
+    "area": "118 sq km"
+  },
+  {
+    "entity": "General Business",
+    "code": "GB",
+    "type": "Department",
+    "employees": "45",
+    "budget": "1.2M"
+  }
+]
