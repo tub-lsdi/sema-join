@@ -8,8 +8,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
+
 from backend.services import SemanticJoinService
 from backend.routes import health_router, bridge_router, join_router
+from backend.app_db import init_app_db, shutdown_app_db
 
 
 def get_db_path():
@@ -28,11 +30,15 @@ async def lifespan(app: FastAPI):
     # Initialize the service with the connection
     app.state.join_service = SemanticJoinService(app.state.db_connection)
 
+    # Initialize and attach the application MySQL DB (SQLAlchemy)
+    init_app_db(app)
+
     yield
 
-    # Shutdown: close database connection
+    # Shutdown: close database connection(s)
     if hasattr(app.state, "db_connection"):
         app.state.db_connection.close()
+        shutdown_app_db(app)
 
 
 # Initialize FastAPI app
