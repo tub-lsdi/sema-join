@@ -4,6 +4,8 @@ Corpus data processing utilities for WDC table parsing.
 import json
 import hashlib
 from typing import Iterator, Any
+
+import orjson
 from loguru import logger
 
 from backend.utils.normalization import NormalizationStrategy
@@ -151,18 +153,17 @@ class CorpusParser:
         """
         try:
             # Use utf-8 but replace errors instead of crashing.
-            with open(path, "r", encoding="utf-8", errors="replace") as f:
+            with open(path,"rb") as f:
                 for line in f:
                     line = line.strip()
                     if not line:
                         continue
                     try:
-                        yield json.loads(line)
-                    except json.JSONDecodeError:
+                        yield orjson.loads(line)
+                    except orjson.JSONDecodeError:
                         continue  # skip malformed JSON lines
 
         except Exception as e:
-            # This would now only catch non-decoding errors (e.g., permissions)
             logger.error(f"Could not read {path}: {e}")
     
     @staticmethod
