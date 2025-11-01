@@ -56,6 +56,7 @@ export default function Home() {
       const listS = tableS.map(row => String(row[sJoinCol]));
       const response = await createBridgeTable(listR, listS, joinMethod, topK);
       const bestMatchMap = new Map<string, { pmi: number, index: number }>();
+      setBridgeTable(response.bridge_table);
 
       response.bridge_table.forEach((entry, index) => {
           const currentBest = bestMatchMap.get(entry.r_val);
