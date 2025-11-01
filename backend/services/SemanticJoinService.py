@@ -153,6 +153,7 @@ class SemanticJoinService:
                 r.*,
                 bridge.r_val,
                 bridge.s_val,
+                bridge.npmi,
                 bridge.pmi,
                 s.*
             FROM temp_r AS r
@@ -163,7 +164,14 @@ class SemanticJoinService:
             ORDER BY r.{r_join_col}
         """
 
-        result_df = conn.execute(join_query).pl()
+        result_df = (conn.execute(join_query).pl())
+        result_df = result_df.select(
+            pl.exclude("r_val", "s_val", "npmi", "pmi"),
+            "r_val",
+            "s_val",
+            "npmi",
+            "pmi"
+        )
 
         # Clean up temp tables
         conn.unregister("temp_r")
