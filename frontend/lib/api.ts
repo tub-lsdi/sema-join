@@ -31,12 +31,13 @@ interface JoinResponse {
 export async function createBridgeTable(
   listR: string[],
   listS: string[],
-  joinMethod: JoinMethod = 'row'
+  joinMethod: JoinMethod = 'row',
+  topK: number = 1
 ): Promise<BridgeTableResponse> {
   const response = await fetch(`${API_BASE_URL}/bridge-table`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ list_r: listR, list_s: listS, join_method: joinMethod }),
+    body: JSON.stringify({ list_r: listR, list_s: listS, join_method: joinMethod, top_k: topK }),
   });
 
   if (!response.ok) {

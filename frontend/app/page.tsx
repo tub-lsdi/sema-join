@@ -16,7 +16,9 @@ export default function Home() {
   const [rJoinCol, setRJoinCol] = useState('');
   const [sJoinCol, setSJoinCol] = useState('');
   const [joinMethod, setJoinMethod] = useState<JoinMethod>('row');
+  const [topK, setTopK] = useState<number>(5);
   const [bridgeTable, setBridgeTable] = useState<BridgeTableEntry[]>([]);
+  const [selectedBridgeEntries, setSelectedBridgeEntries] = useState<Set<number>>(new Set());
   const [joinResult, setJoinResult] = useState<Array<Record<string, any>>>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -26,6 +28,7 @@ export default function Home() {
     setTableR(data);
     setRJoinCol('');
     setBridgeTable([]);
+    setSelectedBridgeEntries(new Set());
     setJoinResult([]);
     setError('');
   };
@@ -34,6 +37,7 @@ export default function Home() {
     setTableS(data);
     setSJoinCol('');
     setBridgeTable([]);
+    setSelectedBridgeEntries(new Set());
     setJoinResult([]);
     setError('');
   };
@@ -50,8 +54,10 @@ export default function Home() {
     try {
       const listR = tableR.map(row => String(row[rJoinCol]));
       const listS = tableS.map(row => String(row[sJoinCol]));
-      const response = await createBridgeTable(listR, listS, joinMethod);
+      const response = await createBridgeTable(listR, listS, joinMethod, topK);
       setBridgeTable(response.bridge_table);
+      // Select all entries by default
+      setSelectedBridgeEntries(new Set(response.bridge_table.map((_, idx) => idx)));
       setJoinResult([]);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create bridge table');
@@ -66,17 +72,42 @@ export default function Home() {
       return;
     }
 
+    if (selectedBridgeEntries.size === 0) {
+      setError('Please select at least one bridge table entry');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
     try {
-      const response = await joinFromBridge(tableR, rJoinCol, bridgeTable, tableS, sJoinCol);
+      // Filter bridge table to only include selected entries
+      const selectedBridge = bridgeTable.filter((_, idx) => selectedBridgeEntries.has(idx));
+      const response = await joinFromBridge(tableR, rJoinCol, selectedBridge, tableS, sJoinCol);
       setJoinResult(response.result);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to perform join');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleToggleBridgeEntry = (index: number) => {
+    const newSelected = new Set(selectedBridgeEntries);
+    if (newSelected.has(index)) {
+      newSelected.delete(index);
+    } else {
+      newSelected.add(index);
+    }
+    setSelectedBridgeEntries(newSelected);
+  };
+
+  const handleSelectAllBridge = () => {
+    setSelectedBridgeEntries(new Set(bridgeTable.map((_, idx) => idx)));
+  };
+
+  const handleDeselectAllBridge = () => {
+    setSelectedBridgeEntries(new Set());
   };
 
   return (
@@ -109,11 +140,17 @@ export default function Home() {
           <BridgeTablePanel
             bridgeTable={bridgeTable}
             joinMethod={joinMethod}
+            topK={topK}
+            selectedEntries={selectedBridgeEntries}
             onJoinMethodChange={setJoinMethod}
+            onTopKChange={setTopK}
             onCreateBridge={handleCreateBridge}
             onPerformJoin={handleJoin}
+            onToggleEntry={handleToggleBridgeEntry}
+            onSelectAll={handleSelectAllBridge}
+            onDeselectAll={handleDeselectAllBridge}
             canCreate={!!(tableR.length && tableS.length && rJoinCol && sJoinCol)}
-            canJoin={!!bridgeTable.length}
+            canJoin={!!bridgeTable.length && selectedBridgeEntries.size > 0}
             loading={loading}
           />
         )}
