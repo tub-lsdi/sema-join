@@ -42,21 +42,23 @@ class RSJPAlgorithm(BridgeAlgorithm):
                 SELECT
                     r.r_val,
                     s.s_val,
-                    pmi.pmi,
-                    ROW_NUMBER() OVER (PARTITION BY r.r_val ORDER BY pmi.pmi DESC) as rn
+                    npmi.npmi,
+                    npmi.pmi,
+                    ROW_NUMBER() OVER (PARTITION BY r.r_val ORDER BY npmi.npmi DESC) as rn
                 FROM input_r AS r
-                JOIN pmi_scores AS pmi
-                    ON r.r_val = pmi.v1 OR r.r_val = pmi.v2
+                JOIN npmi_scores AS npmi
+                    ON r.r_val = npmi.v1 OR r.r_val = npmi.v2
                 JOIN input_s AS s
-                    ON (s.s_val = pmi.v1 OR s.s_val = pmi.v2)
+                    ON (s.s_val = npmi.v1 OR s.s_val = npmi.v2)
                 WHERE
-                    ((r.r_val = pmi.v1 AND s.s_val = pmi.v2) OR
-                     (r.r_val = pmi.v2 AND s.s_val = pmi.v1))
-                    AND pmi.pmi > 0
+                    ((r.r_val = npmi.v1 AND s.s_val = npmi.v2) OR
+                     (r.r_val = npmi.v2 AND s.s_val = npmi.v1))
+                    AND npmi.pmi > 0
             )
             SELECT
                 r_val,
                 s_val,
+                npmi,
                 pmi
             FROM all_candidates
             WHERE rn = 1

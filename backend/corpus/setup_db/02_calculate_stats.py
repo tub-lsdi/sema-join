@@ -131,7 +131,30 @@ def calculate_stats_rs(con: duckdb.DuckDBPyConnection) -> None:
     con.commit()
     con.execute("CREATE INDEX IF NOT EXISTS idx_pmi_v1v2 ON pmi_scores(v1, v2);")
     con.commit()
-    logger.info("✅ Created pmi_scores (RS-JP).")
+    logger.info("Created pmi_scores (RS-JP).")
+
+    # --- 4. Compute Normalized PMI (NPMI) ---
+    logger.info("Computing normalized PMI scores (npmi_scores)...")
+    con.execute("DROP TABLE IF EXISTS npmi_scores;")
+    con.execute(f"""
+            CREATE TABLE npmi_scores AS
+            SELECT
+                v1,
+                v2,
+                pmi,
+                -- Handle the p(x, y) = 1 edge case, which results in 0/0
+                CASE
+                    WHEN num_tables_pair = {N} THEN 1.0 
+                    ELSE pmi / -LOG(num_tables_pair / CAST({N} AS DOUBLE))
+                END AS npmi
+            FROM pmi_scores;
+        """)
+    con.commit()
+
+    # Add an index, just like for the other tables
+    con.execute("CREATE INDEX IF NOT EXISTS idx_npmi_v1v2 ON npmi_scores(v1, v2);")
+    con.commit()
+    logger.info("✅ Created npmi_scores.")
     return
 
 

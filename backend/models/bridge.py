@@ -12,6 +12,8 @@ class BridgeTableEntry(BaseModel):
     s_val: str = Field(..., description="Candidate value from list S")
     pmi: float = Field(...,
                        description="PMI score (confidence) for this match")
+    npmi: float | None = Field(
+        description="NMPI score (confidence) for this match")
 
 
 class BridgeTableRequest(BaseModel):
