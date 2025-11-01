@@ -158,7 +158,6 @@ class SemanticJoinService:
                 bridge.r_val,
                 bridge.s_val,
                 bridge.npmi,
-                bridge.pmi,
                 s.*
             FROM temp_r AS r
             INNER JOIN temp_bridge AS bridge
@@ -170,11 +169,10 @@ class SemanticJoinService:
 
         result_df = (conn.execute(join_query).pl())
         result_df = result_df.select(
-            pl.exclude("r_val", "s_val", "npmi", "pmi"),
+            pl.exclude("r_val", "s_val", "npmi"),
             "r_val",
             "s_val",
             "npmi",
-            "pmi"
         )
 
         # Clean up temp tables

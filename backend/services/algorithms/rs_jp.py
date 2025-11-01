@@ -45,7 +45,6 @@ class RSJPAlgorithm(BridgeAlgorithm):
                     r.r_val,
                     s.s_val,
                     npmi.npmi,
-                    npmi.pmi,
                     ROW_NUMBER() OVER (PARTITION BY r.r_val ORDER BY npmi.npmi DESC) as rn
                 FROM input_r AS r
                 JOIN npmi_scores AS npmi
@@ -61,10 +60,9 @@ class RSJPAlgorithm(BridgeAlgorithm):
                 r_val,
                 s_val,
                 npmi,
-                pmi
             FROM all_candidates
             WHERE rn <= {top_k}
-            ORDER BY r_val, pmi DESC
+            ORDER BY r_val, npmi DESC
         """
         bridge_df = conn.execute(bridge_query).pl()
         return bridge_df.to_dicts()
