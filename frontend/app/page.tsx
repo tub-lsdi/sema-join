@@ -55,9 +55,19 @@ export default function Home() {
       const listR = tableR.map(row => String(row[rJoinCol]));
       const listS = tableS.map(row => String(row[sJoinCol]));
       const response = await createBridgeTable(listR, listS, joinMethod, topK);
-      setBridgeTable(response.bridge_table);
-      // Select all entries by default
-      setSelectedBridgeEntries(new Set(response.bridge_table.map((_, idx) => idx)));
+      const bestMatchMap = new Map<string, { pmi: number, index: number }>();
+
+      response.bridge_table.forEach((entry, index) => {
+          const currentBest = bestMatchMap.get(entry.r_val);
+          if (!currentBest || entry.pmi > currentBest.pmi) {
+              bestMatchMap.set(entry.r_val, {pmi: entry.pmi, index: index});
+          }
+      });
+      const initialSelection = new Set<number>(
+          Array.from(bestMatchMap.values()).map(match => match.index)
+      );
+
+      setSelectedBridgeEntries(initialSelection);
       setJoinResult([]);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create bridge table');
