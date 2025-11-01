@@ -1,3 +1,4 @@
+import os
 import sys
 from pathlib import Path
 
@@ -68,6 +69,7 @@ def calculate_stats_rs(con: duckdb.DuckDBPyConnection) -> None:
         f"Removed {original_count - filtered_count:,} rows (a {reduction_percent:.2f}% reduction)."
     )
     # Compute row co-occurrences based on filtered cells
+    # pairs are canonicalized, v1 < v2
     logger.info("Computing row co-occurrences (row_cooccurrences)...")
     con.execute("DROP TABLE IF EXISTS row_cooccurrences;")
     con.execute("""
@@ -95,11 +97,11 @@ def calculate_stats_rs(con: duckdb.DuckDBPyConnection) -> None:
         "CREATE INDEX IF NOT EXISTS idx_pairs_v1v2 ON row_cooccurrences(v1, v2);"
     )
     con.commit()
-    logger.info("✅ Created row_cooccurrences.")
+    logger.info("Created row_cooccurrences.")
 
     # --- 3. Pre-compute PMI Scores (RS-JP) ---
     # Get total number of tables (n)
-    logger.info("⏳ Pre-computing row-level PMI scores (for RS-JP)...")
+    logger.info("Pre-computing row-level PMI scores (for RS-JP)...")
     try:
         N = con.execute("SELECT COUNT(DISTINCT table_id) FROM tables_meta;").fetchone()[
             0
@@ -154,92 +156,144 @@ def calculate_stats_rs(con: duckdb.DuckDBPyConnection) -> None:
     # Add an index, just like for the other tables
     con.execute("CREATE INDEX IF NOT EXISTS idx_npmi_v1v2 ON npmi_scores(v1, v2);")
     con.commit()
-    logger.info("✅ Created npmi_scores.")
+    logger.info("Created npmi_scores for row score.")
     return
 
 
 def calculate_stats_cs(con: duckdb.DuckDBPyConnection) -> None:
     # --- 1. Compute Column-Pair Co-occurrences for CS-JP ---
     # For CS-JP: Count how often value pairs (v1,v2) and (v3,v4) appear in same column pair
-    logger.info("⏳ Computing column-pair co-occurrences (for CS-JP)...")
-    logger.info("   This may take a while for large corpora...")
+    logger.info("Computing column-pair co-occurrences (for CS-JP)...")
+    logger.info("This may take a while for large corpora...")
+
+    con.execute("""
+                CREATE TABLE IF NOT EXISTS all_rectangles_found (
+                                                                    table_id BIGINT,
+                                                                    pairA_v1 VARCHAR,
+                                                                    pairA_v2 VARCHAR,
+                                                                    pairB_v1 VARCHAR,
+                                                                    pairB_v2 VARCHAR
+                )
+                """)
+    # Get all distinct table_ids
+    table_ids = con.execute("SELECT DISTINCT table_id FROM cells").pl()['table_id'].to_list()
+    logger.info(f"Found {len(table_ids)} tables to process...")
+
+    for i, current_table_id in enumerate(table_ids):
+
+        if (i + 1) % 1000 == 0:  # Print progress
+            logger.info(f"Processing table {i+1}/{len(table_ids)} (ID: {current_table_id})...")
+
+        # This is the 2-step join query, but constrained to a SINGLE table_id
+        con.execute(f"""
+            INSERT INTO all_rectangles_found
+            WITH horizontal_pairs AS (
+                SELECT
+                    c1.row_id,
+                    c1.col_id AS col1_id,
+                    c2.col_id AS col2_id,
+                    c1.value  AS value1,
+                    c2.value  AS value2
+                FROM cells c1
+                JOIN cells c2 ON c1.table_id = c2.table_id
+                             AND c1.row_id = c2.row_id
+                             AND c1.col_id < c2.col_id
+                WHERE c1.table_id = {current_table_id}
+                  AND c1.value != c2.value
+            ),
+            rectangles AS (
+                SELECT
+                    -- Canonicalize Pair 1 (from hp1)
+                    LEAST(hp1.value1, hp1.value2)  AS p1_v1,
+                    GREATEST(hp1.value1, hp1.value2) AS p1_v2,
+                    -- Canonicalize Pair 2 (from hp2)
+                    LEAST(hp2.value1, hp2.value2)  AS p2_v1,
+                    GREATEST(hp2.value1, hp2.value2) AS p2_v2
+                FROM horizontal_pairs hp1
+                JOIN horizontal_pairs hp2 ON hp1.col1_id = hp2.col1_id
+                                         AND hp1.col2_id = hp2.col2_id
+                                         AND hp1.row_id < hp2.row_id
+                WHERE
+                    (hp1.value1 != hp2.value1 OR hp1.value2 != hp2.value2)
+            )
+            -- Now, canonicalize the order of the two pairs
+            SELECT
+                {current_table_id} AS table_id,
+                CASE
+                    WHEN p1_v1 < p2_v1 OR (p1_v1 = p2_v1 AND p1_v2 <= p2_v2) THEN p1_v1
+                    ELSE p2_v1
+                END AS pairA_v1,
+                CASE
+                    WHEN p1_v1 < p2_v1 OR (p1_v1 = p2_v1 AND p1_v2 <= p2_v2) THEN p1_v2
+                    ELSE p2_v2
+                END AS pairA_v2,
+                CASE
+                    WHEN p1_v1 < p2_v1 OR (p1_v1 = p2_v1 AND p1_v2 <= p2_v2) THEN p2_v1
+                    ELSE p1_v1
+                END AS pairB_v1,
+                CASE
+                    WHEN p1_v1 < p2_v1 OR (p1_v1 = p2_v1 AND p1_v2 <= p2_v2) THEN p2_v2
+                    ELSE p1_v2
+                END AS pairB_v2
+            FROM rectangles;
+        """)
+
+    logger.info("Loop complete. Starting final aggregation...")
 
     con.execute("DROP TABLE IF EXISTS column_pair_cooccurrences;")
     con.execute("""
                 CREATE TABLE column_pair_cooccurrences AS
-                SELECT LEAST(c1.value, c2.value, c3.value, c4.value) AS v1,
-                       CASE
-                           WHEN c1.value = LEAST(c1.value, c2.value, c3.value, c4.value) THEN c2.value
-                           WHEN c2.value = LEAST(c1.value, c2.value, c3.value, c4.value) THEN c1.value
-                           WHEN c3.value = LEAST(c1.value, c2.value, c3.value, c4.value) THEN c4.value
-                           ELSE c3.value
-                           END                                       AS v2,
-                       CASE
-                           WHEN c1.value = LEAST(c1.value, c2.value, c3.value, c4.value) THEN
-                               CASE WHEN c3.value < c4.value THEN c3.value ELSE c4.value END
-                           WHEN c2.value = LEAST(c1.value, c2.value, c3.value, c4.value) THEN
-                               CASE WHEN c3.value < c4.value THEN c3.value ELSE c4.value END
-                           WHEN c3.value = LEAST(c1.value, c2.value, c3.value, c4.value) THEN
-                               CASE WHEN c1.value < c2.value THEN c1.value ELSE c2.value END
-                           ELSE
-                               CASE WHEN c1.value < c2.value THEN c1.value ELSE c2.value END
-                           END                                       AS v3,
-                       CASE
-                           WHEN c1.value = LEAST(c1.value, c2.value, c3.value, c4.value) THEN
-                               CASE WHEN c3.value < c4.value THEN c4.value ELSE c3.value END
-                           WHEN c2.value = LEAST(c1.value, c2.value, c3.value, c4.value) THEN
-                               CASE WHEN c3.value < c4.value THEN c4.value ELSE c3.value END
-                           WHEN c3.value = LEAST(c1.value, c2.value, c3.value, c4.value) THEN
-                               CASE WHEN c1.value < c2.value THEN c2.value ELSE c1.value END
-                           ELSE
-                               CASE WHEN c1.value < c2.value THEN c2.value ELSE c1.value END
-                           END                                       AS v4,
-                       COUNT(DISTINCT c1.table_id)                   AS num_tables
-                FROM cells c1
-                         JOIN cells c2 ON c1.table_id = c2.table_id
-                    AND c1.row_id = c2.row_id
-                    AND c1.col_id < c2.col_id
-                         JOIN cells c3 ON c1.table_id = c3.table_id
-                    AND c1.col_id = c3.col_id
-                    AND c1.row_id < c3.row_id
-                         JOIN cells c4 ON c1.table_id = c4.table_id
-                    AND c2.col_id = c4.col_id
-                    AND c3.row_id = c4.row_id
-                WHERE c1.value != c2.value
-                  AND c3.value != c4.value
-                  AND (c1.value != c3.value OR c2.value != c4.value)
-                GROUP BY v1, v2, v3, v4
+                SELECT
+                    pairA_v1,
+                    pairA_v2,
+                    pairB_v1,
+                    pairB_v2,
+                    COUNT(DISTINCT table_id) AS num_tables
+                FROM all_rectangles_found
+                GROUP BY ALL
                 HAVING num_tables >= 2
                 """)
-    con.commit()
-    con.execute(
-        "CREATE INDEX IF NOT EXISTS idx_colpair_v1v2v3v4 ON column_pair_cooccurrences(v1, v2, v3, v4);"
-    )
-    con.commit()
     logger.info("Created column_pair_cooccurrences.")
 
     # --- 2. Pre-compute Column-Level Scores (CS-JP) ---
     logger.info("Pre-computing column-level scores (for CS-JP)...")
     con.execute("DROP TABLE IF EXISTS column_scores;")
     con.execute(f"""
-    CREATE TABLE column_scores AS
-    SELECT
-        cp.v1,
-        cp.v2,
-        cp.v3,
-        cp.v4,
-        cp.num_tables,
-        LOG(({N} * cp.num_tables) / 
-            (GREATEST(rc1.num_tables, 1) * GREATEST(rc2.num_tables, 1))) AS score
-    FROM column_pair_cooccurrences cp
-    LEFT JOIN row_cooccurrences rc1 
-        ON (cp.v1 = rc1.v1 AND cp.v2 = rc1.v2) OR (cp.v1 = rc1.v2 AND cp.v2 = rc1.v1)
-    LEFT JOIN row_cooccurrences rc2
-        ON (cp.v3 = rc2.v1 AND cp.v4 = rc2.v2) OR (cp.v3 = rc2.v2 AND cp.v4 = rc2.v1);
-    """)
+        CREATE TABLE column_scores AS
+        WITH TotalTables (N) AS (
+            -- 1. Get the total number of tables
+            SELECT COUNT(DISTINCT table_id) FROM cells
+        )
+        SELECT
+            cp.pairA_v1,
+            cp.pairA_v2,
+            cp.pairB_v1,
+            cp.pairB_v2,
+            cp.num_tables AS rectangle_count,
+            rc1.num_tables AS pairA_count,
+            rc2.num_tables AS pairB_count,
+            
+            -- 2. Calculate the PMI score
+            LOG( (cp.num_tables * (SELECT N FROM TotalTables)) / 
+                 (GREATEST(rc1.num_tables, 1) * GREATEST(rc2.num_tables, 1)) 
+               ) AS pmi_score
+        FROM column_pair_cooccurrences cp
+        JOIN TotalTables ON 1=1 -- Make N available to all rows
+        
+        -- 3. Simple, fast JOIN on canonical pairs
+        LEFT JOIN row_cooccurrences rc1 
+            ON cp.pairA_v1 = rc1.v1 AND cp.pairA_v2 = rc1.v2
+        LEFT JOIN row_cooccurrences rc2 
+            ON cp.pairB_v1 = rc2.v1 AND cp.pairB_v2 = rc2.v2
+        
+        WHERE 
+            -- 4. Prune pairs with negative/zero correlation (as per paper)
+            (cp.num_tables * (SELECT N FROM TotalTables)) > 
+            (GREATEST(rc1.num_tables, 1) * GREATEST(rc2.num_tables, 1));
+        """)
     con.commit()
     con.execute(
-        "CREATE INDEX IF NOT EXISTS idx_colscores_v1v2v3v4 ON column_scores(v1, v2, v3, v4);"
+        "CREATE INDEX IF NOT EXISTS idx_colscores_v1v2v3v4 ON column_scores(pairA_v1, pairA_v2, pairB_v1, pairB_v2);"
     )
     con.commit()
     logger.info("Created column_scores (CS-JP).")
