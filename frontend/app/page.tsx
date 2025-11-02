@@ -55,13 +55,13 @@ export default function Home() {
       const listR = tableR.map(row => String(row[rJoinCol]));
       const listS = tableS.map(row => String(row[sJoinCol]));
       const response = await createBridgeTable(listR, listS, joinMethod, topK);
-      const bestMatchMap = new Map<string, { pmi: number, index: number }>();
+      const bestMatchMap = new Map<string, { npmi: number, index: number }>();
       setBridgeTable(response.bridge_table);
 
       response.bridge_table.forEach((entry, index) => {
           const currentBest = bestMatchMap.get(entry.r_val);
-          if (!currentBest || entry.pmi > currentBest.pmi) {
-              bestMatchMap.set(entry.r_val, {pmi: entry.pmi, index: index});
+          if (!currentBest || entry.npmi > currentBest.npmi) {
+              bestMatchMap.set(entry.r_val, {npmi: entry.npmi, index: index});
           }
       });
       const initialSelection = new Set<number>(

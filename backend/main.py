@@ -3,18 +3,24 @@ FastAPI backend for Semantic Join operations.
 """
 import os
 import duckdb
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
+from backend.config import settings
 from backend.services import SemanticJoinService
 from backend.routes import health_router, bridge_router, join_router
 
 
+
+
+
 def get_db_path():
-    """Get the database path."""
-    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    return os.path.join(project_root, "corpus.db")
+    """Get the database path from `.env` (DB_NAME)."""
+    db_path = settings.DEFAULT_DB_PATH
+    return db_path
+
 
 
 @asynccontextmanager

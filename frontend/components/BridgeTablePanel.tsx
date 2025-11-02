@@ -159,7 +159,7 @@ export default function BridgeTablePanel({
                     </td>
                     <td>{entry.r_val}</td>
                     <td>{entry.s_val}</td>
-                    <td>{entry.pmi.toFixed(4)}</td>
+                    <td>{entry.npmi.toFixed(4)}</td>
                   </tr>
                 ))}
               </tbody>
