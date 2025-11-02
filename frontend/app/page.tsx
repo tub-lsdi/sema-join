@@ -1,66 +1,78 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Header from '@/components/Header';
-import ErrorAlert from '@/components/ErrorAlert';
-import TableUploadPanel from '@/components/TableUploadPanel';
-import BridgeTablePanel from '@/components/BridgeTablePanel';
-import JoinResultPanel from '@/components/JoinResultPanel';
-import { createBridgeTable, joinFromBridge, type BridgeTableEntry, type JoinMethod } from '@/lib/api';
-import styles from './page.module.css';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Header from "@/components/Header";
+import ErrorAlert from "@/components/ErrorAlert";
+import TableUploadPanel from "@/components/TableUploadPanel";
+import BridgeTablePanel from "@/components/BridgeTablePanel";
+import JoinResultPanel from "@/components/JoinResultPanel";
+import {
+  createBridgeTable,
+  joinFromBridge,
+  type BridgeTableEntry,
+  type JoinMethod,
+} from "@/lib/api";
+import styles from "./page.module.css";
 
 export default function Home() {
   // State
   const [tableR, setTableR] = useState<Array<Record<string, any>>>([]);
   const [tableS, setTableS] = useState<Array<Record<string, any>>>([]);
-  const [rJoinCol, setRJoinCol] = useState('');
-  const [sJoinCol, setSJoinCol] = useState('');
-  const [joinMethod, setJoinMethod] = useState<JoinMethod>('row');
+  const [rJoinCol, setRJoinCol] = useState("");
+  const [sJoinCol, setSJoinCol] = useState("");
+  const [joinMethod, setJoinMethod] = useState<JoinMethod>("row");
   const [topK, setTopK] = useState<number>(5);
   const [bridgeTable, setBridgeTable] = useState<BridgeTableEntry[]>([]);
-  const [selectedBridgeEntries, setSelectedBridgeEntries] = useState<Set<number>>(new Set());
+  const [selectedBridgeEntries, setSelectedBridgeEntries] = useState<
+    Set<number>
+  >(new Set());
   const [joinResult, setJoinResult] = useState<Array<Record<string, any>>>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   // Handlers
   const handleFileLoadR = (data: any[]) => {
     setTableR(data);
-    setRJoinCol('');
+    setRJoinCol("");
     setBridgeTable([]);
     setSelectedBridgeEntries(new Set());
     setJoinResult([]);
-    setError('');
+    setError("");
   };
 
   const handleFileLoadS = (data: any[]) => {
     setTableS(data);
-    setSJoinCol('');
+    setSJoinCol("");
     setBridgeTable([]);
     setSelectedBridgeEntries(new Set());
     setJoinResult([]);
-    setError('');
+    setError("");
   };
 
   const handleCreateBridge = async () => {
     if (!tableR.length || !tableS.length || !rJoinCol || !sJoinCol) {
-      setError('Please upload both files and select join columns');
+      setError("Please upload both files and select join columns");
       return;
     }
 
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
-      const listR = tableR.map(row => String(row[rJoinCol]));
-      const listS = tableS.map(row => String(row[sJoinCol]));
+      const listR = tableR.map((row) => String(row[rJoinCol]));
+      const listS = tableS.map((row) => String(row[sJoinCol]));
       const response = await createBridgeTable(listR, listS, joinMethod, topK);
       setBridgeTable(response.bridge_table);
       // Select all entries by default
-      setSelectedBridgeEntries(new Set(response.bridge_table.map((_, idx) => idx)));
+      setSelectedBridgeEntries(
+        new Set(response.bridge_table.map((_, idx) => idx))
+      );
       setJoinResult([]);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create bridge table');
+      setError(
+        err instanceof Error ? err.message : "Failed to create bridge table"
+      );
     } finally {
       setLoading(false);
     }
@@ -68,25 +80,33 @@ export default function Home() {
 
   const handleJoin = async () => {
     if (!bridgeTable.length) {
-      setError('Please create a bridge table first');
+      setError("Please create a bridge table first");
       return;
     }
 
     if (selectedBridgeEntries.size === 0) {
-      setError('Please select at least one bridge table entry');
+      setError("Please select at least one bridge table entry");
       return;
     }
 
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
       // Filter bridge table to only include selected entries
-      const selectedBridge = bridgeTable.filter((_, idx) => selectedBridgeEntries.has(idx));
-      const response = await joinFromBridge(tableR, rJoinCol, selectedBridge, tableS, sJoinCol);
+      const selectedBridge = bridgeTable.filter((_, idx) =>
+        selectedBridgeEntries.has(idx)
+      );
+      const response = await joinFromBridge(
+        tableR,
+        rJoinCol,
+        selectedBridge,
+        tableS,
+        sJoinCol
+      );
       setJoinResult(response.result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to perform join');
+      setError(err instanceof Error ? err.message : "Failed to perform join");
     } finally {
       setLoading(false);
     }
@@ -110,12 +130,22 @@ export default function Home() {
     setSelectedBridgeEntries(new Set());
   };
 
+  const router = useRouter();
+
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
         <Header />
         <ErrorAlert message={error} />
-
+        <div className={styles.topCard}>
+          <button
+            className={styles.historyButton}
+            aria-label="View history"
+            onClick={() => router.push("/history")}
+          >
+            View History
+          </button>
+        </div>
         <div className={styles.gridTwoCols}>
           <TableUploadPanel
             title="Table R (Left Table)"
@@ -149,7 +179,9 @@ export default function Home() {
             onToggleEntry={handleToggleBridgeEntry}
             onSelectAll={handleSelectAllBridge}
             onDeselectAll={handleDeselectAllBridge}
-            canCreate={!!(tableR.length && tableS.length && rJoinCol && sJoinCol)}
+            canCreate={
+              !!(tableR.length && tableS.length && rJoinCol && sJoinCol)
+            }
             canJoin={!!bridgeTable.length && selectedBridgeEntries.size > 0}
             loading={loading}
           />

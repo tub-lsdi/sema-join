@@ -1,7 +1,5 @@
-from sqlalchemy import Column, Integer, Text, JSON, DateTime, func, ForeignKey, String
+from sqlalchemy import Column, Integer, DateTime, func, ForeignKey, String
 from sqlalchemy.orm import Session, relationship
-from typing import List
-import json
 
 from .base import Base
 
