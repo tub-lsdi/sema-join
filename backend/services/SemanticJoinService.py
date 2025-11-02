@@ -168,11 +168,11 @@ class SemanticJoinService:
         """
 
         result_df = (conn.execute(join_query).pl())
+        # move join columns to the end
+        columns_to_remove = ["r_val", "s_val", "npmi"]
         result_df = result_df.select(
-            pl.exclude("r_val", "s_val", "npmi"),
-            "r_val",
-            "s_val",
-            "npmi",
+         pl.exclude(columns_to_remove),
+         *columns_to_remove
         )
 
         # Clean up temp tables
