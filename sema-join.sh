@@ -254,6 +254,28 @@ setup_database() {
     fi
 }
 
+
+# Run alembic migrations for the application DB
+app_db() {
+    log_header "Running Alembic migrations (app DB)"
+
+    if ! command_exists uv; then
+        log_error "uv is not installed. Please install it first to run migrations."
+        return 1
+    fi
+
+    cd "$PROJECT_ROOT"
+
+    log_info "Running: uv run alembic upgrade head"
+    if uv run alembic upgrade head; then
+        log_success "Alembic migrations applied successfully"
+        return 0
+    else
+        log_error "Alembic migration failed"
+        return 1
+    fi
+}
+
 # Show project status
 show_status() {
     log_header "Project Status"
@@ -349,6 +371,9 @@ show_help() {
     echo -e "  ${GREEN}db${NC}"
     echo "                     Setup and initialize the database"
     echo ""
+    echo -e "  ${GREEN}app_db${NC}"
+    echo "                     Run alembic migrations to upgrade the application DB"
+    echo ""
     echo -e "  ${GREEN}status${NC}"
     echo "                     Show project status and dependencies"
     echo ""
@@ -357,8 +382,10 @@ show_help() {
     echo ""
     echo -e "${YELLOW}Quick Start:${NC}"
     echo "  1. ./sema-join.sh install all"
-    echo "  2. ./sema-join.sh db"
-    echo "  3. ./sema-join.sh run"
+    echo "  2. ./sema-join.sh docker run"
+    echo "  3. ./sema-join.sh app_db"
+    echo "  4. ./sema-join.sh db"
+    echo "  5. ./sema-join.sh run"
     echo ""
 }
 
@@ -398,6 +425,9 @@ main() {
                 ;;
         db)
             setup_database
+            ;;
+        app_db)
+            app_db
             ;;
         status)
             show_status
