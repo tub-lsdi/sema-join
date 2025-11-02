@@ -6,5 +6,6 @@ Each model is defined in its own file to match the repository's style.
 
 from .base import Base
 from .table_entry import TableEntry
+from .join_history import JoinHistory
 
-__all__ = ["Base", "TableEntry"]
+__all__ = ["Base", "TableEntry", "JoinHistory"]

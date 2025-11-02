@@ -12,9 +12,6 @@ class TableEntry(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     body = Column(Text, nullable=False)
     columns = Column(JSON, nullable=False)
-    created_at = Column(
-        DateTime(timezone=True), server_default=func.now(), nullable=False
-    )
 
 
 def create_table_entry(session: Session, body: List[dict]) -> TableEntry:
@@ -44,7 +41,3 @@ def create_table_entry(session: Session, body: List[dict]) -> TableEntry:
     except Exception:
         session.rollback()
         raise
-
-
-def get_all_table_entries(session: Session) -> List[TableEntry]:
-    return session.query(TableEntry).order_by(TableEntry.created_at.desc()).all()
