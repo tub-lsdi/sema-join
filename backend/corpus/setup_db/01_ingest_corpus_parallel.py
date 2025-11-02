@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 from loguru import logger
 from tqdm import tqdm
 
+from backend.config import settings
 from backend.services import get_db_connection
 from backend.utils import (
     stream_json_tables,
@@ -24,19 +25,6 @@ from backend.utils import (
     set_normalization_strategy,
     NormalizationStrategy,
 )
-
-# Load . env and configure logging level
-load_dotenv()
-LOG_LEVEL = os. getenv("LOG_LEVEL", "DEBUG").upper()
-logger. remove ()
-logger.add(sys. stderr, level=LOG_LEVEL)
-
-INPUT_DIR = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "data"
-)
-BATCH_SIZE = 1_000_000 # Number of cells per batch
-TEMP_META_DIR = "temp_parquet_meta"
-TEMP_CELLS_DIR = "temp_parquet_cells"
 
 set_normalization_strategy(NormalizationStrategy.ALPHANUMERIC_STRICT)
 
@@ -136,10 +124,10 @@ def process_file_to_parquet(file_path: str) -> tuple[str, str, int]:
             tables_processed += 1
 
             # Flush cell batch if it gets too big
-            if len(cell_batch) >= BATCH_SIZE:
+            if len(cell_batch) >= settings.CELL_BATCH_SIZE:
                 _write_parquet_batch(
                     cell_batch,
-                    TEMP_CELLS_DIR,
+                    settings.TEMP_CELLS_DIR,
                     f"{base_name}_{worker_pid}_cells_{cell_batch_count}.parquet",
                     pa.schema([
                         ("table_hash", pa.string()),
@@ -160,7 +148,7 @@ def process_file_to_parquet(file_path: str) -> tuple[str, str, int]:
         if cell_batch:
             _write_parquet_batch(
                 cell_batch,
-                TEMP_CELLS_DIR,
+                settings.TEMP_CELLS_DIR,
                 f"{base_name}_{worker_pid}_cells_{cell_batch_count}.parquet",
                 pa.schema([
                     ("table_hash", pa.string()),
@@ -173,7 +161,7 @@ def process_file_to_parquet(file_path: str) -> tuple[str, str, int]:
         if meta_batch:
             _write_parquet_batch(
                 meta_batch,
-                TEMP_META_DIR,
+                settings.TEMP_META_DIR,
                 f"{base_name}_{worker_pid}_meta_{meta_batch_count}.parquet",
                 pa.schema([
                     ("table_hash", pa.string()),
@@ -207,21 +195,21 @@ def _write_parquet_batch(batch: list, directory: str, file_name: str, schema: pa
 
 def main():
     # Gather all .json files recursively
-    json_files = [
-        os.path.join(root, f)
-        for root, _, files in os.walk(INPUT_DIR)
-        for f in files
-        if f.endswith(".json")
-    ]
-
-    # Get all .json files in the input directory
-    # input_path = Path(INPUT_DIR)
     # json_files = [
-    #     str(f) for f in input_path.glob("*.json") if f.is_file()
+    #     os.path.join(root, f)
+    #     for root, _, files in os.walk(INPUT_DIR)
+    #     for f in files
+    #     if f.endswith(".json")
     # ]
 
+    # Get all .json files in the input directory
+    input_path = Path(settings.INPUT_DIR)
+    json_files = [
+        str(f) for f in input_path.glob("*.json") if f.is_file()
+    ]
+
     if not json_files:
-        logger.warning(f"No .json files found in {INPUT_DIR}. Exiting.")
+        logger.warning(f"No .json files found in {settings.INPUT_DIR}. Exiting.")
         return
     logger.info(f"Found {len(json_files)} .json files to process.")
 
@@ -229,13 +217,13 @@ def main():
     logger.info("--- Starting Phase 1: Parallel ETL to Parquet ---")
 
     # Clean up temp directories from a previous failed run if they exist
-    if os.path.exists(TEMP_META_DIR):
-        shutil.rmtree(TEMP_META_DIR)
-    if os.path.exists(TEMP_CELLS_DIR):
-        shutil.rmtree(TEMP_CELLS_DIR)
+    if os.path.exists(settings.TEMP_META_DIR):
+        shutil.rmtree(settings.TEMP_META_DIR)
+    if os.path.exists(settings.TEMP_CELLS_DIR):
+        shutil.rmtree(settings.TEMP_CELLS_DIR)
 
-    os.makedirs(TEMP_META_DIR, exist_ok=True)
-    os.makedirs(TEMP_CELLS_DIR, exist_ok=True)
+    os.makedirs(settings.TEMP_META_DIR, exist_ok=True)
+    os.makedirs(settings.TEMP_CELLS_DIR, exist_ok=True)
 
     num_workers = cpu_count()
     logger.info(f"Starting processing with {num_workers} workers.")
@@ -270,11 +258,21 @@ def main():
 
         # Create a staging table for metadata, deduplicating at the source
         logger.info("Ingesting and deduplicating metadata...")
-        con.execute(f"""
-            CREATE TEMP TABLE meta_staging AS 
-            SELECT DISTINCT table_hash, source_file, url 
-            FROM read_parquet('{TEMP_META_DIR}/*.parquet');
-        """)
+        # prevent ._ parquet files from being mistakenly read (required on macOS)
+        meta_dir = Path(settings.TEMP_META_DIR)
+        meta_files = [
+            str(f) for f in meta_dir.glob("*.parquet")
+            if f.is_file() and not f.name.startswith('._')
+        ]
+
+        if not meta_files:
+            logger.warning("No valid meta parquet files found. Skipping meta ingestion.")
+        else:
+            con.execute(f"""
+                        CREATE TEMP TABLE meta_staging AS 
+                        SELECT DISTINCT table_hash, source_file, url 
+                        FROM read_parquet({meta_files});
+                    """)
 
         # Insert new metadata. ON CONFLICT handles deduplication.
         con.execute("""
@@ -287,10 +285,19 @@ def main():
 
         # Create a staging table for all cell data
         logger.info("Staging cell data...")
-        con.execute(f"""
-            CREATE TEMP TABLE cells_staging AS 
-            SELECT * FROM read_parquet('{TEMP_CELLS_DIR}/*.parquet');
-        """)
+        # prevent ._ parquet files from being mistakenly read (required on macOS)
+        cells_dir = Path(settings.TEMP_CELLS_DIR)
+        cells_files = [
+            str(f) for f in cells_dir.glob("*.parquet")
+            if f.is_file() and not f.name.startswith('._')
+        ]
+        if not cells_files:
+            logger.warning("No valid cell parquet files found. Skipping cell ingestion.")
+        else:
+            con.execute(f"""
+                        CREATE TEMP TABLE cells_staging AS 
+                        SELECT * FROM read_parquet({cells_files});
+                    """)
 
         # Ingest cells by joining with the meta table
         # This join ensures we only add cells for tables that are

@@ -11,6 +11,7 @@ from loguru import logger
 import polars as pl
 from tqdm import tqdm
 
+from backend.config import settings
 from backend.services import get_db_connection
 from backend.utils import (
     stream_json_tables,
@@ -19,17 +20,7 @@ from backend.utils import (
     set_normalization_strategy,
     NormalizationStrategy,
 )
-# Load . env and configure logging level
-load_dotenv()
-LOG_LEVEL = os. getenv("LOG_LEVEL", "DEBUG").upper()
-logger. remove ()
-logger.add(sys. stderr, level=LOG_LEVEL)
 
-# Updated path to point to corpus/data/
-INPUT_DIR = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "data"
-)
-BATCH_SIZE = 50000
 set_normalization_strategy(NormalizationStrategy.ALPHANUMERIC_STRICT)
 
 
@@ -76,13 +67,13 @@ def main():
 
     json_files = [
         os.path.join(root, f)
-        for root, _, files in os.walk(INPUT_DIR)
+        for root, _, files in os.walk(settings.INPUT_DIR)
         for f in files
         if f.endswith(".json")
     ]
 
     if not json_files:
-        logger.warning(f"No .json files found in {INPUT_DIR}. Exiting.")
+        logger.warning(f"No .json files found in {settings.INPUT_DIR}. Exiting.")
         return
 
     logger.info(f"Found {len(json_files)} .json files to process.")
@@ -133,7 +124,7 @@ def main():
                     cell_batch.append((table_id, row_id, col_id, val))
 
             # Flush batch if too large
-            if len(cell_batch) >= BATCH_SIZE:
+            if len(cell_batch) >= settings.TABLE_BATCH_SIZE:
                 logger.debug(f"{table_counter}/{total_tables - len(existing_hashes)} rows ingested")
                 con.executemany(
                     "INSERT INTO cells VALUES (?, ?, ?, ?)", cell_batch)

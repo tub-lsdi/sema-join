@@ -24,6 +24,7 @@ backend = [
     "uvicorn[standard]>=0.24.0",
     "pydantic>=2.0.0",
     "pulp>=2.7.0",
+    "pydantic-settings>=2.11.0",
 ]
 
 [tool.hatch.build.targets.wheel]
