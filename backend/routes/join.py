@@ -6,6 +6,7 @@ from fastapi import APIRouter, HTTPException, Request
 
 from backend.models import JoinResponse, JoinWithBridgeRequest
 from backend.services import SemanticJoinService
+from backend.persistence.table_entry import create_table_entry
 
 
 router = APIRouter(
@@ -51,6 +52,24 @@ async def join_from_bridge(request_data: JoinWithBridgeRequest, request: Request
             list_s=request_data.list_s,
             s_join_col=request_data.s_join_col,
         )
+
+        # Persist the input and output tables to the application DB if available
+        try:
+            Session = request.app.state.app_db_sessionmaker
+            db_session = Session()
+            try:
+                # store list_r, list_s and result as table entries
+                create_table_entry(db_session, request_data.list_r)
+                create_table_entry(db_session, request_data.list_s)
+                create_table_entry(db_session, result)
+            finally:
+                db_session.close()
+        except Exception as e:
+            # If persistence fails, continue but log the issue by raising a HTTPException
+            raise HTTPException(
+                status_code=500,
+                detail=f"Error saving uploaded tables to DB: {str(e)}",
+            )
 
         return JoinResponse(
             result=result,

@@ -5,6 +5,6 @@ Each model is defined in its own file to match the repository's style.
 """
 
 from .base import Base
-from .history import History
+from .table_entry import TableEntry
 
-__all__ = ["Base", "History"]
+__all__ = ["Base", "TableEntry"]
