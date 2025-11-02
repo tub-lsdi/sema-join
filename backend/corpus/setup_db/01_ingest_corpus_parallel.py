@@ -26,6 +26,19 @@ from backend.utils import (
     NormalizationStrategy,
 )
 
+CELL_SCHEMA = pa.schema([
+    ("table_hash", pa.string()),
+    ("row_id", pa.int32()),
+    ("col_id", pa.int32()),
+    ("value", pa.string())
+])
+
+META_SCHEMA = pa.schema([
+    ("table_hash", pa.string()),
+    ("source_file", pa.string()),
+    ("url", pa.string())
+])
+
 set_normalization_strategy(NormalizationStrategy.ALPHANUMERIC_STRICT)
 
 def create_schema(con: duckdb.DuckDBPyConnection):
@@ -66,7 +79,7 @@ def create_schema(con: duckdb.DuckDBPyConnection):
 
 def process_file_to_parquet(file_path: str) -> tuple[str, str, int]:
     """
-    Reads one JSON-L file, processes all tables,
+    Worker function that reads one JSON-L file, processes all tables,
     and writes metadata and cell data to temporary Parquet files.
 
     Returns a tuple: (file_path, status, tables_processed)
@@ -125,16 +138,12 @@ def process_file_to_parquet(file_path: str) -> tuple[str, str, int]:
 
             # Flush cell batch if it gets too big
             if len(cell_batch) >= settings.CELL_BATCH_SIZE:
+                file_name = f"{base_name}_{worker_pid}_cells_{cell_batch_count}.parquet"
                 _write_parquet_batch(
                     cell_batch,
                     settings.TEMP_CELLS_DIR,
-                    f"{base_name}_{worker_pid}_cells_{cell_batch_count}.parquet",
-                    pa.schema([
-                        ("table_hash", pa.string()),
-                        ("row_id", pa.int32()),
-                        ("col_id", pa.int32()),
-                        ("value", pa.string())
-                    ])
+                    file_name,
+                    CELL_SCHEMA
                 )
                 cell_batch = []
                 cell_batch_count += 1
@@ -146,28 +155,21 @@ def process_file_to_parquet(file_path: str) -> tuple[str, str, int]:
 
         # Write any remaining data
         if cell_batch:
+            file_name = f"{base_name}_{worker_pid}_cells_{cell_batch_count}.parquet"
             _write_parquet_batch(
                 cell_batch,
                 settings.TEMP_CELLS_DIR,
-                f"{base_name}_{worker_pid}_cells_{cell_batch_count}.parquet",
-                pa.schema([
-                    ("table_hash", pa.string()),
-                    ("row_id", pa.int32()),
-                    ("col_id", pa.int32()),
-                    ("value", pa.string())
-                ])
+                file_name,
+                CELL_SCHEMA
             )
 
         if meta_batch:
+            file_name = f"{base_name}_{worker_pid}_cells_{meta_batch_count}.parquet"
             _write_parquet_batch(
                 meta_batch,
                 settings.TEMP_META_DIR,
-                f"{base_name}_{worker_pid}_meta_{meta_batch_count}.parquet",
-                pa.schema([
-                    ("table_hash", pa.string()),
-                    ("source_file", pa.string()),
-                    ("url", pa.string())
-                ])
+                file_name,
+                META_SCHEMA
             )
 
         return file_path, "Success", tables_processed
@@ -195,18 +197,18 @@ def _write_parquet_batch(batch: list, directory: str, file_name: str, schema: pa
 
 def main():
     # Gather all .json files recursively
-    # json_files = [
-    #     os.path.join(root, f)
-    #     for root, _, files in os.walk(INPUT_DIR)
-    #     for f in files
-    #     if f.endswith(".json")
-    # ]
+    json_files = [
+        os.path.join(root, f)
+        for root, _, files in os.walk(settings.INPUT_DIR)
+        for f in files
+        if f.endswith(".json")
+    ]
 
     # Get all .json files in the input directory
-    input_path = Path(settings.INPUT_DIR)
-    json_files = [
-        str(f) for f in input_path.glob("*.json") if f.is_file()
-    ]
+    # input_path = Path(settings.INPUT_DIR)
+    # json_files = [
+    #     str(f) for f in input_path.glob("*.json") if f.is_file()
+    # ]
 
     if not json_files:
         logger.warning(f"No .json files found in {settings.INPUT_DIR}. Exiting.")
