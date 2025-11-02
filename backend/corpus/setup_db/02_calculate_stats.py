@@ -166,6 +166,7 @@ def calculate_stats_cs(con: duckdb.DuckDBPyConnection) -> None:
     logger.info("Computing column-pair co-occurrences (for CS-JP)...")
     logger.info("This may take a while for large corpora...")
 
+    # Create aggregation table to store all rectangles found
     con.execute("""
                 CREATE TABLE IF NOT EXISTS all_rectangles_found (
                                                                     table_id BIGINT,
@@ -181,10 +182,10 @@ def calculate_stats_cs(con: duckdb.DuckDBPyConnection) -> None:
 
     for i, current_table_id in enumerate(table_ids):
 
-        if (i + 1) % 1000 == 0:  # Print progress
+        if (i + 1) % 1000 == 0:
             logger.info(f"Processing table {i+1}/{len(table_ids)} (ID: {current_table_id})...")
 
-        # This is the 2-step join query, but constrained to a SINGLE table_id
+        # 2-step join query, but constrained to a SINGLE table_id
         con.execute(f"""
             INSERT INTO all_rectangles_found
             WITH horizontal_pairs AS (
@@ -216,7 +217,7 @@ def calculate_stats_cs(con: duckdb.DuckDBPyConnection) -> None:
                 WHERE
                     (hp1.value1 != hp2.value1 OR hp1.value2 != hp2.value2)
             )
-            -- Now, canonicalize the order of the two pairs
+            -- Canonicalize the order of the two pairs
             SELECT
                 {current_table_id} AS table_id,
                 CASE
@@ -238,7 +239,7 @@ def calculate_stats_cs(con: duckdb.DuckDBPyConnection) -> None:
             FROM rectangles;
         """)
 
-    logger.info("Loop complete. Starting final aggregation...")
+    logger.info("Loop complete. Starting final aggregation. This will take some memory...")
 
     con.execute("DROP TABLE IF EXISTS column_pair_cooccurrences;")
     con.execute("""
@@ -263,33 +264,53 @@ def calculate_stats_cs(con: duckdb.DuckDBPyConnection) -> None:
         WITH TotalTables (N) AS (
             -- 1. Get the total number of tables
             SELECT COUNT(DISTINCT table_id) FROM cells
+        ),
+        PmiScores AS (
+            -- 2. Calculate PMI scores for column pairs
+            SELECT
+                cp.pairA_v1,
+                cp.pairA_v2,
+                cp.pairB_v1,
+                cp.pairB_v2,
+                cp.num_tables AS rectangle_count,
+                rc1.num_tables AS pairA_count,
+                rc2.num_tables AS pairB_count,
+                (SELECT N FROM TotalTables) AS N, -- Pass N to the next step
+
+                LOG( (cp.num_tables * (SELECT N FROM TotalTables)) / 
+                     (GREATEST(rc1.num_tables, 1) * GREATEST(rc2.num_tables, 1)) 
+                   ) AS pmi_score
+            FROM column_pair_cooccurrences cp
+            JOIN TotalTables ON 1=1 -- Make N available to all rows
+            LEFT JOIN row_cooccurrences rc1 
+                ON cp.pairA_v1 = rc1.v1 AND cp.pairA_v2 = rc1.v2
+            LEFT JOIN row_cooccurrences rc2 
+                ON cp.pairB_v1 = rc2.v1 AND cp.pairB_v2 = rc2.v2
+            WHERE 
+                -- Prune pairs with negative/zero correlation (as per paper)
+                (cp.num_tables * (SELECT N FROM TotalTables)) > 
+                (GREATEST(rc1.num_tables, 1) * GREATEST(rc2.num_tables, 1))
         )
+        -- 3. Normalize PMI to get NPMI
         SELECT
-            cp.pairA_v1,
-            cp.pairA_v2,
-            cp.pairB_v1,
-            cp.pairB_v2,
-            cp.num_tables AS rectangle_count,
-            rc1.num_tables AS pairA_count,
-            rc2.num_tables AS pairB_count,
-            
-            -- 2. Calculate the PMI score
-            LOG( (cp.num_tables * (SELECT N FROM TotalTables)) / 
-                 (GREATEST(rc1.num_tables, 1) * GREATEST(rc2.num_tables, 1)) 
-               ) AS pmi_score
-        FROM column_pair_cooccurrences cp
-        JOIN TotalTables ON 1=1 -- Make N available to all rows
-        
-        -- 3. Simple, fast JOIN on canonical pairs
-        LEFT JOIN row_cooccurrences rc1 
-            ON cp.pairA_v1 = rc1.v1 AND cp.pairA_v2 = rc1.v2
-        LEFT JOIN row_cooccurrences rc2 
-            ON cp.pairB_v1 = rc2.v1 AND cp.pairB_v2 = rc2.v2
-        
-        WHERE 
-            -- 4. Prune pairs with negative/zero correlation (as per paper)
-            (cp.num_tables * (SELECT N FROM TotalTables)) > 
-            (GREATEST(rc1.num_tables, 1) * GREATEST(rc2.num_tables, 1));
+            pairA_v1,
+            pairA_v2,
+            pairB_v1,
+            pairB_v2,
+            rectangle_count,
+            pairA_count,
+            pairB_count,
+            pmi_score,
+
+            -- NPMI = PMI / -log(p(joint))
+            -- p(joint) = rectangle_count / N
+            CASE
+                -- Safeguard: If p(joint) = 1 (rectangle is in every table), 
+                WHEN rectangle_count = N THEN 1.0
+                ELSE pmi_score / (-LOG(rectangle_count::DOUBLE / N))
+            END AS npmi_score
+
+        FROM PmiScores;
         """)
     con.commit()
     con.execute(
