@@ -10,7 +10,12 @@ from contextlib import asynccontextmanager
 
 
 from backend.services import SemanticJoinService
-from backend.routes import health_router, bridge_router, join_router
+from backend.routes import (
+    health_router,
+    bridge_router,
+    join_router,
+    history_router,
+)
 from backend.app_db import init_app_db, shutdown_app_db
 
 
@@ -61,3 +66,4 @@ app.add_middleware(
 app.include_router(health_router)
 app.include_router(bridge_router)
 app.include_router(join_router)
+app.include_router(history_router)

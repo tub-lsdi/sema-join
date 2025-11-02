@@ -11,6 +11,10 @@ from .join import (
     JoinWithBridgeRequest,
     JoinResponse,
 )
+from .history import (
+    HistoryEntry,
+    HistoryResponse,
+)
 
 __all__ = [
     # Bridge models
@@ -20,4 +24,7 @@ __all__ = [
     # Join models
     "JoinWithBridgeRequest",
     "JoinResponse",
+    # History models
+    "HistoryEntry",
+    "HistoryResponse",
 ]

@@ -76,3 +76,7 @@ def create_join_history(
     except Exception:
         session.rollback()
         raise
+
+
+def get_entire_join_history(session: Session) -> list[JoinHistory]:
+    return session.query(JoinHistory).order_by(JoinHistory.created_at.desc()).all()
