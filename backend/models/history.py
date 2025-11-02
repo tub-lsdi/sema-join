@@ -16,3 +16,10 @@ class HistoryResponse(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class HistoryDetailEntry(HistoryEntry):
+    list_r: list[dict] = Field(..., description="Body of the stored R table")
+    list_s: list[dict] = Field(..., description="Body of the stored S table")
+    bridge_table: list[dict] = Field(..., description="Body of the stored bridge table")
+    result: list[dict] = Field(..., description="Body of the stored result table")

@@ -15,6 +15,9 @@ from .history import (
     HistoryEntry,
     HistoryResponse,
 )
+from .history import (
+    HistoryDetailEntry,
+)
 
 __all__ = [
     # Bridge models
@@ -27,4 +30,5 @@ __all__ = [
     # History models
     "HistoryEntry",
     "HistoryResponse",
+    "HistoryDetailEntry",
 ]

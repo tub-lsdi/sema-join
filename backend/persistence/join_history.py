@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, DateTime, func, ForeignKey, String
 from sqlalchemy.orm import Session, relationship
 
 from .base import Base
+import json
 
 
 class JoinHistory(Base):
@@ -80,3 +81,37 @@ def create_join_history(
 
 def get_entire_join_history(session: Session) -> list[JoinHistory]:
     return session.query(JoinHistory).order_by(JoinHistory.created_at.desc()).all()
+
+
+def get_join_history_with_bodies(session: Session, history_id: int):
+    """Return a JoinHistory row by id along with parsed table bodies.
+
+    Returns a tuple (join_history, bodies_dict) where bodies_dict contains
+    keys: list_r, list_s, bridge_table, result each mapped to the parsed
+    JSON body (a list of dicts). If the history row is not found, returns
+    (None, None).
+    """
+    row = (
+        session.query(JoinHistory)
+        .filter(JoinHistory.id == int(history_id))
+        .one_or_none()
+    )
+    if row is None:
+        return None, None
+
+    def _parse_body(table_entry):
+        if table_entry is None:
+            return []
+        try:
+            return json.loads(table_entry.body)
+        except Exception:
+            return []
+
+    bodies = {
+        "list_r": _parse_body(row.list_r_entry),
+        "list_s": _parse_body(row.list_s_entry),
+        "bridge_table": _parse_body(row.bridge_table_entry),
+        "result": _parse_body(row.result_entry),
+    }
+
+    return row, bodies
