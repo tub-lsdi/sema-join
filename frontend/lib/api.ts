@@ -10,7 +10,7 @@ export type JoinMethod = "row" | "column";
 export interface BridgeTableEntry {
   r_val: string;
   s_val: string;
-  pmi: number;
+  npmi: number;
 }
 
 interface BridgeTableResponse {

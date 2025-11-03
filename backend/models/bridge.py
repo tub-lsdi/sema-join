@@ -11,7 +11,7 @@ class BridgeTableEntry(BaseModel):
 
     r_val: str = Field(..., description="Value from list R")
     s_val: str = Field(..., description="Candidate value from list S")
-    pmi: float = Field(..., description="PMI score (confidence) for this match")
+    npmi: float | None = Field(description="NMPI score (confidence) for this match")
 
 
 class BridgeTableRequest(BaseModel):
@@ -81,9 +81,9 @@ class BridgeTableResponse(BaseModel):
             "examples": [
                 {
                     "bridge_table": [
-                        {"r_val": "US", "s_val": "USA", "pmi": 5.32},
-                        {"r_val": "US", "s_val": "United States", "pmi": 4.81},
-                        {"r_val": "UK", "s_val": "United Kingdom", "pmi": 6.12},
+                        {"r_val": "US", "s_val": "USA", "npmi": 5.32},
+                        {"r_val": "US", "s_val": "United States", "npmi": 4.81},
+                        {"r_val": "UK", "s_val": "United Kingdom", "npmi": 6.12},
                     ],
                     "total_r_values": 2,
                     "total_s_values": 3,

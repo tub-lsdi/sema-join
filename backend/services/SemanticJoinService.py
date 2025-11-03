@@ -159,7 +159,7 @@ class SemanticJoinService:
                 r.*,
                 bridge.r_val,
                 bridge.s_val,
-                bridge.pmi,
+                bridge.npmi,
                 s.*
             FROM temp_r AS r
             INNER JOIN temp_bridge AS bridge
@@ -170,6 +170,9 @@ class SemanticJoinService:
         """
 
         result_df = conn.execute(join_query).pl()
+        # move join columns to the end
+        columns_to_remove = ["r_val", "s_val", "npmi"]
+        result_df = result_df.select(pl.exclude(columns_to_remove), *columns_to_remove)
 
         # Clean up temp tables
         conn.unregister("temp_r")

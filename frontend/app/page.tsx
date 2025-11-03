@@ -63,11 +63,20 @@ export default function Home() {
       const listR = tableR.map((row) => String(row[rJoinCol]));
       const listS = tableS.map((row) => String(row[sJoinCol]));
       const response = await createBridgeTable(listR, listS, joinMethod, topK);
+      const bestMatchMap = new Map<string, { npmi: number; index: number }>();
       setBridgeTable(response.bridge_table);
-      // Select all entries by default
-      setSelectedBridgeEntries(
-        new Set(response.bridge_table.map((_, idx) => idx))
+
+      response.bridge_table.forEach((entry, index) => {
+        const currentBest = bestMatchMap.get(entry.r_val);
+        if (!currentBest || entry.npmi > currentBest.npmi) {
+          bestMatchMap.set(entry.r_val, { npmi: entry.npmi, index: index });
+        }
+      });
+      const initialSelection = new Set<number>(
+        Array.from(bestMatchMap.values()).map((match) => match.index)
       );
+
+      setSelectedBridgeEntries(initialSelection);
       setJoinResult([]);
     } catch (err) {
       setError(

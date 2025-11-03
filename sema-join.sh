@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-
+source load_env.sh
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -15,6 +15,7 @@ NC='\033[0m' # No Color
 PROJECT_ROOT="$(cd "$(dirname "$0")" && pwd)"
 BACKEND_DIR="$PROJECT_ROOT/backend"
 FRONTEND_DIR="$PROJECT_ROOT/frontend"
+DB_NAME="${DB_PATH:-corpus.db}"
 
 # Log functions
 log_info() {
@@ -135,7 +136,7 @@ run_backend() {
 
     cd "$PROJECT_ROOT"
 
-    if [ ! -f "$PROJECT_ROOT/corpus.db" ]; then
+    if [ ! -f "$PROJECT_ROOT/$DB_NAME" ]; then
         log_warning "Database not found at $PROJECT_ROOT/corpus.db"
         log_info "You may need to run the setup script first:"
         echo "  ./backend/setup_database.sh"

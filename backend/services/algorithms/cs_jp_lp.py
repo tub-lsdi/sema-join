@@ -95,17 +95,17 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
             SELECT DISTINCT
                 r.r_val,
                 s.s_val,
-                pmi.pmi as row_score
+                pmi.npmi as row_score
             FROM input_r AS r
-            JOIN pmi_scores AS pmi
+            JOIN npmi_scores AS pmi
                 ON r.r_val = pmi.v1 OR r.r_val = pmi.v2
             JOIN input_s AS s
                 ON (s.s_val = pmi.v1 OR s.s_val = pmi.v2)
             WHERE
                 ((r.r_val = pmi.v1 AND s.s_val = pmi.v2) OR
                  (r.r_val = pmi.v2 AND s.s_val = pmi.v1))
-                AND pmi.pmi > 0
-            ORDER BY pmi.pmi DESC
+                AND pmi.npmi > 0
+            ORDER BY pmi.npmi DESC
         """
         viable_pairs = conn.execute(row_pairs_query).fetchall()
 
@@ -383,8 +383,8 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
             candidates = sorted(
                 candidates_by_r[r_val], key=lambda x: x[1], reverse=True
             )[:top_k]
-            for s_val, pmi in candidates:
-                result.append({"r_val": r_val, "s_val": s_val, "pmi": pmi})
+            for s_val, npmi in candidates:
+                result.append({"r_val": r_val, "s_val": s_val, "npmi": npmi})
 
         return result
 
@@ -407,6 +407,6 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         for (r_val, s_val), x_val in x_final.items():
             if x_val == 1.0:
                 row_score = row_score_dict.get((r_val, s_val), 0.0)
-                result.append({"r_val": r_val, "s_val": s_val, "pmi": row_score})
+                result.append({"r_val": r_val, "s_val": s_val, "npmi": row_score})
 
         return result

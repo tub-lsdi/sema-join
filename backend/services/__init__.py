@@ -4,20 +4,25 @@ Services layer for semantic join API.
 
 import os
 import duckdb
+from dotenv import load_dotenv
+from loguru import logger
 
 from .SemanticJoinService import SemanticJoinService
+from backend.config import settings
 from backend.utils import (
     NormalizationStrategy,
     normalize_value,
     set_normalization_strategy,
-    extract_rows_from_wdc_dict,
+    extract_rows,
     stream_json_tables,
     table_hash,
 )
 
 
 # Utility function for database connection (used by setup scripts)
-def get_db_connection(db_path: str = None) -> duckdb.DuckDBPyConnection:
+def get_db_connection(
+    db_path: str = None, read_only: bool = False
+) -> duckdb.DuckDBPyConnection:
     """
     Get a connection to the DuckDB database.
 
@@ -27,13 +32,13 @@ def get_db_connection(db_path: str = None) -> duckdb.DuckDBPyConnection:
     Returns:
         DuckDB connection
     """
-    if db_path is None:
-        project_root = os.path.dirname(
-            os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        )
-        db_path = os.path.join(project_root, "corpus.db")
+    db_to_use = db_path if db_path is not None else settings.DEFAULT_DB_PATH
 
-    return duckdb.connect(database=db_path)
+    return duckdb.connect(
+        database=db_to_use,
+        config=settings.DEFAULT_DB_CONFIG,
+        read_only=read_only,
+    )
 
 
 __all__ = [
@@ -44,7 +49,7 @@ __all__ = [
     "get_db_connection",
     "normalize_value",
     "set_normalization_strategy",
-    "extract_rows_from_wdc_dict",
+    "extract_rows",
     "stream_json_tables",
     "table_hash",
 ]

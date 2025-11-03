@@ -5,7 +5,7 @@
 # 2. Calculating PMI statistics
 
 set -e 
-
+source load_env.sh
 echo "========================================"
 echo "Semantic Join - Database Setup"
 echo "========================================"
@@ -21,6 +21,7 @@ NC='\033[0m' # No Color
 # Get the script directory and project root
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+DB_NAME="${DB_PATH:-corpus.db}"
 
 echo -e "${BLUE}Project root: ${PROJECT_ROOT}${NC}"
 echo -e "${BLUE}Backend directory: ${SCRIPT_DIR}${NC}"
@@ -86,9 +87,9 @@ else
 fi
 
 # Check if database file was created
-if [ -f "$PROJECT_ROOT/corpus.db" ]; then
-    DB_SIZE=$(du -h "$PROJECT_ROOT/corpus.db" | cut -f1)
-    echo -e "${GREEN}✅ Database created: corpus.db (${DB_SIZE})${NC}"
+if [ -f "$PROJECT_ROOT/$DB_NAME" ]; then
+    DB_SIZE=$(du -h "$PROJECT_ROOT/$DB_NAME" | cut -f1)
+    echo -e "${GREEN}✅ Database created: $DB_NAME (${DB_SIZE})${NC}"
 else
     echo -e "${YELLOW}⚠ Warning: Database file not found at expected location${NC}"
 fi
