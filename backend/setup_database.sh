@@ -5,7 +5,7 @@
 # 2. Calculating PMI statistics
 
 set -e 
-source load_env.sh
+source ../load_env.sh
 echo "========================================"
 echo "Semantic Join - Database Setup"
 echo "========================================"

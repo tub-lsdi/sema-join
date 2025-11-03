@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import styles from './DataTable.module.css';
+import styles from "./DataTable.module.css";
 
 interface Props {
   data: Array<Record<string, any>>;
@@ -9,7 +9,9 @@ interface Props {
 export default function DataTable({ data }: Props) {
   if (!data || data.length === 0) return null;
 
-  const columns = Object.keys(data[0]);
+  const columns = Array.from(
+    new Set(data.flatMap((row) => Object.keys(row || {})))
+  );
   const displayData = data.slice(0, 10);
 
   return (
@@ -27,7 +29,9 @@ export default function DataTable({ data }: Props) {
             <tr key={idx}>
               {columns.map((col) => (
                 <td key={col}>
-                  {typeof row[col] === 'object' ? JSON.stringify(row[col]) : String(row[col] ?? '')}
+                  {typeof row[col] === "object"
+                    ? JSON.stringify(row[col])
+                    : String(row[col] ?? "")}
                 </td>
               ))}
             </tr>

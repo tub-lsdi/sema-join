@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import styles from './InteractiveDataTable.module.css';
+import styles from "./InteractiveDataTable.module.css";
 
 interface Props {
   data: Array<Record<string, any>>;
@@ -8,16 +8,22 @@ interface Props {
   onColumnSelect?: (column: string) => void;
 }
 
-export default function InteractiveDataTable({ data, selectedColumn, onColumnSelect }: Props) {
+export default function InteractiveDataTable({
+  data,
+  selectedColumn,
+  onColumnSelect,
+}: Props) {
   if (!data || data.length === 0) return null;
 
-  const columns = Object.keys(data[0]);
+  const columns = Array.from(
+    new Set(data.flatMap((row) => Object.keys(row || {})))
+  );
   const minRows = 5;
-  
+
   // Pad with empty rows
   const displayData = [...data];
   while (displayData.length < minRows) {
-    displayData.push(columns.reduce((acc, col) => ({ ...acc, [col]: '' }), {}));
+    displayData.push(columns.reduce((acc, col) => ({ ...acc, [col]: "" }), {}));
   }
 
   return (
@@ -29,7 +35,9 @@ export default function InteractiveDataTable({ data, selectedColumn, onColumnSel
               <th
                 key={col}
                 onClick={() => onColumnSelect?.(col)}
-                className={selectedColumn === col ? styles.selected : styles.clickable}
+                className={
+                  selectedColumn === col ? styles.selected : styles.clickable
+                }
               >
                 {selectedColumn === col && <span>✓ </span>}
                 {col}
@@ -41,15 +49,17 @@ export default function InteractiveDataTable({ data, selectedColumn, onColumnSel
           {displayData.slice(0, minRows).map((row, idx) => {
             const isEmpty = idx >= data.length;
             return (
-              <tr key={idx} className={isEmpty ? styles.empty : ''}>
+              <tr key={idx} className={isEmpty ? styles.empty : ""}>
                 {columns.map((col) => (
                   <td
                     key={col}
-                    className={selectedColumn === col ? styles.highlighted : ''}
+                    className={selectedColumn === col ? styles.highlighted : ""}
                   >
-                    {isEmpty ? '—' : (
-                      typeof row[col] === 'object' ? JSON.stringify(row[col]) : String(row[col] ?? '')
-                    )}
+                    {isEmpty
+                      ? "—"
+                      : typeof row[col] === "object"
+                        ? JSON.stringify(row[col])
+                        : String(row[col] ?? "")}
                   </td>
                 ))}
               </tr>
