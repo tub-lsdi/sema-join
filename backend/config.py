@@ -8,6 +8,7 @@ from pydantic_settings import BaseSettings
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
+
 class Settings(BaseSettings):
     """
     Project settings managed with Pydantic, which automatically reads from .env files.
@@ -16,7 +17,6 @@ class Settings(BaseSettings):
     PROJECT_ROOT: Path = PROJECT_ROOT
     DATA_DIR: Path = PROJECT_ROOT / "backend" / "corpus" / "data"
     INPUT_DIR: Path = DATA_DIR
-
 
     # DuckDB settings
     DB_PATH: str = "corpus.db"
@@ -60,14 +60,16 @@ class Settings(BaseSettings):
         if self.DUCKDB_TEMP_DIRECTORY:
             # Pydantic already converted this to a Path,
             # but DuckDB needs a string.
-            config['temp_directory'] = str(self.DUCKDB_TEMP_DIRECTORY)
+            config["temp_directory"] = str(self.DUCKDB_TEMP_DIRECTORY)
         if self.DUCKDB_MEMORY_LIMIT:
-            config['memory_limit'] = self.DUCKDB_MEMORY_LIMIT
+            config["memory_limit"] = self.DUCKDB_MEMORY_LIMIT
         return config
 
     class Config:
         env_file = PROJECT_ROOT / ".env"
-        env_file_encoding = 'utf-8'
+        env_file_encoding = "utf-8"
+        extra = "ignore"
+
 
 settings = Settings()
 

@@ -4,8 +4,8 @@
 # 1. Ingesting corpus data from JSON files
 # 2. Calculating PMI statistics
 
-set -e 
-source load_env.sh
+set -e
+source ../load_env.sh
 echo "========================================"
 echo "Semantic Join - Database Setup"
 echo "========================================"
@@ -109,4 +109,3 @@ echo ""
 echo "  3. View API docs:"
 echo "     http://localhost:8000/docs"
 echo ""
-
