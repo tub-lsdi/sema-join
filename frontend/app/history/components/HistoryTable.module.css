@@ -31,6 +31,10 @@
   background-color: #f9fafb;
 }
 
+.clickableRow {
+  cursor: pointer;
+}
+
 .more {
   margin-top: 1rem;
   text-align: center;

@@ -37,3 +37,15 @@
   color: #6b7280;
   font-size: 0.875rem;
 }
+
+.highlightedHeader {
+  background-color: #3b82f6;
+  color: white !important;
+  font-weight: 600;
+}
+
+.highlightedCell {
+  background-color: #eff6ff;
+  font-weight: 500;
+  color: #1e3a8a;
+}

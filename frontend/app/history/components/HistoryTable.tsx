@@ -1,3 +1,6 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import styles from "./HistoryTable.module.css";
 
 interface HistoryTableEntry {
@@ -12,7 +15,12 @@ interface Props {
 }
 
 export default function HistoryTable({ data }: Props) {
+  const router = useRouter();
   const columns = ["Timestamp", "R Join Column", "S Join Column"];
+
+  const handleRowClick = (id: number) => {
+    router.push(`/history/${id}`);
+  };
 
   return (
     <div className={styles.container}>
@@ -26,7 +34,11 @@ export default function HistoryTable({ data }: Props) {
         </thead>
         <tbody>
           {data.map((entry) => (
-            <tr key={entry.timestamp}>
+            <tr
+              key={entry.id}
+              className={styles.clickableRow}
+              onClick={() => handleRowClick(entry.id)}
+            >
               <td>{new Date(entry.timestamp).toLocaleString()}</td>
               <td>{entry.r_join_col}</td>
               <td>{entry.s_join_col}</td>

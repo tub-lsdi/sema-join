@@ -83,6 +83,31 @@ export async function fetchHistory(): Promise<HistoryResponse> {
   return response.json();
 }
 
+export async function fetchHistoryDetail(
+  id: number
+): Promise<
+  HistoryEntry & {
+    list_r: any[];
+    list_s: any[];
+    bridge_table: any[];
+    result: any[];
+  }
+> {
+  const response = await fetch(`${API_BASE_URL}/history/${id}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (!response.ok) {
+    const error = await response
+      .json()
+      .catch(() => ({ detail: "Failed to fetch history detail" }));
+    throw new Error(error.detail);
+  }
+
+  return response.json();
+}
+
 export async function joinFromBridge(
   listR: Array<Record<string, any>>,
   rJoinCol: string,

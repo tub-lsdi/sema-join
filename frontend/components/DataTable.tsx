@@ -1,12 +1,11 @@
-'use client';
-
-import styles from './DataTable.module.css';
+import styles from "./DataTable.module.css";
 
 interface Props {
   data: Array<Record<string, any>>;
+  highlightColumn?: string | null;
 }
 
-export default function DataTable({ data }: Props) {
+export default function DataTable({ data, highlightColumn }: Props) {
   if (!data || data.length === 0) return null;
 
   const columns = Object.keys(data[0]);
@@ -18,7 +17,14 @@ export default function DataTable({ data }: Props) {
         <thead>
           <tr>
             {columns.map((col) => (
-              <th key={col}>{col}</th>
+              <th
+                key={col}
+                className={
+                  col === highlightColumn ? styles.highlightedHeader : undefined
+                }
+              >
+                {col}
+              </th>
             ))}
           </tr>
         </thead>
@@ -26,8 +32,15 @@ export default function DataTable({ data }: Props) {
           {displayData.map((row, idx) => (
             <tr key={idx}>
               {columns.map((col) => (
-                <td key={col}>
-                  {typeof row[col] === 'object' ? JSON.stringify(row[col]) : String(row[col] ?? '')}
+                <td
+                  key={col}
+                  className={
+                    col === highlightColumn ? styles.highlightedCell : undefined
+                  }
+                >
+                  {typeof row[col] === "object"
+                    ? JSON.stringify(row[col])
+                    : String(row[col] ?? "")}
                 </td>
               ))}
             </tr>
