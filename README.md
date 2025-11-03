@@ -4,85 +4,115 @@ Implementation of the SEMA-JOIN paper for semantic table joins.
 
 ## Project Structure
 
-* `/src/sema_join`: The core Python library. Contains parsing, DB logic, and the join algorithms.
-* `/scripts`: Executable, one-time-use scripts for data processing.
-* `/data/corpus`: Location for input JSON (NDJSON) table files.
-* `/data/db`: Location for the generated DuckDB database.
+* `/backend`: Self-contained FastAPI backend application
+  * `/services`: Business logic and algorithms
+  * `/routes`: API endpoints
+  * `/corpus`: Corpus data and setup scripts
+  * `/utils`: Utility functions
+* `/frontend`: Next.js web application
 
 ## Prerequisites
-- Python 3.13
-- uv
+- Python 3.13+
+- uv (Python package manager)
+- Node.js 20+ and npm
 
-## Setup
-1. run `uv sync` to create virtual environment and install dependencies
-2. Activate the virtual environment (if this is not done automatically): `source .venv/bin/activate`
+## 🚀 Quick Start (Recommended)
 
-- when committing changes, run `uvx ruff format` to format the code with ruff (until we defined a pre-commit hook for that)
-## Workflow
-
-This project has a two-stage workflow:
-
-### 1. Pre-processing
-
-Run these scripts *once* to build the database and statistics.
-
-**Step 1: Ingest Corpus**
-This script reads all `.json` files from `data/corpus`, normalizes the data,
-and inserts all unique tables and their cells into the DuckDB database. It expects `.json` files that contains one 
-json structure per line. Per default the `data/corpus_test` directory is used. You may change that, by adjusting the
-path at the top of the file.
+We provide a convenient management script for easy setup and running:
 
 ```bash
-python scripts/01_ingest_corpus.py
+# Make the script executable (first time only)
+chmod +x sema-join.sh
+
+# Show help
+./sema-join.sh
+./sema-join.sh help
+
+# Use commands:
+./sema-join.sh install all        # Install all dependencies
+./sema-join.sh db                  # Setup database
+./sema-join.sh run                 # Run both servers
 ```
 
-**Step 2: Calculate Statistics**
-This script uses the ingested cell data to build the aggregate tables (values_index, row_cooccurrences) 
-and pre-computes the final pmi_scores table.
+### Available Commands
 
 ```bash
-python scripts/02_calculate_stats.py
+# Installation
+./sema-join.sh install backend     # Install Python dependencies
+./sema-join.sh install frontend    # Install Node.js dependencies
+./sema-join.sh install all         # Install everything
+
+# Running
+./sema-join.sh run                 # Start both servers
+./sema-join.sh run backend         # Start backend only (port 8000)
+./sema-join.sh run frontend        # Start frontend only (port 3000)
+
+# Database & Info
+./sema-join.sh db                  # Initialize database
+./sema-join.sh status              # Check project status
+./sema-join.sh help                # Show help
 ```
 
-### 2. On-Demand Joining
+## Manual Setup (Alternative)
 
-**Step 3: Joining**
-After pre-processing, the src library can be used by any app (Streamlit, API, etc.) to perform fast, on-demand joins.
-An example script is provided:
+### Backend Setup
+
+#### 1. Install Backend Dependencies
 ```bash
-python scripts/03_test_rsjp.py
+uv sync --extra backend
 ```
 
-## Database Schema
+#### 2. Activate Virtual Environment
+Before running any scripts or commands, activate the virtual environment:
+```bash
+source .venv/bin/activate
 ```
-cells:
-    table_id: BIGINT(64)
-    row_id: INTEGER
-    col_id: INTEGER
-    value: VARCHAR(0)
-    
-pmi_scores: 
-    v1: VARCHAR(0)
-    v2: VARCHAR(0)
-    num_tables_pair: BIGINT(64)
-    num_tables_v1: BIGINT(64)
-    num_tables_v2: BIGINT(64)
-    pmi: DOUBLE(53)
-    
-row_cooccurrences:
-    v1: VARCHAR(0)
-    v2: VARCHAR(0)
-    num_tables: BIGINT(64)
-    
-tables_meta:
-    table_id: BIGINT(64) NN
-    table_hash: VARCHAR(0)
-    source_file: VARCHAR(0)
-    url: VARCHAR(0)
-    + keys
-        #1: PK (table_id)
-        
-values_index:
-    value: VARCHAR(0)
-    num_tables: BIGINT(64)
+
+Or use `uv run` to run commands in the virtual environment without activating it:
+```bash
+uv run <command>
 ```
+
+#### 3. Setup Database
+Run this once to ingest corpus data and calculate PMI statistics:
+```bash
+./backend/setup_database.sh
+```
+
+Or run the setup scripts individually:
+```bash
+# Step 1: Ingest corpus data
+python backend/corpus/setup_db/01_ingest_corpus.py
+
+# Step 2: Calculate PMI statistics
+python backend/corpus/setup_db/02_calculate_stats.py
+```
+
+This will create the `corpus.db` database file in the project root.
+
+#### 4. Start the Backend Server
+```bash
+./backend/run_server.sh
+```
+
+Or run directly:
+```bash
+uv run uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+The API will be available at: http://localhost:8000
+
+### Frontend Setup
+
+#### 1. Install Frontend Dependencies
+```bash
+cd frontend
+npm install
+```
+
+#### 2. Start the Development Server
+```bash
+npm run dev
+```
+
+The frontend will be available at: http://localhost:3000

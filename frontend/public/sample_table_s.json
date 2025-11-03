@@ -1,0 +1,26 @@
+[
+  {
+    "country_code": "DE",
+    "tax_rate": 0.19,
+    "gdp": 3.8,
+    "standard": "ISO 3166-1"
+  },
+  {
+    "country_code": "GB",
+    "tax_rate": 0.20,
+    "gdp": 2.7,
+    "standard": "ISO 3166-1"
+  },
+  {
+    "country_code": "GE",
+    "tax_rate": 0.18,
+    "gdp": 0.016,
+    "standard": "FIPS 10-4"
+  },
+  {
+    "country_code": "FR",
+    "tax_rate": 0.20,
+    "gdp": 2.6,
+    "standard": "ISO 3166-1"
+  }
+]

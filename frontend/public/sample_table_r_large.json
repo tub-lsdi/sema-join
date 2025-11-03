@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "code": "DE",
+    "sales": 1250000,
+    "quarter": "Q1 2024"
+  },
+  {
+    "id": 2,
+    "code": "FR",
+    "sales": 985000,
+    "quarter": "Q1 2024"
+  },
+  {
+    "id": 3,
+    "code": "GB",
+    "sales": 870000,
+    "quarter": "Q1 2024"
+  }
+]

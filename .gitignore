@@ -1,5 +1,13 @@
 .idea/
 .venv
+.env
+uv.lock
 
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
 
-data/corpus
+# Database file
+corpus.db
+wiki_corpus.db
