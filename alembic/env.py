@@ -3,6 +3,8 @@ from logging.config import fileConfig
 import os
 import sys
 
+from dotenv import load_dotenv
+
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
@@ -30,6 +32,20 @@ config = context.config
 # This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
+
+load_dotenv()
+
+# Read DB connection pieces from environment
+db_user = os.getenv("APP_DB_USERNAME")
+db_pass = os.getenv("APP_DB_PASSWORD")
+db_host = os.getenv("APP_DB_HOST")
+db_port = os.getenv("APP_DB_PORT")
+db_name = os.getenv("APP_DB_DATABASE")
+
+sqlalchemy_url = f"mysql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}"
+print(sqlalchemy_url)
+
+config.set_main_option("sqlalchemy.url", sqlalchemy_url)
 
 # ensure the project root is on PYTHONPATH so we can import models
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
