@@ -18,11 +18,11 @@ def create_mysql_engine_and_sessionmaker() -> Tuple[object, sessionmaker]:
     Reads connection parameters from environment variables and URL-encodes
     username/password to be safe with special characters.
     """
-    db_host = os.getenv("DB_HOST", "localhost")
-    db_port = os.getenv("DB_PORT", "3306")
-    db_name = os.getenv("DB_DATABASE", "sema_app_db")
-    db_user = os.getenv("DB_USERNAME", "semajoin")
-    db_password = os.getenv("DB_PASSWORD", "semajoin")
+    db_host = os.getenv("APP_DB_HOST", "localhost")
+    db_port = os.getenv("APP_DB_PORT", "3306")
+    db_name = os.getenv("APP_DB_DATABASE", "sema_app_db")
+    db_user = os.getenv("APP_DB_USERNAME", "semajoin")
+    db_password = os.getenv("APP_DB_PASSWORD", "semajoin")
 
     db_user_enc = urllib.parse.quote_plus(db_user)
     db_password_enc = urllib.parse.quote_plus(db_password)
