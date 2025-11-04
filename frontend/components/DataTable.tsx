@@ -8,7 +8,9 @@ interface Props {
 export default function DataTable({ data, highlightColumn }: Props) {
   if (!data || data.length === 0) return null;
 
-  const columns = Object.keys(data[0]);
+  const columns = Array.from(
+    new Set(data.flatMap((row) => Object.keys(row || {})))
+  );
   const displayData = data.slice(0, 10);
 
   return (
