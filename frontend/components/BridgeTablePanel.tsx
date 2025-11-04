@@ -92,7 +92,8 @@ export default function BridgeTablePanel({
         <>
           <div className={styles.header}>
             <h2 className={styles.title}>
-              Bridge Table ({selectedEntries.size}/{bridgeTable.length} selected)
+              Bridge Table ({selectedEntries.size}/{bridgeTable.length}{" "}
+              selected)
             </h2>
             <div className={styles.headerControls}>
               <input
@@ -104,7 +105,7 @@ export default function BridgeTablePanel({
                 onChange={(e) => onTopKChange(parseInt(e.target.value) || 1)}
                 disabled={loading}
                 className={styles.selectCompact}
-                style={{ width: '80px' }}
+                style={{ width: "80px" }}
               />
               <select
                 id="join-method-recreate"
@@ -144,12 +145,17 @@ export default function BridgeTablePanel({
                   <th className={styles.checkboxCell}>Select</th>
                   <th>R Value</th>
                   <th>S Value</th>
-                  <th>PMI Score</th>
+                  <th>NPMI Score</th>
                 </tr>
               </thead>
               <tbody>
                 {bridgeTable.map((entry, idx) => (
-                  <tr key={idx} className={selectedEntries.has(idx) ? styles.selectedRow : ''}>
+                  <tr
+                    key={idx}
+                    className={
+                      selectedEntries.has(idx) ? styles.selectedRow : ""
+                    }
+                  >
                     <td className={styles.checkboxCell}>
                       <input
                         type="checkbox"
