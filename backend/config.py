@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     DUCKDB_TEMP_DIRECTORY: Path = PROJECT_ROOT
     TEMP_META_DIR_NAME: Path = "temp_parquet_meta"
     TEMP_CELLS_DIR_NAME: Path = "temp_parquet_cells"
+    TEMP_COLUMN_PAIRS_DIR_NAME: Path = "temp_parquet_column_pairs"
     DUCKDB_MEMORY_LIMIT: str = "10GB"
 
     LOG_LEVEL: str = "DEBUG"
@@ -45,6 +46,11 @@ class Settings(BaseSettings):
     def TEMP_CELLS_DIR(self) -> Path:
         """Provides the absolute path to the temp cells directory."""
         return self.DUCKDB_TEMP_DIRECTORY / self.TEMP_CELLS_DIR_NAME
+
+    @property
+    def TEMP_COLUMN_PAIRS_DIR(self) -> Path:
+        """Provides the absolute path to the temp column pairs directory."""
+        return self.DUCKDB_TEMP_DIRECTORY / self.TEMP_COLUMN_PAIRS_DIR_NAME
 
     @property
     def DEFAULT_DB_PATH(self) -> Path:
