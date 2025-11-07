@@ -218,7 +218,7 @@ def calculate_stats_cs(con: duckdb.DuckDBPyConnection) -> None:
                     (hp1.value1 != hp2.value1 OR hp1.value2 != hp2.value2)
             )
             -- Canonicalize the order of the two pairs
-            SELECT
+            SELECT DISTINCT 
                 {current_table_id} AS table_id,
                 CASE
                     WHEN p1_v1 < p2_v1 OR (p1_v1 = p2_v1 AND p1_v2 <= p2_v2) THEN p1_v1
