@@ -28,10 +28,12 @@ chmod +x sema-join.sh
 ./sema-join.sh
 ./sema-join.sh help
 
-# Use commands:
-./sema-join.sh install all        # Install all dependencies
-./sema-join.sh db                  # Setup database
-./sema-join.sh run                 # Run both servers
+# Quick Start:
+./sema-join.sh install all        # 1. Install all dependencies
+./sema-join.sh db                  # 2. Setup database
+./sema-join.sh ai setup            # 3. Setup AI (Ollama + Mistral)
+./sema-join.sh ai serve            # 4. Start Ollama service
+./sema-join.sh run                 # 5. Run both servers
 ```
 
 ### Available Commands
@@ -51,6 +53,11 @@ chmod +x sema-join.sh
 ./sema-join.sh db                  # Initialize database
 ./sema-join.sh status              # Check project status
 ./sema-join.sh help                # Show help
+
+# AI Commands
+./sema-join.sh ai setup            # Install Ollama & pull Mistral model
+./sema-join.sh ai status           # Check AI status
+./sema-join.sh ai serve            # Start Ollama service
 ```
 
 ## Manual Setup (Alternative)
@@ -116,3 +123,18 @@ npm run dev
 ```
 
 The frontend will be available at: http://localhost:3000
+
+## AI-Powered Column Matching
+
+Uses Ollama with Mistral LLM to suggest which columns should be joined based on semantic relationships.
+
+```bash
+# Setup (one time)
+./sema-join.sh ai setup
+
+# Start AI service
+./sema-join.sh ai serve
+
+# Check status
+./sema-join.sh ai status
+```

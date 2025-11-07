@@ -1,6 +1,3 @@
-/**
- * API client for semantic join backend
- */
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -25,6 +22,32 @@ interface JoinResponse {
   total_records: number;
   total_r_records: number;
   matched_count: number;
+}
+
+export interface ColumnJoinRecommendation {
+  r_column: string;
+  s_column: string;
+  confidence: number;
+  reason: string;
+}
+
+export interface AIColumnMatchResponse {
+  recommended_joins: ColumnJoinRecommendation[];
+  analysis: string;
+  model_used: string;
+  table_r_columns: string[];
+  table_s_columns: string[];
+  rows_analyzed_r: number;
+  rows_analyzed_s: number;
+}
+
+export interface OllamaStatus {
+  ollama_running: boolean;
+  model_requested?: string;
+  model_available?: boolean;
+  available_models?: string[];
+  error?: string;
+  suggestion?: string;
 }
 
 // API Functions
@@ -70,6 +93,42 @@ export async function joinFromBridge(
   if (!response.ok) {
     const error = await response.json().catch(() => ({ detail: 'Failed to perform join' }));
     throw new Error(error.detail);
+  }
+
+  return response.json();
+}
+
+export async function getAIColumnRecommendations(
+  tableR: Array<Record<string, any>>,
+  tableS: Array<Record<string, any>>,
+  maxSamples: number = 100
+): Promise<AIColumnMatchResponse> {
+  const response = await fetch(`${API_BASE_URL}/ai/match-columns`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      table_r: tableR,
+      table_s: tableS,
+      max_samples: maxSamples,
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ detail: 'Failed to get AI recommendations' }));
+    throw new Error(error.detail || error.error || 'Failed to get AI recommendations');
+  }
+
+  return response.json();
+}
+
+export async function checkOllamaStatus(): Promise<OllamaStatus> {
+  const response = await fetch(`${API_BASE_URL}/ai/status`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to check Ollama status');
   }
 
   return response.json();

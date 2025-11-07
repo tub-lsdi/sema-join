@@ -218,6 +218,122 @@ setup_database() {
     fi
 }
 
+# AI-related functions
+ai_setup() {
+    log_header "Setting Up AI (Ollama + Mistral)"
+    
+    # Check if Ollama is already installed
+    if command_exists ollama; then
+        log_success "Ollama is already installed"
+        OLLAMA_VERSION=$(ollama --version 2>/dev/null || echo "unknown")
+        echo "  Version: $OLLAMA_VERSION"
+        echo ""
+    else
+        log_info "Installing Ollama..."
+        echo ""
+        
+        # Detect OS
+        if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+            log_info "Detected Linux. Installing Ollama..."
+            curl -fsSL https://ollama.ai/install.sh | sh
+        elif [[ "$OSTYPE" == "darwin"* ]]; then
+            log_info "Detected macOS. Installing Ollama..."
+            curl -fsSL https://ollama.ai/install.sh | sh
+        else
+            log_error "Unsupported OS. Please install Ollama manually from:"
+            echo "  https://ollama.ai"
+            return 1
+        fi
+        
+        log_success "Ollama installed successfully!"
+        echo ""
+    fi
+    
+    # Pull Mistral model
+    log_info "Pulling Mistral model (this may take a few minutes, ~4GB download)..."
+    echo ""
+    
+    if ollama pull mistral; then
+        log_success "Mistral model downloaded successfully!"
+        echo ""
+        
+        log_success "AI setup complete!"
+        echo ""
+        log_info "Next steps:"
+        echo "  1. Start Ollama: ./sema-join.sh ai serve"
+        echo "  2. Start backend: ./sema-join.sh run backend"
+        echo "  3. Start frontend: ./sema-join.sh run frontend"
+        echo ""
+    else
+        log_error "Failed to pull Mistral model"
+        return 1
+    fi
+}
+
+ai_status() {
+    log_header "AI Status"
+    
+    echo "🤖 Ollama Status:"
+    echo ""
+    
+    # Check if Ollama is installed
+    if command_exists ollama; then
+        OLLAMA_VERSION=$(ollama --version 2>/dev/null || echo "unknown")
+        log_success "Ollama installed: $OLLAMA_VERSION"
+    else
+        log_error "Ollama not installed"
+        echo ""
+        log_info "Install with: ./sema-join.sh ai setup"
+        return 1
+    fi
+    
+    # Check if Ollama is running
+    if curl -s http://localhost:11434/api/tags >/dev/null 2>&1; then
+        log_success "Ollama service is running on http://localhost:11434"
+        
+        # Get list of models
+        echo ""
+        log_info "Checking for Mistral model..."
+        
+        if ollama list 2>/dev/null | grep -q "mistral"; then
+            log_success "Mistral model is available"
+        else
+            log_warning "Mistral model not found"
+            echo ""
+            log_info "Pull model with: ollama pull mistral"
+        fi
+    else
+        log_warning "Ollama service is not running"
+        echo ""
+        log_info "Start with: ./sema-join.sh ai serve"
+    fi
+    
+    echo ""
+}
+
+ai_serve() {
+    log_header "Starting Ollama Service"
+    
+    if ! command_exists ollama; then
+        log_error "Ollama is not installed"
+        echo ""
+        log_info "Install with: ./sema-join.sh ai setup"
+        return 1
+    fi
+    
+    # Check if already running
+    if curl -s http://localhost:11434/api/tags >/dev/null 2>&1; then
+        log_warning "Ollama is already running on http://localhost:11434"
+        return 0
+    fi
+    
+    log_info "Starting Ollama on http://localhost:11434"
+    log_info "Press CTRL+C to stop the service"
+    echo ""
+    
+    ollama serve
+}
+
 # Show project status
 show_status() {
     log_header "Project Status"
@@ -247,6 +363,21 @@ show_status() {
         log_success "npm: v$NPM_VERSION"
     else
         log_error "npm: not installed"
+    fi
+    
+    # Check Ollama
+    if command_exists ollama; then
+        OLLAMA_VERSION=$(ollama --version 2>/dev/null || echo "unknown")
+        log_success "ollama: $OLLAMA_VERSION"
+        
+        # Check if running
+        if curl -s http://localhost:11434/api/tags >/dev/null 2>&1; then
+            log_success "  → Service running ✓"
+        else
+            log_warning "  → Service not running (start with: ./sema-join.sh ai serve)"
+        fi
+    else
+        log_warning "ollama: not installed (optional, for AI features)"
     fi
     
     echo ""
@@ -312,13 +443,20 @@ show_help() {
     echo -e "  ${GREEN}status${NC}"
     echo "                     Show project status and dependencies"
     echo ""
+    echo -e "  ${GREEN}ai${NC} <command>"
+    echo "    setup            Install Ollama and pull Mistral model"
+    echo "    status           Check AI status"
+    echo "    serve            Start Ollama service"
+    echo ""
     echo -e "  ${GREEN}help${NC}"
     echo "                     Show this help message"
     echo ""
     echo -e "${YELLOW}Quick Start:${NC}"
     echo "  1. ./sema-join.sh install all"
     echo "  2. ./sema-join.sh db"
-    echo "  3. ./sema-join.sh run"
+    echo "  3. ./sema-join.sh ai setup"
+    echo "  4. ./sema-join.sh ai serve"
+    echo "  5. ./sema-join.sh run"
     echo ""
 }
 
@@ -354,6 +492,15 @@ main() {
             ;;
         status)
             show_status
+            ;;
+        ai)
+            case "$2" in
+                setup) ai_setup ;;
+                status) ai_status ;;
+                serve) ai_serve ;;
+                "") log_error "AI command requires an argument"; echo ""; echo "Available: setup, status, serve"; exit 1 ;;
+                *) log_error "Unknown ai command: $2"; echo ""; echo "Available: setup, status, serve"; exit 1 ;;
+            esac
             ;;
         help|--help|-h)
             show_help

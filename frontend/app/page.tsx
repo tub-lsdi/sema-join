@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Header from '@/components/Header';
 import ErrorAlert from '@/components/ErrorAlert';
 import TableUploadPanel from '@/components/TableUploadPanel';
+import AISuggestionPanel from '@/components/AISuggestionPanel';
 import BridgeTablePanel from '@/components/BridgeTablePanel';
 import JoinResultPanel from '@/components/JoinResultPanel';
 import { createBridgeTable, joinFromBridge, type BridgeTableEntry, type JoinMethod } from '@/lib/api';
@@ -121,6 +122,18 @@ export default function Home() {
     setSelectedBridgeEntries(new Set());
   };
 
+  const handleAIRecommendationAccept = (rColumn: string, sColumn: string) => {
+    // Set the recommended columns
+    setRJoinCol(rColumn);
+    setSJoinCol(sColumn);
+    
+    // Clear previous results
+    setBridgeTable([]);
+    setSelectedBridgeEntries(new Set());
+    setJoinResult([]);
+    setError('');
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
@@ -146,6 +159,15 @@ export default function Home() {
             disabled={loading}
           />
         </div>
+
+        {tableR.length > 0 && tableS.length > 0 && (
+          <AISuggestionPanel
+            tableR={tableR}
+            tableS={tableS}
+            onRecommendationAccept={handleAIRecommendationAccept}
+            disabled={loading}
+          />
+        )}
 
         {(tableR.length > 0 || tableS.length > 0) && (
           <BridgeTablePanel
