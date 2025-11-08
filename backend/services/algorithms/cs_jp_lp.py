@@ -28,7 +28,9 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         Args:
             list_r: Normalized list of strings from R set
             list_s: Normalized list of strings from S set
-            top_k: Number of top candidates to return per R value
+            top_k: Not used in CS-JP-LP. Unlike RS-JP which can return multiple 
+                   candidates per R value, CS-JP-LP is a global optimization problem 
+                   that returns a single optimal many-to-one mapping.
 
         Returns:
             List of dictionaries with r_val, s_val, and npmi fields.
