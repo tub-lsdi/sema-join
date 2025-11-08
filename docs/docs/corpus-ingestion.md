@@ -50,7 +50,7 @@ This will execute both ingestion steps in sequence:
 - Extract and normalize table values
 - Calculate value frequencies
 - Compute co-occurrence statistics
-- Generate PMI scores
+- Generate NPMI scores
 - Create database indexes
 
 ## Database Location
