@@ -12,18 +12,17 @@ class TestCSJPLPPaperExample3(unittest.TestCase):
         self.list_r = ["Germany", "United Kingdom"]
         self.list_s = ["DE", "GB", "GE"]
 
-        # Column-level PMI scores from paper
-        self.paper_column_pmi = {
+        # Column-level PMI scores from paper - ISO is better
+        self.pmi_iso_better = {
             ("Germany", "DE", "United Kingdom", "GB"): 0.60,
             ("Germany", "GE", "United Kingdom", "GB"): 0.05,
         }
-
-        # Expected results from paper
-        self.expected_mapping = {
-            "Germany": "DE",
-            "United Kingdom": "GB"
+        
+        # Reversed scenario - FIPS is better (hypothetical)
+        self.pmi_fips_better = {
+            ("Germany", "DE", "United Kingdom", "GB"): 0.05,
+            ("Germany", "GE", "United Kingdom", "GB"): 0.60,
         }
-        self.expected_score = 0.60
 
     def _calculate_total_score(self, mapping, column_pmi_scores):
         """Calculate total objective score: Σ w_ijkl where both pairs are matched."""
@@ -33,76 +32,143 @@ class TestCSJPLPPaperExample3(unittest.TestCase):
                 total += w_ijkl
         return total
 
-    def test_cs_jp_lp_output_mapping(self):
-        """Test that CS-JP-LP produces correct join mapping."""
+    def test_cs_jp_lp_chooses_higher_column_score_iso(self):
+        """Test that CS-JP-LP picks ISO when ISO has higher column-level score."""
         # Arrange
         mock_conn = MagicMock()
         algo = CSJPLPAlgorithm(mock_conn)
-        algo._fetch_pmi_scores = lambda conn: self.paper_column_pmi
+        algo._fetch_pmi_scores = lambda conn: self.pmi_iso_better
 
         # Act
         result = algo.create_bridge(self.list_r, self.list_s, top_k=10)
         result_mapping = {r["r_val"]: r["s_val"] for r in result}
 
-        # Assert
+        # Assert - Should choose ISO (DE) because column score is higher (0.60 > 0.05)
         self.assertEqual(result_mapping["Germany"], "DE",
-                         "Germany should map to DE (ISO standard)")
+                         "Should choose DE when (Germany,DE,UK,GB) score is higher")
         self.assertEqual(result_mapping["United Kingdom"], "GB",
-                         "United Kingdom should map to GB")
-        self.assertEqual(result_mapping, self.expected_mapping,
-                         "Complete mapping should match paper's expected output")
-
-    def test_cs_jp_lp_objective_score(self):
-        """Test that CS-JP-LP produces correct objective score."""
+                         "UK should map to GB in ISO scenario")
+        
+        # Verify that the chosen solution has the higher score
+        chosen_score = self._calculate_total_score(result_mapping, self.pmi_iso_better)
+        alternative_mapping = {"Germany": "GE", "United Kingdom": "GB"}
+        alternative_score = self._calculate_total_score(alternative_mapping, self.pmi_iso_better)
+        self.assertGreater(chosen_score, alternative_score,
+                          "Chosen solution should have higher score than alternative")
+        
+    def test_cs_jp_lp_chooses_higher_column_score_fips(self):
+        """Test that CS-JP-LP picks FIPS when FIPS has higher column-level score."""
         # Arrange
         mock_conn = MagicMock()
         algo = CSJPLPAlgorithm(mock_conn)
-        algo._fetch_pmi_scores = lambda conn: self.paper_column_pmi
+        algo._fetch_pmi_scores = lambda conn: self.pmi_fips_better
 
         # Act
         result = algo.create_bridge(self.list_r, self.list_s, top_k=10)
         result_mapping = {r["r_val"]: r["s_val"] for r in result}
-        total_score = self._calculate_total_score(
-            result_mapping, self.paper_column_pmi)
 
+        # Assert - Should choose FIPS (GE) because column score is higher (0.60 > 0.05)
+        self.assertEqual(result_mapping["Germany"], "GE",
+                         "Should choose GE when (Germany,GE,UK,GB) score is higher")
+        self.assertEqual(result_mapping["United Kingdom"], "GB",
+                         "UK should map to GB in FIPS scenario")
+        
+        # Verify that the chosen solution has the higher score
+        chosen_score = self._calculate_total_score(result_mapping, self.pmi_fips_better)
+        alternative_mapping = {"Germany": "DE", "United Kingdom": "GB"}
+        alternative_score = self._calculate_total_score(alternative_mapping, self.pmi_fips_better)
+        self.assertGreater(chosen_score, alternative_score,
+                          "Chosen solution should have higher score than alternative")
+
+    def test_cs_jp_lp_maximizes_objective_function(self):
+        """Test that CS-JP-LP maximizes the objective function."""
+        # Arrange
+        mock_conn = MagicMock()
+        algo = CSJPLPAlgorithm(mock_conn)
+        algo._fetch_pmi_scores = lambda conn: self.pmi_iso_better
+
+        # Act
+        result = algo.create_bridge(self.list_r, self.list_s, top_k=10)
+        result_mapping = {r["r_val"]: r["s_val"] for r in result}
+        
+        # Calculate score for all possible valid mappings
+        all_possible_mappings = [
+            {"Germany": "DE", "United Kingdom": "GB"},
+            {"Germany": "GE", "United Kingdom": "GB"},
+            {"Germany": "DE", "United Kingdom": "GE"},
+            {"Germany": "GE", "United Kingdom": "GE"},
+            {"Germany": "DE", "United Kingdom": "DE"},
+            {"Germany": "GE", "United Kingdom": "DE"},
+        ]
+        
+        chosen_score = self._calculate_total_score(result_mapping, self.pmi_iso_better)
+        
+        # Assert that chosen solution has score >= all other solutions
+        for alternative_mapping in all_possible_mappings:
+            alternative_score = self._calculate_total_score(alternative_mapping, self.pmi_iso_better)
+            self.assertGreaterEqual(chosen_score, alternative_score,
+                                   f"Chosen solution (score={chosen_score:.4f}) should be >= "
+                                   f"alternative {alternative_mapping} (score={alternative_score:.4f})")
+
+    def test_cs_jp_lp_with_complex_scenario(self):
+        """Test CS-JP-LP with more complex PMI scores to verify optimization."""
+        # Create a scenario with 3 possible Germany codes and complex interactions
+        list_r = ["Germany", "United Kingdom", "France"]
+        list_s = ["DE", "GB", "FR", "GE"]
+        
+        # Complex PMI scores where optimal solution is not immediately obvious
+        complex_pmi = {
+            # Germany-UK pairs
+            ("Germany", "DE", "United Kingdom", "GB"): 0.50,
+            ("Germany", "GE", "United Kingdom", "GB"): 0.30,
+            # Germany-France pairs
+            ("Germany", "DE", "France", "FR"): 0.45,
+            ("Germany", "GE", "France", "FR"): 0.25,
+            # UK-France pairs
+            ("United Kingdom", "GB", "France", "FR"): 0.40,
+        }
+        # Optimal solution should be: Germany→DE, UK→GB, France→FR
+        # Total score: 0.50 + 0.45 + 0.40 = 1.35
+        
+        mock_conn = MagicMock()
+        algo = CSJPLPAlgorithm(mock_conn)
+        algo._fetch_pmi_scores = lambda conn: complex_pmi
+
+        # Act
+        result = algo.create_bridge(list_r, list_s, top_k=10)
+        result_mapping = {r["r_val"]: r["s_val"] for r in result}
+        
         # Assert
-        self.assertAlmostEqual(total_score, self.expected_score, places=4,
-                               msg="Total objective score should be 0.6000")
-
-    def test_cs_jp_lp_semantic_consistency(self):
-        """Test that CS-JP-LP ensures semantic consistency (both ISO standard)."""
-        # Arrange
-        mock_conn = MagicMock()
-        algo = CSJPLPAlgorithm(mock_conn)
-        algo._fetch_pmi_scores = lambda conn: self.paper_column_pmi
-
-        # Act
-        result = algo.create_bridge(self.list_r, self.list_s, top_k=10)
-        result_mapping = {r["r_val"]: r["s_val"] for r in result}
-
-        # Assert - Germany should use ISO (DE) not FIPS (GE)
-        self.assertEqual(result_mapping["Germany"], "DE",
-                         "Germany should use ISO code (DE), not FIPS code (GE)")
-
-        # Assert - This ensures consistency: both Germany and UK use ISO standard
-        # DE is ISO for Germany, GB is ISO for UK
-        # If Germany mapped to GE (FIPS), it would be inconsistent with GB (ISO)
-        self.assertNotEqual(result_mapping["Germany"], "GE",
-                            "Germany should NOT use FIPS code (GE) which would be inconsistent")
+        chosen_score = self._calculate_total_score(result_mapping, complex_pmi)
+        
+        # Check against the expected optimal solution
+        expected_optimal = {"Germany": "DE", "United Kingdom": "GB", "France": "FR"}
+        optimal_score = self._calculate_total_score(expected_optimal, complex_pmi)
+        
+        self.assertAlmostEqual(chosen_score, optimal_score, places=4,
+                              msg=f"Chosen score ({chosen_score:.4f}) should equal optimal ({optimal_score:.4f})")
+        
+        # Verify it's better than a suboptimal choice (Germany→GE)
+        suboptimal = {"Germany": "GE", "United Kingdom": "GB", "France": "FR"}
+        suboptimal_score = self._calculate_total_score(suboptimal, complex_pmi)
+        
+        self.assertGreater(chosen_score, suboptimal_score,
+                          f"Chosen solution ({chosen_score:.4f}) should be better than "
+                          f"suboptimal ({suboptimal_score:.4f})")
 
     def test_cs_jp_lp_column_level_advantage(self):
         """
         Test that CS-JP-LP correctly uses column-level scores.
 
         This test verifies the key insight from the paper:
-        Even though row-level w(Germany, GE) = 0.80 > w(Germany, DE) = 0.79,
-        CS-JP-LP correctly picks Germany→DE because the column-level score
-        w(Germany, DE, UK, GB) = 0.60 >> w(Germany, GE, UK, GB) = 0.05
+        Even though row-level scores might favor one choice (e.g., w(Germany, GE)),
+        CS-JP-LP correctly considers column-level interactions and picks the
+        globally optimal solution based on w(Germany, DE, UK, GB) vs w(Germany, GE, UK, GB).
         """
         # Arrange
         mock_conn = MagicMock()
         algo = CSJPLPAlgorithm(mock_conn)
-        algo._fetch_pmi_scores = lambda conn: self.paper_column_pmi
+        algo._fetch_pmi_scores = lambda conn: self.pmi_iso_better
 
         # Act
         result = algo.create_bridge(self.list_r, self.list_s, top_k=10)
@@ -112,10 +178,8 @@ class TestCSJPLPPaperExample3(unittest.TestCase):
         mapping_iso = {"Germany": "DE", "United Kingdom": "GB"}
         mapping_fips = {"Germany": "GE", "United Kingdom": "GB"}
 
-        score_iso = self._calculate_total_score(
-            mapping_iso, self.paper_column_pmi)
-        score_fips = self._calculate_total_score(
-            mapping_fips, self.paper_column_pmi)
+        score_iso = self._calculate_total_score(mapping_iso, self.pmi_iso_better)
+        score_fips = self._calculate_total_score(mapping_fips, self.pmi_iso_better)
 
         # Assert - ISO mapping should have higher column-level score
         self.assertGreater(score_iso, score_fips,
@@ -132,7 +196,7 @@ class TestCSJPLPPaperExample3(unittest.TestCase):
         # Arrange
         mock_conn = MagicMock()
         algo = CSJPLPAlgorithm(mock_conn)
-        algo._fetch_pmi_scores = lambda conn: self.paper_column_pmi
+        algo._fetch_pmi_scores = lambda conn: self.pmi_iso_better
 
         # Act
         result = algo.create_bridge(self.list_r, self.list_s, top_k=10)
@@ -150,7 +214,7 @@ class TestCSJPLPPaperExample3(unittest.TestCase):
         # Arrange
         mock_conn = MagicMock()
         algo = CSJPLPAlgorithm(mock_conn)
-        algo._fetch_pmi_scores = lambda conn: self.paper_column_pmi
+        algo._fetch_pmi_scores = lambda conn: self.pmi_iso_better
 
         # Act
         result = algo.create_bridge(self.list_r, self.list_s, top_k=10)
@@ -176,14 +240,14 @@ class TestCSJPLPPaperExample3Integration(unittest.TestCase):
         # Arrange
         list_r = ["Germany", "United Kingdom"]
         list_s = ["DE", "GB", "GE"]
-        paper_column_pmi = {
+        pmi_scores = {
             ("Germany", "DE", "United Kingdom", "GB"): 0.60,
             ("Germany", "GE", "United Kingdom", "GB"): 0.05,
         }
 
         mock_conn = MagicMock()
         algo = CSJPLPAlgorithm(mock_conn)
-        algo._fetch_pmi_scores = lambda conn: paper_column_pmi
+        algo._fetch_pmi_scores = lambda conn: pmi_scores
 
         # Act
         result = algo.create_bridge(list_r, list_s, top_k=10)
@@ -206,14 +270,14 @@ class TestCSJPLPPaperExample3Integration(unittest.TestCase):
         # Arrange
         list_r = ["Germany", "United Kingdom"]
         list_s = ["DE", "GB", "GE"]
-        paper_column_pmi = {
+        pmi_scores = {
             ("Germany", "DE", "United Kingdom", "GB"): 0.60,
             ("Germany", "GE", "United Kingdom", "GB"): 0.05,
         }
 
         mock_conn = MagicMock()
         algo = CSJPLPAlgorithm(mock_conn)
-        algo._fetch_pmi_scores = lambda conn: paper_column_pmi
+        algo._fetch_pmi_scores = lambda conn: pmi_scores
 
         # Act
         result = algo.create_bridge(list_r, list_s, top_k=10)

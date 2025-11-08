@@ -1,0 +1,15 @@
+[
+  {
+    "country_code": "DE",
+    "standard": "ISO 3166-1"
+  },
+  {
+    "country_code": "GB",
+    "standard": "ISO 3166-1"
+  },
+  {
+    "country_code": "GE",
+    "standard": "FIPS 10-4"
+  }
+]
+
