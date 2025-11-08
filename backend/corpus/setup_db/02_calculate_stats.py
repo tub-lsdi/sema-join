@@ -292,35 +292,7 @@ def calculate_stats_cs(con: duckdb.DuckDBPyConnection) -> None:
     """)
     con.commit()
     logger.info("Created column_pmi_scores (CS-JP-LP).")
-    
-    # --- 3. Compute Normalized PMI (NPMI) for column-level scores ---
-    logger.info("Computing normalized column-level PMI scores...")
-    con.execute("DROP TABLE IF EXISTS column_npmi_scores;")
-    con.execute(f"""
-        CREATE TABLE column_npmi_scores AS
-        SELECT
-            ri,
-            sj,
-            rk,
-            sl,
-            column_pmi,
-            -- Handle the p(x, y) = 1 edge case, which results in 0/0
-            CASE
-                WHEN num_tables_quad = {N} THEN 1.0
-                ELSE column_pmi / -LOG(num_tables_quad / CAST({N} AS DOUBLE))
-            END AS column_npmi
-        FROM column_pmi_scores;
-    """)
-    con.commit()
-    
-    # Create index for efficient lookups
-    con.execute("""
-        CREATE INDEX IF NOT EXISTS idx_column_npmi_all 
-        ON column_npmi_scores(ri, sj, rk, sl);
-    """)
-    con.commit()
-    logger.info("Created column_npmi_scores (CS-JP-LP with normalized scores).")
-    
+
     return
 
 
