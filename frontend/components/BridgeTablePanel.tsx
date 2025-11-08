@@ -1,7 +1,12 @@
 "use client";
 
-import DataTable from "./DataTable";
-import { type BridgeTableEntry, type JoinMethod } from "@/lib/api";
+import { useState } from "react";
+import {
+  type BridgeTableEntry,
+  type JoinMethod,
+  suggestBestBridgeEntries,
+} from "@/lib/api";
+import { getErrorMessage } from "@/lib/utils";
 import styles from "./BridgeTablePanel.module.css";
 
 interface Props {
@@ -16,6 +21,7 @@ interface Props {
   onToggleEntry: (index: number) => void;
   onSelectAll: () => void;
   onDeselectAll: () => void;
+  onAISuggestBest: (indices: number[]) => void;
   canCreate: boolean;
   canJoin: boolean;
   loading: boolean;
@@ -33,10 +39,32 @@ export default function BridgeTablePanel({
   onToggleEntry,
   onSelectAll,
   onDeselectAll,
+  onAISuggestBest,
   canCreate,
   canJoin,
   loading,
 }: Props) {
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState("");
+
+  const handleAISuggest = async () => {
+    setAiLoading(true);
+    setAiError("");
+
+    try {
+      const result = await suggestBestBridgeEntries(bridgeTable);
+      onAISuggestBest(result.selected_indices);
+    } catch (err) {
+      setAiError(getErrorMessage(err, "Failed to get AI suggestions"));
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  // AI suggest button is only shown for RS-JP with top_k > 1
+  const showAISuggestButton =
+    joinMethod === "row" && topK > 1 && bridgeTable.length > 0;
+
   return (
     <div className={styles.panel}>
       {bridgeTable.length === 0 ? (
@@ -59,26 +87,101 @@ export default function BridgeTablePanel({
               disabled={loading}
               className={styles.select}
             >
-              <option value="row">RS-JP</option>
-              <option value="column">CS-JP-LP</option>
+              <option value="row">RS-JP (Row Method)</option>
+              <option value="column">CS-JP-LP (Column Method)</option>
             </select>
+
+            {/* Algorithm Explanation */}
+            <div className={styles.algoExplanation}>
+              {joinMethod === "row" ? (
+                <div className={styles.algoCard}>
+                  <div className={styles.algoHeader}>
+                    <strong>RS-JP: Row-Score Join Prediction</strong>
+                    <span className={styles.algoBadge}>Baseline</span>
+                  </div>
+                  <div className={styles.algoDetails}>
+                    <p className={styles.algoDescription}>
+                      A greedy, per-row optimization algorithm that
+                      independently identifies candidate matches for each value
+                      based on pairwise NPMI scores derived from corpus
+                      co-occurrence statistics.
+                    </p>
+                    <div className={styles.algoProperties}>
+                      <div className={styles.propertyItem}>
+                        <span className={styles.propertyLabel}>Approach:</span>
+                        <span className={styles.propertyValue}>
+                          Independent row-level matching
+                        </span>
+                      </div>
+                      <div className={styles.propertyItem}>
+                        <span className={styles.propertyLabel}>
+                          Complexity:
+                        </span>
+                        <span className={styles.propertyValue}>
+                          Simple and efficient
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className={styles.algoCard}>
+                  <div className={styles.algoHeader}>
+                    <strong>
+                      CS-JP-LP: Column-Score Join Prediction with Linear
+                      Programming
+                    </strong>
+                    <span className={styles.algoBadge}>Advanced</span>
+                  </div>
+                  <div className={styles.algoDetails}>
+                    <p className={styles.algoDescription}>
+                      A global optimization algorithm that formulates join
+                      prediction as a Linear Program, maximizing aggregate
+                      column-level PMI scores while ensuring consistent mapping
+                      assignments across all rows.
+                    </p>
+                    <div className={styles.algoProperties}>
+                      <div className={styles.propertyItem}>
+                        <span className={styles.propertyLabel}>Approach:</span>
+                        <span className={styles.propertyValue}>
+                          Global consistency optimization
+                        </span>
+                      </div>
+                      <div className={styles.propertyItem}>
+                        <span className={styles.propertyLabel}>
+                          Complexity:
+                        </span>
+                        <span className={styles.propertyValue}>
+                          Polynomial time (LP relaxation + rounding)
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className={styles.joinMethodSelector}>
-            <label htmlFor="top-k" className={styles.label}>
-              Top K Matches:
-            </label>
-            <input
-              id="top-k"
-              type="number"
-              min="1"
-              max="100"
-              value={topK}
-              onChange={(e) => onTopKChange(parseInt(e.target.value) || 1)}
-              disabled={loading}
-              className={styles.select}
-            />
-          </div>
+          {joinMethod === "row" && (
+            <div className={styles.joinMethodSelector}>
+              <label htmlFor="top-k" className={styles.label}>
+                Top K Matches:
+              </label>
+              <input
+                id="top-k"
+                type="number"
+                min="1"
+                max="100"
+                value={topK}
+                onChange={(e) => onTopKChange(parseInt(e.target.value) || 1)}
+                disabled={loading}
+                className={styles.select}
+              />
+              <p className={styles.helpText}>
+                Number of candidate matches to show per row.
+              </p>
+            </div>
+          )}
 
           <button
             onClick={onCreateBridge}
@@ -93,20 +196,23 @@ export default function BridgeTablePanel({
           <div className={styles.header}>
             <h2 className={styles.title}>
               Bridge Table ({selectedEntries.size}/{bridgeTable.length}{" "}
-              selected)
+              selected) - {joinMethod === "row" ? "RS-JP" : "CS-JP-LP"}
             </h2>
             <div className={styles.headerControls}>
-              <input
-                id="top-k-recreate"
-                type="number"
-                min="1"
-                max="100"
-                value={topK}
-                onChange={(e) => onTopKChange(parseInt(e.target.value) || 1)}
-                disabled={loading}
-                className={styles.selectCompact}
-                style={{ width: "80px" }}
-              />
+              {joinMethod === "row" && (
+                <input
+                  id="top-k-recreate"
+                  type="number"
+                  min="1"
+                  max="100"
+                  value={topK}
+                  onChange={(e) => onTopKChange(parseInt(e.target.value) || 1)}
+                  disabled={loading}
+                  className={styles.selectCompact}
+                  style={{ width: "80px" }}
+                  title="Top K matches per row"
+                />
+              )}
               <select
                 id="join-method-recreate"
                 value={joinMethod}
@@ -130,22 +236,95 @@ export default function BridgeTablePanel({
           </div>
 
           <div className={styles.selectionControls}>
-            <button onClick={onSelectAll} className={styles.selectButton}>
+            <button
+              type="button"
+              onClick={onSelectAll}
+              className={styles.selectButton}
+            >
               Select All
             </button>
-            <button onClick={onDeselectAll} className={styles.selectButton}>
+            <button
+              type="button"
+              onClick={onDeselectAll}
+              className={styles.selectButton}
+            >
               Deselect All
             </button>
+            {showAISuggestButton && (
+              <button
+                type="button"
+                onClick={handleAISuggest}
+                disabled={aiLoading || loading}
+                className={styles.aiSuggestButton}
+                title="Use AI to pick the best match for each row"
+              >
+                {aiLoading ? (
+                  <>
+                    <span className={styles.spinner}></span>
+                    AI Analyzing...
+                  </>
+                ) : (
+                  <>
+                    <span className={styles.icon}>✨</span>
+                    AI Suggest Best
+                  </>
+                )}
+              </button>
+            )}
           </div>
+
+          {aiError && (
+            <div className={styles.aiError}>
+              <strong>AI Error:</strong> {aiError}
+            </div>
+          )}
 
           <div className={styles.tableWrapper}>
             <table className={styles.table}>
               <thead>
                 <tr>
                   <th className={styles.checkboxCell}>Select</th>
-                  <th>R Value</th>
-                  <th>S Value</th>
-                  <th>NPMI Score</th>
+                  <th>
+                    R Value
+                    <span
+                      className={styles.tooltipIcon}
+                      title="Source values from the left input table (R)"
+                    >
+                      ⓘ
+                    </span>
+                  </th>
+                  <th>
+                    S Value
+                    <span
+                      className={styles.tooltipIcon}
+                      title="Target values from the right input table (S)"
+                    >
+                      ⓘ
+                    </span>
+                  </th>
+                  <th>
+                    {joinMethod === "row" ? (
+                      <>
+                        NPMI Score
+                        <span
+                          className={styles.tooltipIcon}
+                          title="Normalized Pointwise Mutual Information: Quantifies pairwise statistical co-occurrence strength between values in the corpus. Range: [-1, +1]. Higher values indicate stronger semantic association."
+                        >
+                          ⓘ
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        Match Score
+                        <span
+                          className={styles.tooltipIcon}
+                          title="Aggregate PMI score: Represents the sum of column-level co-occurrence scores for this assignment within the global optimization objective. Higher values indicate better consistency with the overall mapping."
+                        >
+                          ⓘ
+                        </span>
+                      </>
+                    )}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -154,6 +333,11 @@ export default function BridgeTablePanel({
                     key={idx}
                     className={
                       selectedEntries.has(idx) ? styles.selectedRow : ""
+                    }
+                    title={
+                      joinMethod === "column"
+                        ? "Aggregate column-level PMI score (sum of co-occurrence scores)"
+                        : "Normalized pointwise mutual information (pairwise score)"
                     }
                   >
                     <td className={styles.checkboxCell}>

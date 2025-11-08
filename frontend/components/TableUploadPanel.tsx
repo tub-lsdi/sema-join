@@ -3,14 +3,18 @@
 import { useRef, useState } from 'react';
 import InteractiveDataTable from './InteractiveDataTable';
 import TableModal from './TableModal';
+import { type TableRow } from '@/lib/api';
+import { parseJSONFile } from '@/lib/utils';
+import { ERROR_MESSAGES } from '@/lib/constants';
 import styles from './TableUploadPanel.module.css';
 
 interface Props {
   title: string;
-  data: Array<Record<string, any>>;
+  data: TableRow[];
   selectedColumn: string;
-  onFileLoad: (data: any[]) => void;
+  onFileLoad: (data: TableRow[]) => void;
   onColumnSelect: (column: string) => void;
+  onError?: (error: string) => void;
   disabled?: boolean;
 }
 
@@ -20,6 +24,7 @@ export default function TableUploadPanel({
   selectedColumn,
   onFileLoad,
   onColumnSelect,
+  onError,
   disabled = false,
 }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -32,11 +37,16 @@ export default function TableUploadPanel({
     const reader = new FileReader();
     reader.onload = (event) => {
       try {
-        const json = JSON.parse(event.target?.result as string);
-        const data = Array.isArray(json) ? json : [json];
-        onFileLoad(data);
-      } catch {
-        alert('Invalid JSON file');
+        const content = event.target?.result as string;
+        const parsedData = parseJSONFile(content);
+        onFileLoad(parsedData as TableRow[]);
+      } catch (error) {
+        // Report error to parent if callback provided, otherwise use alert as fallback
+        if (onError) {
+          onError(ERROR_MESSAGES.INVALID_JSON);
+        } else {
+          alert(ERROR_MESSAGES.INVALID_JSON);
+        }
       }
     };
     reader.readAsText(file);

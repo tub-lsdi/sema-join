@@ -28,15 +28,27 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         Args:
             list_r: Normalized list of strings from R set
             list_s: Normalized list of strings from S set
-            top_k: Not used in CS-JP-LP. Unlike RS-JP which can return multiple 
-                   candidates per R value, CS-JP-LP is a global optimization problem 
-                   that returns a single optimal many-to-one mapping.
+            top_k: IGNORED in CS-JP-LP. This parameter is kept for API consistency
+                   with RS-JP but has no effect. CS-JP-LP is a global optimization 
+                   problem that finds ONE complete mapping with the highest aggregate 
+                   column-level score. Unlike RS-JP (which independently finds top-k 
+                   candidates per row), CS-JP-LP considers all rows jointly, so there 
+                   is only one globally optimal solution.
 
         Returns:
             List of dictionaries with r_val, s_val, and npmi fields.
+            Each result represents one row in the optimal global mapping.
             Note: 'npmi' field contains aggregate PMI score (sum), not a single PMI value.
         """
         conn = self.db_connection
+        
+        # Warn if top_k > 1 (parameter is ignored)
+        if top_k > 1:
+            logger.warning(
+                f"CS-JP-LP: top_k={top_k} is ignored. CS-JP-LP always returns "
+                f"ONE globally optimal mapping. Use RS-JP if you need top-k "
+                f"candidates per row."
+            )
 
         # Register inputs as temp tables
         conn.register("input_r", pl.DataFrame({"r_val": list_r}))

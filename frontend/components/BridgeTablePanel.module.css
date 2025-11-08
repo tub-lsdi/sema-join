@@ -113,6 +113,108 @@
   font-size: 0.95rem;
 }
 
+.helpText {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.algoExplanation {
+  margin-top: 1rem;
+}
+
+.algoCard {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-left: 4px solid #2563eb;
+  border-radius: 0.375rem;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.algoHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.875rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.algoHeader strong {
+  color: #1f2937;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.algoBadge {
+  display: inline-block;
+  padding: 0.25rem 0.625rem;
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.algoDetails {
+  font-size: 0.875rem;
+  color: #374151;
+  line-height: 1.6;
+}
+
+.algoDescription {
+  margin: 0 0 1rem 0;
+  color: #4b5563;
+  line-height: 1.65;
+  text-align: justify;
+}
+
+.algoProperties {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.propertyItem {
+  display: flex;
+  padding: 0.5rem 0.75rem;
+  background: #f9fafb;
+  border-radius: 0.25rem;
+  border-left: 2px solid #d1d5db;
+}
+
+.propertyLabel {
+  min-width: 100px;
+  font-weight: 600;
+  color: #374151;
+  margin-right: 0.75rem;
+}
+
+.propertyValue {
+  color: #6b7280;
+  flex: 1;
+}
+
+.tooltipIcon {
+  display: inline-block;
+  margin-left: 0.375rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  cursor: help;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.tooltipIcon:hover {
+  opacity: 1;
+  color: #2563eb;
+}
+
 .select {
   width: 100%;
   padding: 0.75rem;
@@ -198,6 +300,64 @@
 
 .selectButton:hover {
   background-color: #4b5563;
+}
+
+.aiSuggestButton {
+  padding: 0.5rem 1rem;
+  background-color: #8b5cf6;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.aiSuggestButton:hover:not(:disabled) {
+  background-color: #7c3aed;
+}
+
+.aiSuggestButton:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+.aiSuggestButton .icon {
+  font-size: 1rem;
+}
+
+.aiSuggestButton .spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+.aiError {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  color: #dc2626;
+  font-size: 0.875rem;
+}
+
+.aiError strong {
+  font-weight: 600;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .tableWrapper {

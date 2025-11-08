@@ -157,3 +157,64 @@ class OllamaStatusResponse(BaseModel):
         default=None,
         description="Suggestion for fixing the issue"
     )
+
+
+class BridgeEntrySelection(BaseModel):
+    """A single R value with its selected S match."""
+    
+    r_val: str = Field(..., description="Value from R")
+    selected_s_val: str = Field(..., description="Best S value selected for this R value")
+    reason: str = Field(..., description="Why this S value was chosen")
+    confidence: float = Field(..., ge=0.0, le=1.0, description="Confidence in this selection")
+
+
+class BridgeEntrySuggestionRequest(BaseModel):
+    """Request model for AI-powered bridge entry selection."""
+    
+    bridge_entries: list[dict] = Field(
+        ...,
+        description="RS-JP top-k results with r_val, s_val, npmi fields",
+        min_length=1,
+        examples=[[
+            {"r_val": "Germany", "s_val": "DE", "npmi": 0.9},
+            {"r_val": "Germany", "s_val": "GE", "npmi": 0.7},
+            {"r_val": "UK", "s_val": "GB", "npmi": 0.95}
+        ]]
+    )
+    
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "bridge_entries": [
+                        {"r_val": "Germany", "s_val": "DE", "npmi": 0.9},
+                        {"r_val": "Germany", "s_val": "GE", "npmi": 0.7},
+                        {"r_val": "Germany", "s_val": "GER", "npmi": 0.5},
+                        {"r_val": "UK", "s_val": "GB", "npmi": 0.95},
+                        {"r_val": "UK", "s_val": "UK", "npmi": 0.8}
+                    ]
+                }
+            ]
+        }
+    }
+
+
+class BridgeEntrySuggestionResponse(BaseModel):
+    """Response model for AI-powered bridge entry selection."""
+    
+    selections: list[BridgeEntrySelection] = Field(
+        ...,
+        description="Best match selected for each R value"
+    )
+    analysis: str = Field(
+        ...,
+        description="Overall reasoning for the selections"
+    )
+    selected_indices: list[int] = Field(
+        ...,
+        description="Indices of selected entries in the original bridge_entries array"
+    )
+    model_used: str = Field(
+        ...,
+        description="Name of AI model used"
+    )

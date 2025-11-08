@@ -1,12 +1,25 @@
 'use client';
 
 import { useState } from 'react';
-import { getAIColumnRecommendations, type AIColumnMatchResponse, type ColumnJoinRecommendation } from '@/lib/api';
+import {
+  getAIColumnRecommendations,
+  type AIColumnMatchResponse,
+  type ColumnJoinRecommendation,
+  type TableRow,
+} from '@/lib/api';
+import {
+  getErrorMessage,
+  getConfidenceLabel,
+  getConfidenceClassName,
+  isOllamaNotRunningError,
+  isModelNotFoundError,
+} from '@/lib/utils';
+import { DEFAULTS, ERROR_MESSAGES } from '@/lib/constants';
 import styles from './AISuggestionPanel.module.css';
 
 interface Props {
-  tableR: Array<Record<string, any>>;
-  tableS: Array<Record<string, any>>;
+  tableR: TableRow[];
+  tableS: TableRow[];
   onRecommendationAccept: (rColumn: string, sColumn: string) => void;
   disabled?: boolean;
 }
@@ -24,7 +37,7 @@ export default function AISuggestionPanel({
 
   const handleGetSuggestions = async () => {
     if (!tableR.length || !tableS.length) {
-      setError('Please upload both tables first');
+      setError(ERROR_MESSAGES.MISSING_TABLES);
       return;
     }
 
@@ -33,17 +46,20 @@ export default function AISuggestionPanel({
     setExpanded(true);
 
     try {
-      // Send up to 100 rows from each table for better AI analysis
-      const result = await getAIColumnRecommendations(tableR, tableS, 100);
+      const result = await getAIColumnRecommendations(
+        tableR,
+        tableS,
+        DEFAULTS.MAX_AI_SAMPLES
+      );
       setRecommendations(result);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to get AI recommendations';
-      
-      // Check for common errors
-      if (errorMessage.includes('503') || errorMessage.includes('not available')) {
-        setError('⚠️ Ollama is not running. Please start it with: ollama serve');
-      } else if (errorMessage.includes('404') || errorMessage.includes('not available')) {
-        setError('⚠️ AI model not found. Please install it with: ollama pull mistral');
+      const errorMessage = getErrorMessage(err, 'Failed to get AI recommendations');
+
+      // Check for specific AI errors
+      if (isOllamaNotRunningError(errorMessage)) {
+        setError(ERROR_MESSAGES.AI_OLLAMA_NOT_RUNNING);
+      } else if (isModelNotFoundError(errorMessage)) {
+        setError(ERROR_MESSAGES.AI_MODEL_NOT_FOUND);
       } else {
         setError(errorMessage);
       }
@@ -55,18 +71,6 @@ export default function AISuggestionPanel({
   const handleAcceptRecommendation = (recommendation: ColumnJoinRecommendation) => {
     onRecommendationAccept(recommendation.r_column, recommendation.s_column);
     setExpanded(false);
-  };
-
-  const getConfidenceColor = (confidence: number): string => {
-    if (confidence >= 0.8) return styles.high;
-    if (confidence >= 0.6) return styles.medium;
-    return styles.low;
-  };
-
-  const getConfidenceLabel = (confidence: number): string => {
-    if (confidence >= 0.8) return 'High';
-    if (confidence >= 0.6) return 'Medium';
-    return 'Low';
   };
 
   if (!tableR.length || !tableS.length) {
@@ -87,6 +91,7 @@ export default function AISuggestionPanel({
         </div>
         
         <button
+          type="button"
           onClick={handleGetSuggestions}
           disabled={disabled || loading}
           className={styles.suggestButton}
@@ -135,13 +140,20 @@ export default function AISuggestionPanel({
                       <span className={styles.columnBadge}>{rec.s_column}</span>
                     </div>
                     <div className={styles.confidence}>
-                      <span className={`${styles.confidenceBadge} ${getConfidenceColor(rec.confidence)}`}>
-                        {getConfidenceLabel(rec.confidence)} ({Math.round(rec.confidence * 100)}%)
+                      <span
+                        className={`${styles.confidenceBadge} ${getConfidenceClassName(
+                          rec.confidence,
+                          styles
+                        )}`}
+                      >
+                        {getConfidenceLabel(rec.confidence)} (
+                        {Math.round(rec.confidence * 100)}%)
                       </span>
                     </div>
                   </div>
                   <p className={styles.reason}>{rec.reason}</p>
                   <button
+                    type="button"
                     onClick={() => handleAcceptRecommendation(rec)}
                     className={styles.acceptButton}
                     disabled={disabled}
@@ -158,6 +170,7 @@ export default function AISuggestionPanel({
           )}
 
           <button
+            type="button"
             onClick={() => setExpanded(false)}
             className={styles.closeButton}
           >

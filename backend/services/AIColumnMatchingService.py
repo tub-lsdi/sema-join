@@ -283,3 +283,154 @@ IMPORTANT:
                 "error": str(e),
                 "suggestion": "Make sure Ollama is running. Try: 'ollama serve'"
             }
+
+    def suggest_best_bridge_entries(self, bridge_entries: list[dict]) -> dict:
+        """
+        Use LLM to select the best match for each R value from RS-JP top-k results.
+        
+        Args:
+            bridge_entries: List of dicts with r_val, s_val, npmi fields
+            
+        Returns:
+            Dictionary with selections, analysis, selected_indices, and model_used
+        """
+        # Group entries by r_val
+        grouped = {}
+        for idx, entry in enumerate(bridge_entries):
+            r_val = entry["r_val"]
+            if r_val not in grouped:
+                grouped[r_val] = []
+            grouped[r_val].append({
+                "index": idx,
+                "s_val": entry["s_val"],
+                "npmi": entry["npmi"]
+            })
+        
+        # Build prompt
+        prompt = f"""You are a data expert analyzing bridge table matches from a semantic join algorithm.
+
+For each value from Table R, the algorithm found multiple candidate matches in Table S based on co-occurrence statistics (NPMI scores).
+
+Your task: Select the BEST match for each R value.
+
+BRIDGE TABLE CANDIDATES:
+{json.dumps(grouped, indent=2)}
+
+INSTRUCTIONS:
+1. For each R value, analyze ALL candidate S values
+2. Consider both the NPMI score AND the semantic meaning
+3. Higher NPMI = stronger statistical co-occurrence in corpus
+4. But also use common sense about which match makes most semantic sense
+5. Select the ONE best S value for each R value
+
+CRITICAL RULES:
+- The highest NPMI is usually correct, but not always
+- Look for standard codes vs non-standard codes (e.g., "DE" is better than "GE" for Germany - ISO standard)
+- Prefer well-known standards (ISO, FIPS, etc.)
+- Explain WHY you picked each one
+- **IMPORTANT**: You MUST provide a selection for EVERY r_val in the input
+- **IMPORTANT**: The "selected_s_val" MUST be EXACTLY one of the s_val options shown above (copy it exactly, including case and spacing)
+
+OUTPUT FORMAT (JSON):
+{{
+  "selections": [
+    {{
+      "r_val": "<EXACTLY as shown above>",
+      "selected_s_val": "<EXACTLY one of the s_val options, copied verbatim>",
+      "reason": "<why this one>",
+      "confidence": 0.95
+    }}
+  ],
+  "analysis": "<overall reasoning>"
+}}
+
+Example: If you see {{"s_val": "united kingdom", "npmi": 0.21}}, you MUST write "selected_s_val": "united kingdom" (not "United Kingdom" or "UK")
+
+Respond with ONLY valid JSON, no markdown, no explanation outside the JSON."""
+
+        try:
+            # Call Ollama
+            response = requests.post(
+                f"{self.base_url}/api/generate",
+                json={
+                    "model": self.model,
+                    "prompt": prompt,
+                    "stream": False,
+                    "format": "json"
+                },
+                timeout=self.timeout
+            )
+            response.raise_for_status()
+            
+            # Parse response
+            response_text = response.json().get("response", "{}")
+            ai_result = json.loads(response_text)
+            
+            # Map selections back to indices
+            selections = ai_result.get("selections", [])
+            selected_indices = []
+            missing_selections = []
+            
+            for selection in selections:
+                r_val = selection["r_val"]
+                selected_s_val = selection["selected_s_val"]
+                
+                # Find the index of this (r_val, s_val) pair
+                # Use case-insensitive comparison with whitespace stripping
+                found = False
+                for entry_data in grouped.get(r_val, []):
+                    # Normalize both values for comparison
+                    entry_s_normalized = entry_data["s_val"].strip().lower()
+                    selected_s_normalized = selected_s_val.strip().lower()
+                    
+                    if entry_s_normalized == selected_s_normalized:
+                        selected_indices.append(entry_data["index"])
+                        found = True
+                        break
+                
+                # If AI suggested a value not in the list, log it and fall back to best NPMI
+                if not found:
+                    missing_selections.append({
+                        "r_val": r_val,
+                        "suggested_s_val": selected_s_val,
+                        "available_s_vals": [e["s_val"] for e in grouped.get(r_val, [])]
+                    })
+                    
+                    # Fallback: Pick the one with highest NPMI for this r_val
+                    entries_for_r = grouped.get(r_val, [])
+                    if entries_for_r:
+                        best_entry = max(entries_for_r, key=lambda e: e.get("npmi", 0))
+                        selected_indices.append(best_entry["index"])
+                        print(f"Warning: AI suggested '{selected_s_val}' for '{r_val}' but it's not in the list. "
+                              f"Falling back to best NPMI match: '{best_entry['s_val']}'")
+            
+            # Check if AI missed any r_vals - add them with highest NPMI
+            all_r_vals = set(grouped.keys())
+            suggested_r_vals = {s["r_val"] for s in selections}
+            missed_r_vals = all_r_vals - suggested_r_vals
+            
+            if missed_r_vals:
+                print(f"Warning: AI didn't suggest matches for: {missed_r_vals}. Adding best NPMI matches.")
+                for r_val in missed_r_vals:
+                    entries_for_r = grouped.get(r_val, [])
+                    if entries_for_r:
+                        best_entry = max(entries_for_r, key=lambda e: e.get("npmi", 0))
+                        selected_indices.append(best_entry["index"])
+                        selections.append({
+                            "r_val": r_val,
+                            "selected_s_val": best_entry["s_val"],
+                            "reason": "AI didn't provide suggestion, using highest NPMI",
+                            "confidence": 0.5
+                        })
+            
+            return {
+                "selections": selections,
+                "analysis": ai_result.get("analysis", "AI analysis complete"),
+                "selected_indices": selected_indices,
+                "model_used": self.model
+            }
+            
+        except json.JSONDecodeError as e:
+            raise ValueError(f"Failed to parse AI response as JSON: {e}")
+        except requests.RequestException as e:
+            raise RuntimeError(f"Failed to communicate with Ollama: {e}")
