@@ -67,6 +67,18 @@ CELL_BATCH_SIZE=1000000
 TABLE_BATCH_SIZE=50000
 ```
 
+### Ollama AI Configuration
+
+Configure the Ollama service for AI-powered column matching:
+
+```bash
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=mistral
+OLLAMA_TIMEOUT=60
+```
+
+**Note:** If these variables are not set in your `.env` file, the system will use the default values shown above.
+
 ## Complete Example
 
 A complete `.env` file with all common settings:
@@ -85,6 +97,11 @@ DUCKDB_TEMP_DIRECTORY=./_temp
 # Batch Processing
 CELL_BATCH_SIZE=1000000
 TABLE_BATCH_SIZE=50000
+
+# Ollama AI Configuration
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=mistral
+OLLAMA_TIMEOUT=60
 ```
 
 ## Important Notes
