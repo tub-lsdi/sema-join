@@ -218,6 +218,34 @@ setup_database() {
     fi
 }
 
+# Run tests
+run_tests() {
+    log_header "Running Tests"
+    
+    cd "$PROJECT_ROOT"
+    
+    # Check if tests directory exists
+    if [ ! -d "$BACKEND_DIR/tests" ]; then
+        log_error "Tests directory not found: backend/tests"
+        return 1
+    fi
+    
+    log_info "Running backend tests..."
+    echo ""
+    
+    # Run all tests in backend/tests directory using unittest
+    uv run python -m unittest discover -s "$BACKEND_DIR/tests" -p "test_*.py" -v
+    
+    if [ $? -eq 0 ]; then
+        echo ""
+        log_success "All tests passed!"
+    else
+        echo ""
+        log_error "Some tests failed"
+        return 1
+    fi
+}
+
 # AI-related functions
 ai_setup() {
     log_header "Setting Up AI (Ollama + Mistral)"
@@ -440,6 +468,9 @@ show_help() {
     echo -e "  ${GREEN}db${NC}"
     echo "                     Setup and initialize the database"
     echo ""
+    echo -e "  ${GREEN}tests${NC}"
+    echo "                     Run tests"
+    echo ""
     echo -e "  ${GREEN}status${NC}"
     echo "                     Show project status and dependencies"
     echo ""
@@ -489,6 +520,9 @@ main() {
             ;;
         db)
             setup_database
+            ;;
+        tests|test)
+            run_tests
             ;;
         status)
             show_status

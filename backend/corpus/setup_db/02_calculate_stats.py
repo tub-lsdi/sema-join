@@ -161,164 +161,168 @@ def calculate_stats_rs(con: duckdb.DuckDBPyConnection) -> None:
 
 
 def calculate_stats_cs(con: duckdb.DuckDBPyConnection) -> None:
-    # --- 1. Compute Column-Pair Co-occurrences for CS-JP ---
-    # For CS-JP: Count how often value pairs (v1,v2) and (v3,v4) appear in same column pair
-    logger.info("Computing column-pair co-occurrences (for CS-JP)...")
-    logger.info("This may take a while for large corpora...")
-
-    # Create aggregation table to store all rectangles found
+    """
+    Calculate Column-Level PMI statistics for CS-JP-LP algorithm.
+    
+    For each pair of value-pairs ((ri, sj), (rk, sl)) where i ≠ k, we compute:
+    - T((ri, sj), (rk, sl)) = set of tables where:
+      1. ri and sj are in the same row
+      2. rk and sl are in the same row  
+      3. ri and rk are in the same column
+      4. sj and sl are in the same column
+    
+    Then calculate: PMI((ri, sj), (rk, sl)) = log(p((ri, sj), (rk, sl)) / (p(ri, sj) × p(rk, sl)))
+    """
+    
+    # Get total number of tables (N)
+    logger.info("Computing column-level PMI scores (for CS-JP-LP)...")
+    try:
+        N = con.execute("SELECT COUNT(DISTINCT table_id) FROM tables_meta;").fetchone()[0]
+    except Exception as e:
+        logger.error(f"Could not get table count. Error: {e}")
+        return
+    
+    if N == 0:
+        logger.error("No tables found in tables_meta. Run ingestion script first.")
+        return
+    
+    logger.debug(f"Total tables (N) = {N}")
+    
+    # --- 1. Compute Column-Level Co-occurrences ---
+    # Find all instances where two value pairs (ri, sj) and (rk, sl) satisfy:
+    # - ri and sj are in the same row
+    # - rk and sl are in the same row
+    # - ri and rk are in the same column (col_id)
+    # - sj and sl are in the same column (col_id)
+    #
+    # IMPORTANT: We canonicalize the pairs to avoid double-counting.
+    # Since PMI((ri,sj),(rk,sl)) = PMI((rk,sl),(ri,sj)) (symmetric),
+    # we only store one direction using lexicographic ordering.
+    # This prevents the objective function from counting the same pair twice.
+    logger.info("Computing column-level co-occurrences...")
+    
+    con.execute("DROP TABLE IF EXISTS column_cooccurrences;")
     con.execute("""
-                CREATE TABLE IF NOT EXISTS all_rectangles_found (
-                                                                    table_id BIGINT,
-                                                                    pairA_v1 VARCHAR,
-                                                                    pairA_v2 VARCHAR,
-                                                                    pairB_v1 VARCHAR,
-                                                                    pairB_v2 VARCHAR
-                )
-                """)
-    # Get all distinct table_ids
-    table_ids = con.execute("SELECT DISTINCT table_id FROM cells").pl()['table_id'].to_list()
-    logger.info(f"Found {len(table_ids)} tables to process...")
-
-    for i, current_table_id in enumerate(table_ids):
-
-        if (i + 1) % 1000 == 0:
-            logger.info(f"Processing table {i+1}/{len(table_ids)} (ID: {current_table_id})...")
-
-        # 2-step join query, but constrained to a SINGLE table_id
-        con.execute(f"""
-            INSERT INTO all_rectangles_found
-            WITH horizontal_pairs AS (
-                SELECT
-                    c1.row_id,
-                    c1.col_id AS col1_id,
-                    c2.col_id AS col2_id,
-                    c1.value  AS value1,
-                    c2.value  AS value2
-                FROM cells c1
-                JOIN cells c2 ON c1.table_id = c2.table_id
-                             AND c1.row_id = c2.row_id
-                             AND c1.col_id < c2.col_id
-                WHERE c1.table_id = {current_table_id}
-                  AND c1.value != c2.value
-            ),
-            rectangles AS (
-                SELECT
-                    -- Canonicalize Pair 1 (from hp1)
-                    LEAST(hp1.value1, hp1.value2)  AS p1_v1,
-                    GREATEST(hp1.value1, hp1.value2) AS p1_v2,
-                    -- Canonicalize Pair 2 (from hp2)
-                    LEAST(hp2.value1, hp2.value2)  AS p2_v1,
-                    GREATEST(hp2.value1, hp2.value2) AS p2_v2
-                FROM horizontal_pairs hp1
-                JOIN horizontal_pairs hp2 ON hp1.col1_id = hp2.col1_id
-                                         AND hp1.col2_id = hp2.col2_id
-                                         AND hp1.row_id < hp2.row_id
-                WHERE
-                    (hp1.value1 != hp2.value1 OR hp1.value2 != hp2.value2)
-            )
-            -- Canonicalize the order of the two pairs
-            SELECT
-                {current_table_id} AS table_id,
-                CASE
-                    WHEN p1_v1 < p2_v1 OR (p1_v1 = p2_v1 AND p1_v2 <= p2_v2) THEN p1_v1
-                    ELSE p2_v1
-                END AS pairA_v1,
-                CASE
-                    WHEN p1_v1 < p2_v1 OR (p1_v1 = p2_v1 AND p1_v2 <= p2_v2) THEN p1_v2
-                    ELSE p2_v2
-                END AS pairA_v2,
-                CASE
-                    WHEN p1_v1 < p2_v1 OR (p1_v1 = p2_v1 AND p1_v2 <= p2_v2) THEN p2_v1
-                    ELSE p1_v1
-                END AS pairB_v1,
-                CASE
-                    WHEN p1_v1 < p2_v1 OR (p1_v1 = p2_v1 AND p1_v2 <= p2_v2) THEN p2_v2
-                    ELSE p1_v2
-                END AS pairB_v2
-            FROM rectangles;
-        """)
-
-    logger.info("Loop complete. Starting final aggregation. This will take some memory...")
-
-    con.execute("DROP TABLE IF EXISTS column_pair_cooccurrences;")
-    con.execute("""
-                CREATE TABLE column_pair_cooccurrences AS
-                SELECT
-                    pairA_v1,
-                    pairA_v2,
-                    pairB_v1,
-                    pairB_v2,
-                    COUNT(DISTINCT table_id) AS num_tables
-                FROM all_rectangles_found
-                GROUP BY ALL
-                HAVING num_tables >= 2
-                """)
-    logger.info("Created column_pair_cooccurrences.")
-
-    # --- 2. Pre-compute Column-Level Scores (CS-JP) ---
-    logger.info("Pre-computing column-level scores (for CS-JP)...")
-    con.execute("DROP TABLE IF EXISTS column_scores;")
-    con.execute(f"""
-        CREATE TABLE column_scores AS
-        WITH TotalTables (N) AS (
-            -- 1. Get the total number of tables
-            SELECT COUNT(DISTINCT table_id) FROM cells
+        CREATE TABLE column_cooccurrences AS
+        WITH distinct_pairs_by_table AS (
+            SELECT DISTINCT
+                c1.value AS ri,
+                c2.value AS sj,
+                c3.value AS rk,
+                c4.value AS sl,
+                c1.table_id
+            FROM cells c1
+            JOIN cells c2 ON c1.table_id = c2.table_id 
+                         AND c1.row_id = c2.row_id
+                         AND c1.col_id < c2.col_id  -- ri and sj in same row, different columns
+            JOIN cells c3 ON c1.table_id = c3.table_id
+                         AND c1.col_id = c3.col_id  -- ri and rk in same column
+                         AND c1.row_id < c3.row_id  -- different rows (i ≠ k)
+            JOIN cells c4 ON c1.table_id = c4.table_id
+                         AND c2.col_id = c4.col_id  -- sj and sl in same column
+                         AND c3.row_id = c4.row_id  -- rk and sl in same row
         ),
-        PmiScores AS (
-            -- 2. Calculate PMI scores for column pairs
-            SELECT
-                cp.pairA_v1,
-                cp.pairA_v2,
-                cp.pairB_v1,
-                cp.pairB_v2,
-                cp.num_tables AS rectangle_count,
-                rc1.num_tables AS pairA_count,
-                rc2.num_tables AS pairB_count,
-                (SELECT N FROM TotalTables) AS N, -- Pass N to the next step
-
-                LOG( (cp.num_tables * (SELECT N FROM TotalTables)) / 
-                     (GREATEST(rc1.num_tables, 1) * GREATEST(rc2.num_tables, 1)) 
-                   ) AS pmi_score
-            FROM column_pair_cooccurrences cp
-            JOIN TotalTables ON 1=1 -- Make N available to all rows
-            LEFT JOIN row_cooccurrences rc1 
-                ON cp.pairA_v1 = rc1.v1 AND cp.pairA_v2 = rc1.v2
-            LEFT JOIN row_cooccurrences rc2 
-                ON cp.pairB_v1 = rc2.v1 AND cp.pairB_v2 = rc2.v2
-            WHERE 
-                -- Prune pairs with negative/zero correlation (as per paper)
-                (cp.num_tables * (SELECT N FROM TotalTables)) > 
-                (GREATEST(rc1.num_tables, 1) * GREATEST(rc2.num_tables, 1))
+        canonicalized AS (
+            -- Canonicalize: ensure (ri,sj) comes "before" (rk,sl) to avoid duplicates
+            -- We use lexicographic ordering: if ri < rk, or if ri = rk and sj < sl
+            SELECT DISTINCT
+                CASE WHEN ri < rk OR (ri = rk AND sj <= sl) 
+                     THEN ri ELSE rk END AS ri,
+                CASE WHEN ri < rk OR (ri = rk AND sj <= sl) 
+                     THEN sj ELSE sl END AS sj,
+                CASE WHEN ri < rk OR (ri = rk AND sj <= sl) 
+                     THEN rk ELSE ri END AS rk,
+                CASE WHEN ri < rk OR (ri = rk AND sj <= sl) 
+                     THEN sl ELSE sj END AS sl,
+                table_id
+            FROM distinct_pairs_by_table
         )
-        -- 3. Normalize PMI to get NPMI
         SELECT
-            pairA_v1,
-            pairA_v2,
-            pairB_v1,
-            pairB_v2,
-            rectangle_count,
-            pairA_count,
-            pairB_count,
-            pmi_score,
-
-            -- NPMI = PMI / -log(p(joint))
-            -- p(joint) = rectangle_count / N
+            ri,
+            sj,
+            rk,
+            sl,
+            COUNT(*) AS num_tables
+        FROM canonicalized
+        GROUP BY ri, sj, rk, sl
+        HAVING num_tables >= 2;  -- Pruning: only keep pairs that occur in at least 2 tables
+    """)
+    con.commit()
+    logger.info("Created column_cooccurrences.")
+    
+    # --- 2. Calculate Column-Level PMI Scores ---
+    # PMI((ri, sj), (rk, sl)) = log(p((ri, sj), (rk, sl)) / (p(ri, sj) × p(rk, sl)))
+    # Where:
+    # - p(ri, sj) = |T(ri, sj)| / N  (from row_cooccurrences)
+    # - p(rk, sl) = |T(rk, sl)| / N  (from row_cooccurrences)
+    # - p((ri, sj), (rk, sl)) = |T((ri, sj), (rk, sl))| / N  (from column_cooccurrences)
+    logger.info("Computing column-level PMI scores...")
+    
+    con.execute("DROP TABLE IF EXISTS column_pmi_scores;")
+    con.execute(f"""
+        CREATE TABLE column_pmi_scores AS
+        SELECT
+            cc.ri,
+            cc.sj,
+            cc.rk,
+            cc.sl,
+            cc.num_tables AS num_tables_quad,
+            rc1.num_tables AS num_tables_ri_sj,
+            rc2.num_tables AS num_tables_rk_sl,
+            LOG(({N} * cc.num_tables) / (rc1.num_tables * rc2.num_tables)) AS column_pmi
+        FROM column_cooccurrences cc
+        -- Join with row_cooccurrences to get p(ri, sj)
+        JOIN row_cooccurrences rc1 ON (
+            (cc.ri = rc1.v1 AND cc.sj = rc1.v2) OR
+            (cc.ri = rc1.v2 AND cc.sj = rc1.v1)
+        )
+        -- Join with row_cooccurrences to get p(rk, sl)
+        JOIN row_cooccurrences rc2 ON (
+            (cc.rk = rc2.v1 AND cc.sl = rc2.v2) OR
+            (cc.rk = rc2.v2 AND cc.sl = rc2.v1)
+        )
+        WHERE LOG(({N} * cc.num_tables) / (rc1.num_tables * rc2.num_tables)) > 0;  -- Only keep positive PMI
+    """)
+    con.commit()
+    
+    # Create index for efficient lookups
+    con.execute("""
+        CREATE INDEX IF NOT EXISTS idx_column_pmi_all 
+        ON column_pmi_scores(ri, sj, rk, sl);
+    """)
+    con.commit()
+    logger.info("Created column_pmi_scores (CS-JP-LP).")
+    
+    # --- 3. Compute Normalized PMI (NPMI) for column-level scores ---
+    logger.info("Computing normalized column-level PMI scores...")
+    con.execute("DROP TABLE IF EXISTS column_npmi_scores;")
+    con.execute(f"""
+        CREATE TABLE column_npmi_scores AS
+        SELECT
+            ri,
+            sj,
+            rk,
+            sl,
+            column_pmi,
+            -- Handle the p(x, y) = 1 edge case, which results in 0/0
             CASE
-                -- Safeguard: If p(joint) = 1 (rectangle is in every table), 
-                WHEN rectangle_count = N THEN 1.0
-                ELSE pmi_score / (-LOG(rectangle_count::DOUBLE / N))
-            END AS npmi_score
-
-        FROM PmiScores;
-        """)
+                WHEN num_tables_quad = {N} THEN 1.0
+                ELSE column_pmi / -LOG(num_tables_quad / CAST({N} AS DOUBLE))
+            END AS column_npmi
+        FROM column_pmi_scores;
+    """)
     con.commit()
-    con.execute(
-        "CREATE INDEX IF NOT EXISTS idx_colscores_v1v2v3v4 ON column_scores(pairA_v1, pairA_v2, pairB_v1, pairB_v2);"
-    )
+    
+    # Create index for efficient lookups
+    con.execute("""
+        CREATE INDEX IF NOT EXISTS idx_column_npmi_all 
+        ON column_npmi_scores(ri, sj, rk, sl);
+    """)
     con.commit()
-    logger.info("Created column_scores (CS-JP).")
+    logger.info("Created column_npmi_scores (CS-JP-LP with normalized scores).")
+    
     return
+
 
 
 if __name__ == "__main__":
