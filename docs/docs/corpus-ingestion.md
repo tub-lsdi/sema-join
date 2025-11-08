@@ -46,7 +46,7 @@ Use the management script to run the complete database setup process:
 
 This will execute both ingestion steps in sequence:
 
-- Read all corpus JSON files
+- Read all corpus files
 - Extract and normalize table values
 - Calculate value frequencies
 - Compute co-occurrence statistics
