@@ -18,12 +18,12 @@ const config: Config = {
   url: 'https://tub-lsdi.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/sema-join/',
+  baseUrl: '/sema-join-docs/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'tub-lsdi', // Usually your GitHub org/user name.
-  projectName: 'sema-join', // Usually your repo name.
+  projectName: 'sema-join-docs', // Usually your repo name.
 
   onBrokenLinks: 'throw',
 
