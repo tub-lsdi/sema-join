@@ -6,21 +6,9 @@ on:
       - 'docs/**'
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -42,15 +30,21 @@ jobs:
           cd docs
           npm run build
           
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-        
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Generate GitHub App Token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
         with:
-          path: docs/build
+          app-id: ${{ secrets.DOCS_DEPLOY_APP_ID }}
+          private-key: ${{ secrets.DOCS_DEPLOY_APP_PRIVATE_KEY }}
+          owner: tub-lsdi
+          repositories: sema-join-docs
           
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ steps.generate-token.outputs.token }}
+          external_repository: tub-lsdi/sema-join-docs
+          publish_branch: gh-pages
+          publish_dir: ./docs/build
+          cname: false
 
