@@ -41,7 +41,7 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
             Note: 'npmi' field contains aggregate PMI score (sum), not a single PMI value.
         """
         conn = self.db_connection
-        
+
         # Warn if top_k > 1 (parameter is ignored)
         if top_k > 1:
             logger.warning(
@@ -100,6 +100,11 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         Note: Assumes input_r and input_s tables have been registered in conn.
         These tables contain the r_val and s_val columns to filter on.
 
+        The database stores PMI scores in canonicalized form to save space,
+        but the algorithm needs scores for all ordered pairs (ri,sj,rk,sl) where i≠k.
+        Since PMI((ri,sj),(rk,sl)) = PMI((rk,sl),(ri,sj)) (symmetric), we expand
+        each stored entry into both directions.
+
         We assume that the direction of the join J : R → S 
         is known without loss of generality, since both join directions can be 
         tested and the one with a better score can be picked.
@@ -127,11 +132,17 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
 
         w_ijkl_scores = {}
         for row in column_pmi_df.iter_rows(named=True):
-            # wᵢⱼₖₗ = PMI((rᵢ, sⱼ), (rₖ, sₗ))
-            w_ijkl_scores[(row["ri"], row["sj"], row["rk"],
-                           row["sl"])] = row["column_pmi"]
+            ri, sj, rk, sl = row["ri"], row["sj"], row["rk"], row["sl"]
+            pmi_value = row["column_pmi"]
 
-        logger.debug(f"Fetched {len(w_ijkl_scores)} column-level PMI scores")
+            # Store the fetched direction: wᵢⱼₖₗ = PMI((rᵢ, sⱼ), (rₖ, sₗ))
+            w_ijkl_scores[(ri, sj, rk, sl)] = pmi_value
+
+            # The database only stores canonicalized pairs, but the algorithm's
+            # objective function sums over ALL ordered pairs where i≠k.
+            # Since PMI((ri,sj),(rk,sl)) = PMI((rk,sl),(ri,sj)), we can reuse
+            # the same PMI value for the reverse direction.
+            w_ijkl_scores[(rk, sl, ri, sj)] = pmi_value
 
         return w_ijkl_scores
 
