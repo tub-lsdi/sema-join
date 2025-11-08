@@ -42,7 +42,7 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ steps.generate-token.outputs.token }}
+          personal_token: ${{ steps.generate-token.outputs.token }}
           external_repository: tub-lsdi/sema-join-docs
           publish_branch: gh-pages
           publish_dir: ./docs/build
