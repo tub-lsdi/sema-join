@@ -1,5 +1,6 @@
 import requests
 import json
+from backend.config import settings
 
 
 class AIColumnMatchingService:
@@ -9,23 +10,19 @@ class AIColumnMatchingService:
     their names, sample values, and semantic meaning.
     """
 
-    def __init__(
-        self,
-        base_url: str = "http://localhost:11434",
-        model: str = "mistral",
-        timeout: int = 60
-    ):
+    def __init__(self):
         """
         Initialize the AI Column Matching Service.
 
-        Args:
-            base_url: URL of the Ollama API (default: http://localhost:11434)
-            model: Name of the model to use (default: mistral)
-            timeout: Request timeout in seconds (default: 60)
+        Configuration is loaded from .env file via settings.
+        If not set in .env, uses defaults from config.py:
+        - OLLAMA_BASE_URL: http://localhost:11434
+        - OLLAMA_MODEL: mistral
+        - OLLAMA_TIMEOUT: 60
         """
-        self.base_url = base_url.rstrip('/')
-        self.model = model
-        self.timeout = timeout
+        self.base_url = settings.OLLAMA_BASE_URL.rstrip('/')
+        self.model = settings.OLLAMA_MODEL
+        self.timeout = settings.OLLAMA_TIMEOUT
 
     def _build_prompt(
         self,
@@ -287,10 +284,10 @@ IMPORTANT:
     def suggest_best_bridge_entries(self, bridge_entries: list[dict]) -> dict:
         """
         Use LLM to select the best match for each R value from RS-JP top-k results.
-        
+
         Args:
             bridge_entries: List of dicts with r_val, s_val, npmi fields
-            
+
         Returns:
             Dictionary with selections, analysis, selected_indices, and model_used
         """
@@ -305,7 +302,7 @@ IMPORTANT:
                 "s_val": entry["s_val"],
                 "npmi": entry["npmi"]
             })
-        
+
         # Build prompt
         prompt = f"""You are a data expert analyzing bridge table matches from a semantic join algorithm.
 
@@ -361,20 +358,20 @@ Respond with ONLY valid JSON, no markdown, no explanation outside the JSON."""
                 timeout=self.timeout
             )
             response.raise_for_status()
-            
+
             # Parse response
             response_text = response.json().get("response", "{}")
             ai_result = json.loads(response_text)
-            
+
             # Map selections back to indices
             selections = ai_result.get("selections", [])
             selected_indices = []
             missing_selections = []
-            
+
             for selection in selections:
                 r_val = selection["r_val"]
                 selected_s_val = selection["selected_s_val"]
-                
+
                 # Find the index of this (r_val, s_val) pair
                 # Use case-insensitive comparison with whitespace stripping
                 found = False
@@ -382,12 +379,12 @@ Respond with ONLY valid JSON, no markdown, no explanation outside the JSON."""
                     # Normalize both values for comparison
                     entry_s_normalized = entry_data["s_val"].strip().lower()
                     selected_s_normalized = selected_s_val.strip().lower()
-                    
+
                     if entry_s_normalized == selected_s_normalized:
                         selected_indices.append(entry_data["index"])
                         found = True
                         break
-                
+
                 # If AI suggested a value not in the list, log it and fall back to best NPMI
                 if not found:
                     missing_selections.append({
@@ -395,26 +392,29 @@ Respond with ONLY valid JSON, no markdown, no explanation outside the JSON."""
                         "suggested_s_val": selected_s_val,
                         "available_s_vals": [e["s_val"] for e in grouped.get(r_val, [])]
                     })
-                    
+
                     # Fallback: Pick the one with highest NPMI for this r_val
                     entries_for_r = grouped.get(r_val, [])
                     if entries_for_r:
-                        best_entry = max(entries_for_r, key=lambda e: e.get("npmi", 0))
+                        best_entry = max(
+                            entries_for_r, key=lambda e: e.get("npmi", 0))
                         selected_indices.append(best_entry["index"])
                         print(f"Warning: AI suggested '{selected_s_val}' for '{r_val}' but it's not in the list. "
                               f"Falling back to best NPMI match: '{best_entry['s_val']}'")
-            
+
             # Check if AI missed any r_vals - add them with highest NPMI
             all_r_vals = set(grouped.keys())
             suggested_r_vals = {s["r_val"] for s in selections}
             missed_r_vals = all_r_vals - suggested_r_vals
-            
+
             if missed_r_vals:
-                print(f"Warning: AI didn't suggest matches for: {missed_r_vals}. Adding best NPMI matches.")
+                print(
+                    f"Warning: AI didn't suggest matches for: {missed_r_vals}. Adding best NPMI matches.")
                 for r_val in missed_r_vals:
                     entries_for_r = grouped.get(r_val, [])
                     if entries_for_r:
-                        best_entry = max(entries_for_r, key=lambda e: e.get("npmi", 0))
+                        best_entry = max(
+                            entries_for_r, key=lambda e: e.get("npmi", 0))
                         selected_indices.append(best_entry["index"])
                         selections.append({
                             "r_val": r_val,
@@ -422,14 +422,14 @@ Respond with ONLY valid JSON, no markdown, no explanation outside the JSON."""
                             "reason": "AI didn't provide suggestion, using highest NPMI",
                             "confidence": 0.5
                         })
-            
+
             return {
                 "selections": selections,
                 "analysis": ai_result.get("analysis", "AI analysis complete"),
                 "selected_indices": selected_indices,
                 "model_used": self.model
             }
-            
+
         except json.JSONDecodeError as e:
             raise ValueError(f"Failed to parse AI response as JSON: {e}")
         except requests.RequestException as e:

@@ -38,10 +38,7 @@ async def match_columns_with_ai(request_data: AIColumnMatchRequest, request: Req
         HTTPException: If Ollama is not available or analysis fails
     """
     try:
-        ai_service = AIColumnMatchingService(
-            base_url="http://localhost:11434",
-            model="mistral"
-        )
+        ai_service = AIColumnMatchingService()
 
         # Check if Ollama is running first
         status = ai_service.check_ollama_status()
@@ -127,10 +124,7 @@ async def suggest_best_bridge_entries(request_data: BridgeEntrySuggestionRequest
         HTTPException: If Ollama is not available or analysis fails
     """
     try:
-        ai_service = AIColumnMatchingService(
-            base_url="http://localhost:11434",
-            model="mistral"
-        )
+        ai_service = AIColumnMatchingService()
 
         # Check if Ollama is running
         status = ai_service.check_ollama_status()
