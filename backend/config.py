@@ -23,17 +23,25 @@ class Settings(BaseSettings):
     DUCKDB_TEMP_DIRECTORY: Path = PROJECT_ROOT
     TEMP_META_DIR_NAME: Path = "temp_parquet_meta"
     TEMP_CELLS_DIR_NAME: Path = "temp_parquet_cells"
+    TEMP_COLUMN_PAIRS_DIR_NAME: Path = "temp_parquet_column_pairs"
     DUCKDB_MEMORY_LIMIT: str = "10GB"
+    NUM_WORKERS_FOR_CALCULATION: int = 4
 
     LOG_LEVEL: str = "DEBUG"
 
     CELL_BATCH_SIZE: int = 1_000_000
     TABLE_BATCH_SIZE: int = 50_000
+    TABLES_PER_WORKER_BATCH: int = 40
 
     # Ollama AI settings
     OLLAMA_BASE_URL: str = "http://localhost:11434"
     OLLAMA_MODEL: str = "mistral"
     OLLAMA_TIMEOUT: int = 60
+
+    @property
+    def TEMP_COLUMN_PAIRS_DIR(self) -> Path:
+        """Provides the absolute path to the temp column pairs directory."""
+        return self.DUCKDB_TEMP_DIRECTORY / self.TEMP_COLUMN_PAIRS_DIR_NAME
 
     @property
     def DEFAULT_DB_PATH(self) -> Path:
