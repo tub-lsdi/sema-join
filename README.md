@@ -130,7 +130,6 @@ The frontend will be available at: http://localhost:3000
 
 ### AI Setup (Optional)
 
-AI-powered column matching uses Ollama with Mistral LLM to suggest which columns should be joined based on semantic relationships.
 
 #### 1. Install Ollama
 

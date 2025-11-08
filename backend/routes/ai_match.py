@@ -38,8 +38,6 @@ async def match_columns_with_ai(request_data: AIColumnMatchRequest, request: Req
         HTTPException: If Ollama is not available or analysis fails
     """
     try:
-        # Get AI service from app config or create new instance
-        # You can configure these in config.py
         ai_service = AIColumnMatchingService(
             base_url="http://localhost:11434",
             model="mistral"

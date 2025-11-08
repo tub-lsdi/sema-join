@@ -1,0 +1,50 @@
+name: Clean Docs History
+
+on:
+  workflow_dispatch:
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sema-join repo
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: docs/package-lock.json
+          
+      - name: Install dependencies
+        run: |
+          cd docs
+          npm ci
+          
+      - name: Build documentation
+        run: |
+          cd docs
+          npm run build
+          
+      - name: Generate GitHub App Token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.DOCS_DEPLOY_APP_ID }}
+          private-key: ${{ secrets.DOCS_DEPLOY_APP_PRIVATE_KEY }}
+          owner: tub-lsdi
+          repositories: sema-join-docs
+          
+      - name: Deploy with force orphan
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ steps.generate-token.outputs.token }}
+          external_repository: tub-lsdi/sema-join-docs
+          publish_branch: main
+          publish_dir: ./docs/build
+          force_orphan: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Clean deploy: ${{ github.sha }}'
+
