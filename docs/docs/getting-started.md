@@ -22,26 +22,6 @@ For example, Project SEMA-JOIN can discover relationships such as:
 
 These relationships are quantified using Pointwise Mutual Information (PMI) scores calculated from the corpus.
 
-## Key Features
-
-**Statistical Semantic Discovery**  
-Automatically discovers semantic relationships by analyzing value co-occurrence patterns across your table corpus. No manual relationship definition required.
-
-**PMI-Based Join Quality**  
-Uses Pointwise Mutual Information scores to measure the strength of semantic relationships and rank join results by quality.
-
-**Multiple Join Algorithms**  
-Choose between CS-JP-LP for optimal accuracy or RS-JP for faster performance while maintaining quality superior to traditional approaches.
-
-**AI-Powered Column Matching**  
-Extended beyond the original research, this implementation adds AI to automatically identify which columns should be joined.
-
-**Bridge Table Discovery**  
-Automatically finds intermediate tables that can connect datasets with no direct semantic relationship.
-
-**Web Interface**  
-User-friendly interface for managing the complete semantic join workflow.
-
 ## How It Works
 
 Project SEMA-JOIN operates in two stages:
@@ -60,28 +40,6 @@ Implements the semantic join algorithms, manages the corpus database, and calcul
 **Web Interface**  
 Provides an intuitive interface for uploading tables and executing joins.
 
-**AI Service**  
-Optional component that extends the original research by using AI to suggest join columns automatically.
-
-## When to Use Project SEMA-JOIN
-
-Project SEMA-JOIN is particularly valuable when:
-
-- Tables use different representations for the same entities
-- Direct joins fail due to naming variations or encoding differences
-- You need to discover non-obvious relationships between datasets
-- Traditional fuzzy joins based on syntactic similarity are insufficient
-- You are working with web tables or data from heterogeneous sources
-
-## Prerequisites
-
-Before installation, ensure your system has:
-
-- Python 3.13 or higher
-- Node.js 20 or higher
-- At least 4GB of RAM
-- 2GB of free disk space
-
 ## Relationship to the Research Paper
 
 This implementation is based on the Microsoft Research SEMA-JOIN paper and implements the core algorithms:
@@ -95,7 +53,6 @@ This implementation extends the research with additional features:
 
 - Web-based user interface for accessibility
 - AI-powered column matching to address the future work identified in the paper
-- Modern technology stack for deployment and scalability
 
 ## Next Steps
 

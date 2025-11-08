@@ -121,15 +121,6 @@ ollama pull mistral
 
 ## Troubleshooting
 
-**Python Version Issues**  
-Verify you have Python 3.13 or higher installed.
-
-**uv Not Found**  
-Install uv using the official installation script.
-
-**Node.js Version Issues**  
-Update to Node.js 20 or higher.
-
 **Port Conflicts**  
 The backend uses port 8000 and frontend uses port 3000. Ensure these ports are available.
 

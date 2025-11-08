@@ -131,35 +131,6 @@ Review the results to verify they meet your expectations.
 
 ![Join Results](/img/how_2_sema_join/join_results.png)
 
-## Tips for Best Results
-
-**Data Quality**  
-Ensure your tables contain clean, consistent data. Remove duplicates and handle missing values before uploading.
-
-**Column Selection**  
-Choose columns that represent meaningful entities or concepts. Avoid using purely random identifiers.
-
-**Algorithm Choice**  
-Start with CS-JP-LP for best quality results on smaller tables. Switch to RS-JP for large tables or time-sensitive operations while maintaining quality significantly better than traditional join methods.
-
-**AI Suggestions**  
-Leverage AI suggestions when working with unfamiliar data or complex table structures.
-
-## Troubleshooting
-
-**No Matches Found**  
-This indicates the selected columns have no semantic relationship in the corpus. Try different column combinations or verify your data relates to the corpus domain.
-
-**Low Quality Matches**  
-Results with low PMI scores suggest weak relationships. Consider using different columns, cleaning your data, or finding a bridge table.
-
-**Performance Issues**  
-Large tables may take longer to process. Try the RS+JP algorithm for better performance, or consider sampling your data.
-
-**AI Suggestions Not Available**  
-Ensure the Ollama service is running and the Mistral model is installed.
-
-## Summary
 
 You now have a complete understanding of how to use Project SEMA-JOIN for semantic table joins. Experiment with different tables, algorithms, and features to find the best approach for your data integration needs.
 
