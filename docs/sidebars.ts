@@ -15,8 +15,8 @@ import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
 const sidebars: SidebarsConfig = {
   tutorialSidebar: [
     'getting-started',
-    'environment-setup',
     'installation',
+    'environment-setup',
     'corpus-ingestion',
     'using-sema-join',
   ],

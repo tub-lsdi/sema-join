@@ -19,6 +19,8 @@ By calculating Pointwise Mutual Information (PMI) scores across the corpus, Proj
 ## Corpus Data
 
 Project SEMA-JOIN includes sample corpus data in JSON format. This data contains tables that will be analyzed to build the semantic index.
+Currently supported corpus formats are:
+- JSON files containing arrays of tables in Wikitable or WDC format
 
 ## Ingestion Process
 

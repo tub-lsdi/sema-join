@@ -56,5 +56,5 @@ This implementation extends the research with additional features:
 
 ## Next Steps
 
-Start by setting up your environment configuration, then proceed with installation.
+Start by completing the installation, then proceed with your environment configuration
 

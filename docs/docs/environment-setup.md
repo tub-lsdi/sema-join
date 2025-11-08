@@ -57,6 +57,9 @@ DUCKDB_TEMP_DIRECTORY=./_temp
 ```
 
 These settings control DuckDB's performance characteristics.
+The temporary directory is used for intermediate data storage during processing. Depending on the size of your corpus, ensure this directory has sufficient space. This can me a multiple of the original corpus size.
+Make sure there is enough free disk space in the specified directory. This can be on a separate volume.
+Also note, that read and write speeds of the disk can impact performance.
 
 ### Batch Processing
 
