@@ -48,9 +48,9 @@ npm run serve
 Documentation files are in the `/docs` directory:
 
 - `getting-started.md` - Introduction to SEMA-JOIN
+- `environment-setup.md` - Environment configuration
 - `installation.md` - Installation instructions
 - `corpus-ingestion.md` - How to ingest corpus data
-- `environment-setup.md` - Environment configuration
 - `using-sema-join.md` - User guide for the application
 
 To add a new page, create a markdown file in `/docs` and update `sidebars.ts` to include it in the navigation.
