@@ -2,6 +2,8 @@
 
 Implementation of the SEMA-JOIN paper for semantic table joins.
 
+**📚 [View Full Documentation](https://tub-lsdi.github.io/sema-join-docs/)**
+
 ## Project Structure
 
 * `/backend`: Self-contained FastAPI backend application
@@ -15,6 +17,8 @@ Implementation of the SEMA-JOIN paper for semantic table joins.
 - Python 3.13+
 - uv (Python package manager)
 - Node.js 20+ and npm
+- Ollama 
+- Mistral model (via Ollama: `ollama pull mistral`)
 
 ## 🚀 Quick Start (Recommended)
 
@@ -124,17 +128,34 @@ npm run dev
 
 The frontend will be available at: http://localhost:3000
 
-## AI-Powered Column Matching
+### AI Setup (Optional)
 
-Uses Ollama with Mistral LLM to suggest which columns should be joined based on semantic relationships.
+AI-powered column matching uses Ollama with Mistral LLM to suggest which columns should be joined based on semantic relationships.
 
+#### 1. Install Ollama
+
+For Linux:
 ```bash
-# Setup (one time)
-./sema-join.sh ai setup
-
-# Start AI service
-./sema-join.sh ai serve
-
-# Check status
-./sema-join.sh ai status
+curl -fsSL https://ollama.com/install.sh | sh
 ```
+
+For macOS:
+```bash
+brew install ollama
+```
+
+For Windows:
+- Download Ollama from https://ollama.com/download
+- Install and run Ollama
+
+#### 2. Install Mistral Model
+```bash
+ollama pull mistral
+```
+
+#### 3. Start Ollama Service
+```bash
+ollama serve
+```
+
+**Note:** Ollama must be running on port 11434 for AI features to work.
