@@ -211,7 +211,7 @@ setup_database() {
     
     if [ -f "$BACKEND_DIR/setup_database.sh" ]; then
         cd "$BACKEND_DIR"
-        bash setup_database.sh
+        bash setup_database.sh "$@"
     else
         log_error "setup_database.sh not found in backend directory"
         return 1
@@ -465,8 +465,9 @@ show_help() {
     echo "    backend          Start backend server only (http://localhost:8000)"
     echo "    frontend         Start frontend server only (http://localhost:3000)"
     echo ""
-    echo -e "  ${GREEN}db${NC}"
+    echo -e "  ${GREEN}db${NC} [--large]"
     echo "                     Setup and initialize the database"
+    echo "                     (Use --large for large datasets)"
     echo ""
     echo -e "  ${GREEN}tests${NC}"
     echo "                     Run tests"
@@ -519,7 +520,7 @@ main() {
             esac
             ;;
         db)
-            setup_database
+            setup_database "$2"
             ;;
         tests|test)
             run_tests

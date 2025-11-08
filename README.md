@@ -55,6 +55,7 @@ chmod +x sema-join.sh
 
 # Database & Info
 ./sema-join.sh db                  # Initialize database
+./sema-join.sh db --large          # Initialize database with scripts for large corpora
 ./sema-join.sh status              # Check project status
 ./sema-join.sh help                # Show help
 
@@ -94,6 +95,8 @@ Or run the setup scripts individually:
 ```bash
 # Step 1: Ingest corpus data
 python backend/corpus/setup_db/01_ingest_corpus.py
+# or use the version for larger corpora:
+python backend/corpus/setup_db/01_ingest_corpus_parllel.py
 
 # Step 2: Calculate PMI statistics
 python backend/corpus/setup_db/02_calculate_stats.py

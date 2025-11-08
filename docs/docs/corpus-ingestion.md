@@ -55,6 +55,12 @@ This will execute both ingestion steps in sequence:
 - Generate NPMI scores
 - Create database indexes
 
+Use the `--large` flag if you are using a large corpus:
+This will use temporary files to handle larger datasets without running out of memory as well ase optimizing some steps for speed.
+
+```bash./sema-join.sh db --large
+```
+
 ## Database Location
 
 The corpus database is created in the project root directory. This database contains all the statistical information needed for semantic joins.
