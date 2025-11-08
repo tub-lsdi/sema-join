@@ -56,7 +56,6 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
 
         # Step 1: Fetch column-level PMI scores from database
         w_ijkl_scores = self._fetch_pmi_scores(conn)
-        print(w_ijkl_scores)
 
         # Step 2: Solve CILP using Algorithm 2 (which constructs CLP, calls Algorithm 1, and converts to integral)
         x_star, z_star = self._algorithm_2_solve_cilp(
@@ -116,6 +115,12 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         # Fetch column-level PMI scores (only positive, as stored in DB)
         # Filters based on input_r and input_s tables registered in create_bridge()
         column_pmi_query = """
+            WITH R AS (
+                SELECT r_val FROM input_r
+            ),
+            S AS (
+                SELECT s_val FROM input_s
+            )
             SELECT
                 cp.pairA_v1,
                 cp.pairA_v2,
@@ -124,16 +129,22 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
                 cp.npmi_score AS column_pmi
             FROM column_npmi_scores AS cp
             WHERE
-                (cp.pairA_v1 IN (SELECT r_val FROM input_r)) AND
-                (cp.pairA_v2 IN (SELECT r_val FROM input_r)) AND
-                (cp.pairB_v1 IN (SELECT s_val FROM input_s)) AND
-                (cp.pairB_v2 IN (SELECT s_val FROM input_s))
+                -- Condition 1: Check if pairA is an (R, S) or (S, R) match
+                (
+                    (EXISTS (SELECT 1 FROM R WHERE cp.pairA_v1 = R.r_val) AND EXISTS (SELECT 1 FROM S WHERE cp.pairA_v2 = S.s_val)) OR
+                    (EXISTS (SELECT 1 FROM S WHERE cp.pairA_v1 = S.s_val) AND EXISTS (SELECT 1 FROM R WHERE cp.pairA_v2 = R.r_val))
+                )
+                AND
+                -- Condition 2: Check if pairB is ALSO an (R, S) or (S, R) match
+                (
+                    (EXISTS (SELECT 1 FROM R WHERE cp.pairB_v1 = R.r_val) AND EXISTS (SELECT 1 FROM S WHERE cp.pairB_v2 = S.s_val)) OR
+                    (EXISTS (SELECT 1 FROM S WHERE cp.pairB_v1 = S.s_val) AND EXISTS (SELECT 1 FROM R WHERE cp.pairB_v2 = R.r_val))
+                )
         """
         column_pmi_df = conn.execute(column_pmi_query).pl()
-
         w_ijkl_scores = {}
         for row in column_pmi_df.iter_rows(named=True):
-            ri, sj, rk, sl = row["ri"], row["sj"], row["rk"], row["sl"]
+            ri, sj, rk, sl = row["pairA_v1"], row["pairA_v2"], row["pairB_v1"], row["pairB_v2"]
             pmi_value = row["column_pmi"]
 
             # Store the fetched direction: wᵢⱼₖₗ = PMI((rᵢ, sⱼ), (rₖ, sₗ))
@@ -189,8 +200,27 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
 
         # Constraint 2: z̄ᵢⱼₖₗ ≤ (1/2) × (x̄ᵢⱼ + x̄ₖₗ) for all i≠k
         for (ri, sj, rk, sl) in z_vars.keys():
-            prob += z_vars[(ri, sj, rk, sl)] <= 0.5 * \
-                (x_vars[(ri, sj)] + x_vars[(rk, sl)])
+            # Find the x_var for the first pair
+            x_var_1 = x_vars.get((ri, sj))
+            if x_var_1 is None:
+                # If (ri, sj) isn't the key, (sj, ri) must be.
+                x_var_1 = x_vars.get((sj, ri))
+
+            # Find the x_var for the second pair
+            x_var_2 = x_vars.get((rk, sl))
+            if x_var_2 is None:
+                # If (rk, sl) isn't the key, (sl, rk) must be.
+                x_var_2 = x_vars.get((sl, rk))
+
+            # Only add the constraint if both corresponding x_vars were
+            # found in our (R, S) input lists.
+            if x_var_1 is not None and x_var_2 is not None:
+                prob += z_vars[(ri, sj, rk, sl)] <= 0.5 * (x_var_1 + x_var_2)
+            else:
+                # If an x_var is missing, it means this z_var corresponds
+                # to a pair not in our R/S scope. That pair's x_var
+                # is implicitly 0, so z_var must also be 0.
+                prob += z_vars[(ri, sj, rk, sl)] == 0
 
         # Solve the LP
         prob.solve(pulp.PULP_CBC_CMD(msg=0))
@@ -249,11 +279,21 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
                 contribution_scores = {}
                 for sj in list_s:
                     c_ij = 0.0
+
+                    # We must use CANONICAL keys to access w_ijkl_scores
+                    # (ri, sj) is the ORDERED (r,s) pair we are scoring
+                    pair_1_canon = (min(ri, sj), max(ri, sj))
+
                     for rk in list_r:
-                        if rk != ri:  # k ≠ i
+                        if rk != ri:
                             for sl in list_s:
-                                w_ijkl = w_ijkl_scores.get(
-                                    (ri, sj, rk, sl), 0.0)
+                                pair_2_canon = (min(rk, sl), max(rk, sl))
+
+                                # Build the canonical key to access the score dict
+                                w_key = (pair_1_canon[0], pair_1_canon[1],
+                                         pair_2_canon[0], pair_2_canon[1])
+
+                                w_ijkl = w_ijkl_scores.get(w_key, 0.0)
                                 c_ij += 0.5 * w_ijkl
                     contribution_scores[sj] = c_ij
 
@@ -271,15 +311,21 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         # Step 3: Calculate z̃*ᵢⱼₖₗ from x̃*ᵢⱼ
         # z̃*ᵢⱼₖₗ = (1/2) × (x̃*ᵢⱼ + x̃*ₖₗ) for all i, k ∈ [|R|], j, l ∈ [|S|], k ≠ i
         z_tilde = {}
-        for ri in list_r:
-            for sj in list_s:
-                for rk in list_r:
-                    if rk != ri:  # k ≠ i
-                        for sl in list_s:
-                            z_tilde[(ri, sj, rk, sl)] = 0.5 * (
-                                x_tilde.get((ri, sj), 0) +
-                                x_tilde.get((rk, sl), 0)
-                            )
+        for (ri_c, sj_c, rk_c, sl_c) in w_ijkl_scores.keys():
+            # (ri_c, sj_c) is canonical pair 1
+            # (rk_c, sl_c) is canonical pair 2
+
+            # Find corresponding x_tilde value for pair 1
+            x_tilde_1_val = x_tilde.get((ri_c, sj_c))
+            if x_tilde_1_val is None:
+                x_tilde_1_val = x_tilde.get((sj_c, ri_c), 0)
+
+            # Find corresponding x_tilde value for pair 2
+            x_tilde_2_val = x_tilde.get((rk_c, sl_c))
+            if x_tilde_2_val is None:
+                x_tilde_2_val = x_tilde.get((sl_c, rk_c), 0)
+
+            z_tilde[(ri_c, sj_c, rk_c, sl_c)] = 0.5 * (x_tilde_1_val + x_tilde_2_val)
 
         # Step 4: Return half-integral solution
         return x_tilde, z_tilde
@@ -310,16 +356,21 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
 
         # Step 4: Calculate z*ᵢⱼₖₗ from x*ᵢⱼ
         z_star = {}
-        for ri in list_r:
-            for sj in list_s:
-                for rk in list_r:
-                    if rk != ri:  # k ≠ i
-                        for sl in list_s:
-                            # If x*ᵢⱼ = 1 AND x*ₖₗ = 1: z*ᵢⱼₖₗ ← 1, else 0
-                            if x_star.get((ri, sj), 0) == 1 and x_star.get((rk, sl), 0) == 1:
-                                z_star[(ri, sj, rk, sl)] = 1
-                            else:
-                                z_star[(ri, sj, rk, sl)] = 0
+        for (ri_c, sj_c, rk_c, sl_c) in z_tilde.keys():
+            # Find corresponding x_star value for pair 1
+            x_star_1_val = x_star.get((ri_c, sj_c))
+            if x_star_1_val is None:
+                x_star_1_val = x_star.get((sj_c, ri_c), 0)
+
+            # Find corresponding x_star value for pair 2
+            x_star_2_val = x_star.get((rk_c, sl_c))
+            if x_star_2_val is None:
+                x_star_2_val = x_star.get((sl_c, rk_c), 0)
+
+            if x_star_1_val == 1 and x_star_2_val == 1:
+                z_star[(ri_c, sj_c, rk_c, sl_c)] = 1
+            else:
+                z_star[(ri_c, sj_c, rk_c, sl_c)] = 0
 
         # Step 5: Return integral solution
         return x_star, z_star
@@ -403,9 +454,18 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         """
         total_score = 0.0
 
-        for (ri, sj, rk, sl), w_ijkl in w_ijkl_scores.items():
-            # Check if both mappings exist
-            if join_mapping.get(ri) == sj and join_mapping.get(rk) == sl:
+        for (ri_c, sj_c, rk_c, sl_c), w_ijkl in w_ijkl_scores.items():
+
+            # Check if canonical pair 1 matches the ORDERED mapping
+            # It matches if mapping[ri_c] == sj_c OR mapping[sj_c] == ri_c
+            pair_1_match = (join_mapping.get(ri_c) == sj_c) or \
+                           (join_mapping.get(sj_c) == ri_c)
+
+            # Check if canonical pair 2 matches the ORDERED mapping
+            pair_2_match = (join_mapping.get(rk_c) == sl_c) or \
+                           (join_mapping.get(sl_c) == rk_c)
+
+            if pair_1_match and pair_2_match:
                 total_score += w_ijkl
 
         return total_score
@@ -428,13 +488,22 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         """
         score = 0.0
 
-        for (ri, sj, rk, sl), w_ijkl in w_ijkl_scores.items():
-            # Count if this mapping is part of a matched pair
-            if (ri == r_val and sj == s_val and
-                    join_mapping.get(rk) == sl):
-                score += w_ijkl
-            elif (rk == r_val and sl == s_val and
-                  join_mapping.get(ri) == sj):
-                score += w_ijkl
+        canon_target = (min(r_val, s_val), max(r_val, s_val))
+
+        for rk, sl in join_mapping.items():
+
+            if rk == r_val:
+                continue
+
+            if sl is None:
+                continue
+
+            canon_other = (min(rk, sl), max(rk, sl))
+
+            # Build the canonical key to look up in w_ijkl_scores
+            w_key = (canon_target[0], canon_target[1],
+                     canon_other[0], canon_other[1])
+
+            score += w_ijkl_scores.get(w_key, 0.0)
 
         return score
