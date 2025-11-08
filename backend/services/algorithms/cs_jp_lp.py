@@ -56,6 +56,7 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
 
         # Step 1: Fetch column-level PMI scores from database
         w_ijkl_scores = self._fetch_pmi_scores(conn)
+        print(w_ijkl_scores)
 
         # Step 2: Solve CILP using Algorithm 2 (which constructs CLP, calls Algorithm 1, and converts to integral)
         x_star, z_star = self._algorithm_2_solve_cilp(
@@ -116,17 +117,17 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         # Filters based on input_r and input_s tables registered in create_bridge()
         column_pmi_query = """
             SELECT
-                cp.ri,
-                cp.sj,
-                cp.rk,
-                cp.sl,
-                cp.column_pmi
-            FROM column_pmi_scores AS cp
+                cp.pairA_v1,
+                cp.pairA_v2,
+                cp.pairB_v1,
+                cp.pairB_v2,
+                cp.npmi_score AS column_pmi
+            FROM column_npmi_scores AS cp
             WHERE
-                (cp.ri IN (SELECT r_val FROM input_r)) AND
-                (cp.rk IN (SELECT r_val FROM input_r)) AND
-                (cp.sj IN (SELECT s_val FROM input_s)) AND
-                (cp.sl IN (SELECT s_val FROM input_s))
+                (cp.pairA_v1 IN (SELECT r_val FROM input_r)) AND
+                (cp.pairA_v2 IN (SELECT r_val FROM input_r)) AND
+                (cp.pairB_v1 IN (SELECT s_val FROM input_s)) AND
+                (cp.pairB_v2 IN (SELECT s_val FROM input_s))
         """
         column_pmi_df = conn.execute(column_pmi_query).pl()
 
