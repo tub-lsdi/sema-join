@@ -8,6 +8,7 @@ from pydantic_settings import BaseSettings
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
+
 class Settings(BaseSettings):
     """
     Project settings managed with Pydantic, which automatically reads from .env files.
@@ -16,7 +17,6 @@ class Settings(BaseSettings):
     PROJECT_ROOT: Path = PROJECT_ROOT
     DATA_DIR: Path = PROJECT_ROOT / "backend" / "corpus" / "data"
     INPUT_DIR: Path = DATA_DIR
-
 
     # DuckDB settings
     DB_PATH: str = "corpus.db"
@@ -29,6 +29,11 @@ class Settings(BaseSettings):
 
     CELL_BATCH_SIZE: int = 1_000_000
     TABLE_BATCH_SIZE: int = 50_000
+
+    # Ollama AI settings
+    OLLAMA_BASE_URL: str = "http://localhost:11434"
+    OLLAMA_MODEL: str = "mistral"
+    OLLAMA_TIMEOUT: int = 60
 
     @property
     def DEFAULT_DB_PATH(self) -> Path:
@@ -69,6 +74,7 @@ class Settings(BaseSettings):
         env_file = PROJECT_ROOT / ".env"
         env_file_encoding = 'utf-8'
 
+
 settings = Settings()
 
 try:
@@ -97,4 +103,5 @@ if settings.DEFAULT_DB_CONFIG:
     for key, value in settings.DEFAULT_DB_CONFIG.items():
         logger.debug(f"    {key} = '{value}'")
 else:
-    logger.debug("  No extra DuckDB config (temp_directory or memory_limit) found.")
+    logger.debug(
+        "  No extra DuckDB config (temp_directory or memory_limit) found.")

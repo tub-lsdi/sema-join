@@ -1,6 +1,3 @@
-"""
-Pydantic models for request/response validation.
-"""
 from .bridge import (
     BridgeTableEntry,
     BridgeTableRequest,
@@ -9,6 +6,12 @@ from .bridge import (
 from .join import (
     JoinWithBridgeRequest,
     JoinResponse,
+)
+from .ai_match import (
+    AIColumnMatchRequest,
+    AIColumnMatchResponse,
+    ColumnJoinRecommendation,
+    OllamaStatusResponse,
 )
 
 __all__ = [
@@ -19,5 +22,9 @@ __all__ = [
     # Join models
     "JoinWithBridgeRequest",
     "JoinResponse",
+    # AI matching models
+    "AIColumnMatchRequest",
+    "AIColumnMatchResponse",
+    "ColumnJoinRecommendation",
+    "OllamaStatusResponse",
 ]
-

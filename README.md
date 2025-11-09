@@ -2,6 +2,8 @@
 
 Implementation of the SEMA-JOIN paper for semantic table joins.
 
+**📚 [View Full Documentation](https://tub-lsdi.github.io/sema-join-docs/)**
+
 ## Project Structure
 
 * `/backend`: Self-contained FastAPI backend application
@@ -15,6 +17,8 @@ Implementation of the SEMA-JOIN paper for semantic table joins.
 - Python 3.13+
 - uv (Python package manager)
 - Node.js 20+ and npm
+- Ollama 
+- Mistral model (via Ollama: `ollama pull mistral`)
 
 ## 🚀 Quick Start (Recommended)
 
@@ -28,10 +32,12 @@ chmod +x sema-join.sh
 ./sema-join.sh
 ./sema-join.sh help
 
-# Use commands:
-./sema-join.sh install all        # Install all dependencies
-./sema-join.sh db                  # Setup database
-./sema-join.sh run                 # Run both servers
+# Quick Start:
+./sema-join.sh install all        # 1. Install all dependencies
+./sema-join.sh db                  # 2. Setup database
+./sema-join.sh ai setup            # 3. Setup AI (Ollama + Mistral)
+./sema-join.sh ai serve            # 4. Start Ollama service
+./sema-join.sh run                 # 5. Run both servers
 ```
 
 ### Available Commands
@@ -49,8 +55,14 @@ chmod +x sema-join.sh
 
 # Database & Info
 ./sema-join.sh db                  # Initialize database
+./sema-join.sh db --large          # Initialize database with scripts for large corpora
 ./sema-join.sh status              # Check project status
 ./sema-join.sh help                # Show help
+
+# AI Commands
+./sema-join.sh ai setup            # Install Ollama & pull Mistral model
+./sema-join.sh ai status           # Check AI status
+./sema-join.sh ai serve            # Start Ollama service
 ```
 
 ## Manual Setup (Alternative)
@@ -83,6 +95,8 @@ Or run the setup scripts individually:
 ```bash
 # Step 1: Ingest corpus data
 python backend/corpus/setup_db/01_ingest_corpus.py
+# or use the version for larger corpora:
+python backend/corpus/setup_db/01_ingest_corpus_parllel.py
 
 # Step 2: Calculate PMI statistics
 python backend/corpus/setup_db/02_calculate_stats.py
@@ -116,3 +130,34 @@ npm run dev
 ```
 
 The frontend will be available at: http://localhost:3000
+
+### AI Setup (Optional)
+
+
+#### 1. Install Ollama
+
+For Linux:
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+For macOS:
+```bash
+brew install ollama
+```
+
+For Windows:
+- Download Ollama from https://ollama.com/download
+- Install and run Ollama
+
+#### 2. Install Mistral Model
+```bash
+ollama pull mistral
+```
+
+#### 3. Start Ollama Service
+```bash
+ollama serve
+```
+
+**Note:** Ollama must be running on port 11434 for AI features to work.
