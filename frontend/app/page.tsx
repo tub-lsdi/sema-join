@@ -27,10 +27,16 @@ export default function Home() {
   const [joinMethod, setJoinMethod] = useState<JoinMethod>("row");
   const [topK, setTopK] = useState<number>(DEFAULTS.TOP_K);
   const [bridgeTable, setBridgeTable] = useState<BridgeTableEntry[]>([]);
+  const [bridgeTableMethod, setBridgeTableMethod] = useState<
+    JoinMethod | undefined
+  >(undefined);
   const [selectedBridgeEntries, setSelectedBridgeEntries] = useState<
     Set<number>
   >(new Set());
   const [joinResult, setJoinResult] = useState<TableRow[]>([]);
+  const [joinResultMethod, setJoinResultMethod] = useState<
+    JoinMethod | undefined
+  >(undefined);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -38,8 +44,10 @@ export default function Home() {
 
   const resetJoinState = () => {
     setBridgeTable([]);
+    setBridgeTableMethod(undefined);
     setSelectedBridgeEntries(new Set());
     setJoinResult([]);
+    setJoinResultMethod(undefined);
     setError("");
   };
 
@@ -72,6 +80,7 @@ export default function Home() {
 
       const response = await createBridgeTable(listR, listS, joinMethod, topK);
       setBridgeTable(response.bridge_table);
+      setBridgeTableMethod(joinMethod);
 
       // Auto-select best matches (highest NPMI per r_val)
       const initialSelection = selectBestMatches(response.bridge_table);
@@ -110,6 +119,7 @@ export default function Home() {
         sJoinCol
       );
       setJoinResult(response.result);
+      setJoinResultMethod(joinMethod);
     } catch (err) {
       setError(getErrorMessage(err, "Failed to perform join"));
     } finally {
@@ -190,6 +200,7 @@ export default function Home() {
           <BridgeTablePanel
             bridgeTable={bridgeTable}
             joinMethod={joinMethod}
+            bridgeTableMethod={bridgeTableMethod}
             topK={topK}
             selectedEntries={selectedBridgeEntries}
             onJoinMethodChange={setJoinMethod}
@@ -208,7 +219,7 @@ export default function Home() {
           />
         )}
 
-        <JoinResultPanel data={joinResult} />
+        <JoinResultPanel data={joinResult} joinMethod={joinResultMethod} />
       </div>
     </div>
   );

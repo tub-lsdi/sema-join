@@ -6,12 +6,13 @@ import {
   type JoinMethod,
   suggestBestBridgeEntries,
 } from "@/lib/api";
-import { getErrorMessage } from "@/lib/utils";
+import { getErrorMessage, getScoreColumnConfig } from "@/lib/utils";
 import styles from "./BridgeTablePanel.module.css";
 
 interface Props {
   bridgeTable: BridgeTableEntry[];
   joinMethod: JoinMethod;
+  bridgeTableMethod?: JoinMethod;
   topK: number;
   selectedEntries: Set<number>;
   onJoinMethodChange: (method: JoinMethod) => void;
@@ -30,6 +31,7 @@ interface Props {
 export default function BridgeTablePanel({
   bridgeTable,
   joinMethod,
+  bridgeTableMethod,
   topK,
   selectedEntries,
   onJoinMethodChange,
@@ -64,6 +66,9 @@ export default function BridgeTablePanel({
   // AI suggest button is only shown for RS-JP with top_k > 1
   const showAISuggestButton =
     joinMethod === "row" && topK > 1 && bridgeTable.length > 0;
+
+  // Get score column configuration based on the algorithm that was used
+  const scoreColumn = getScoreColumnConfig(bridgeTableMethod);
 
   return (
     <div className={styles.panel}>
@@ -303,27 +308,13 @@ export default function BridgeTablePanel({
                     </span>
                   </th>
                   <th>
-                    {joinMethod === "row" ? (
-                      <>
-                        NPMI Score
-                        <span
-                          className={styles.tooltipIcon}
-                          title="Normalized Pointwise Mutual Information: Quantifies pairwise statistical co-occurrence strength between values in the corpus. Range: [-1, +1]. Higher values indicate stronger semantic association."
-                        >
-                          ⓘ
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        Match Score
-                        <span
-                          className={styles.tooltipIcon}
-                          title="Aggregate PMI score: Represents the sum of column-level co-occurrence scores for this assignment within the global optimization objective. Higher values indicate better consistency with the overall mapping."
-                        >
-                          ⓘ
-                        </span>
-                      </>
-                    )}
+                    {scoreColumn.label}
+                    <span
+                      className={styles.tooltipIcon}
+                      title={scoreColumn.tooltip}
+                    >
+                      ⓘ
+                    </span>
                   </th>
                 </tr>
               </thead>
@@ -334,11 +325,7 @@ export default function BridgeTablePanel({
                     className={
                       selectedEntries.has(idx) ? styles.selectedRow : ""
                     }
-                    title={
-                      joinMethod === "column"
-                        ? "Aggregate column-level PMI score (sum of co-occurrence scores)"
-                        : "Normalized pointwise mutual information (pairwise score)"
-                    }
+                    title={scoreColumn.tooltip}
                   >
                     <td className={styles.checkboxCell}>
                       <input
