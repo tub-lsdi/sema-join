@@ -37,6 +37,13 @@ export interface HistoryResponse {
   entries: HistoryEntry[];
 }
 
+export interface HistoryDetailResponse extends HistoryEntry {
+  list_r: any[];
+  list_s: any[];
+  bridge_table: any[];
+  result: any[];
+}
+
 // Helper Functions
 
 /**
@@ -190,40 +197,17 @@ export async function suggestBestBridgeEntries(
 }
 
 export async function fetchHistory(): Promise<HistoryResponse> {
-  const response = await fetch(`${API_BASE_URL}/history`, {
+  return apiRequest<HistoryResponse>(`${API_BASE_URL}/history`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
-
-  if (!response.ok) {
-    const error = await response
-      .json()
-      .catch(() => ({ detail: "Failed to fetch history" }));
-    throw new Error(error.detail);
-  }
-
-  return response.json();
 }
 
-export async function fetchHistoryDetail(id: number): Promise<
-  HistoryEntry & {
-    list_r: any[];
-    list_s: any[];
-    bridge_table: any[];
-    result: any[];
-  }
-> {
-  const response = await fetch(`${API_BASE_URL}/history/${id}`, {
+export async function fetchHistoryDetail(
+  id: number
+): Promise<HistoryDetailResponse> {
+  return apiRequest<HistoryDetailResponse>(`${API_BASE_URL}/history/${id}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
-
-  if (!response.ok) {
-    const error = await response
-      .json()
-      .catch(() => ({ detail: "Failed to fetch history detail" }));
-    throw new Error(error.detail);
-  }
-
-  return response.json();
 }
