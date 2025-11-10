@@ -17,8 +17,9 @@ Implementation of the SEMA-JOIN paper for semantic table joins.
 - Python 3.13+
 - uv (Python package manager)
 - Node.js 20+ and npm
-- Ollama 
-- Mistral model (via Ollama: `ollama pull mistral`)
+- Docker (for application database)
+- Ollama (optional, for AI features)
+- Mistral model (optional, via Ollama: `ollama pull mistral`)
 
 ## 🚀 Quick Start (Recommended)
 
@@ -33,12 +34,42 @@ chmod +x sema-join.sh
 ./sema-join.sh help
 
 # Quick Start:
-./sema-join.sh install all        # 1. Install all dependencies
-./sema-join.sh db                  # 2. Setup database
-./sema-join.sh ai setup            # 3. Setup AI (Ollama + Mistral)
-./sema-join.sh ai serve            # 4. Start Ollama service
-./sema-join.sh run                 # 5. Run both servers
+# 1. Create .env file with required configuration (see Environment Setup below)
+# 2. Install all dependencies
+./sema-join.sh install all
+# 3. Start Docker services (application database)
+./sema-join.sh docker run
+# 4. Initialize application database schema
+./sema-join.sh app_db
+# 5. Setup corpus database
+./sema-join.sh db
+# 6. (Optional) Setup AI (Ollama + Mistral)
+./sema-join.sh ai setup
+# 7. (Optional) Start Ollama service
+./sema-join.sh ai serve
+# 8. Run both servers
+./sema-join.sh run
 ```
+
+### Environment Setup
+
+Before running the project, create a `.env` file in the project root with the required configuration:
+
+```bash
+DB_PATH=corpus.db
+LOG_LEVEL=DEBUG
+
+# Application Database Configuration
+APP_DB_CONTAINER_NAME=sema_app_db
+APP_DB_HOST=localhost
+APP_DB_PORT=3306
+APP_DB_DATABASE=sema_app_db
+APP_DB_USERNAME=your_username
+APP_DB_PASSWORD=your_password
+APP_DB_ROOT_PASSWORD=your_root_password
+```
+
+See the [Environment Setup documentation](https://tub-lsdi.github.io/sema-join-docs/docs/environment-setup) for complete configuration details.
 
 ### Available Commands
 
@@ -54,10 +85,15 @@ chmod +x sema-join.sh
 ./sema-join.sh run frontend        # Start frontend only (port 3000)
 
 # Database & Info
-./sema-join.sh db                  # Initialize database
-./sema-join.sh db --large          # Initialize database with scripts for large corpora
+./sema-join.sh db                  # Initialize corpus database
+./sema-join.sh db --large          # Initialize corpus database with scripts for large corpora
+./sema-join.sh app_db              # Run Alembic migrations for application database
 ./sema-join.sh status              # Check project status
 ./sema-join.sh help                # Show help
+
+# Docker
+./sema-join.sh docker run          # Start Docker services (build & up)
+./sema-join.sh docker down         # Stop Docker services
 
 # AI Commands
 ./sema-join.sh ai setup            # Install Ollama & pull Mistral model
