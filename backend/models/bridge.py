@@ -8,7 +8,8 @@ class BridgeTableEntry(BaseModel):
     r_val: str = Field(..., description="Value from list R")
     s_val: str = Field(..., description="Candidate value from list S")
     npmi: float | None = Field(
-        description="Score for this match. RS-JP: single pairwise NPMI score. CS-JP-LP: aggregate column-level PMI score (sum).")
+        description="Score for this match. RS-JP: single pairwise NPMI score. CS-JP-LP: aggregate column-level PMI score (sum)."
+    )
 
 
 class BridgeTableRequest(BaseModel):
