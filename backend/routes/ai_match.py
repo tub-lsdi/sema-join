@@ -5,7 +5,7 @@ from backend.models.ai_match import (
     AIColumnMatchResponse,
     OllamaStatusResponse,
     BridgeEntrySuggestionRequest,
-    BridgeEntrySuggestionResponse
+    BridgeEntrySuggestionResponse,
 )
 from backend.services.AIColumnMatchingService import AIColumnMatchingService
 
@@ -48,8 +48,8 @@ async def match_columns_with_ai(request_data: AIColumnMatchRequest, request: Req
                 detail={
                     "error": "Ollama service is not available",
                     "suggestion": status.get("suggestion", "Start Ollama service"),
-                    "details": status
-                }
+                    "details": status,
+                },
             )
 
         if not status.get("model_available"):
@@ -58,15 +58,15 @@ async def match_columns_with_ai(request_data: AIColumnMatchRequest, request: Req
                 detail={
                     "error": f"Model '{ai_service.model}' is not available",
                     "suggestion": f"Pull the model with: ollama pull {ai_service.model}",
-                    "available_models": status.get("available_models", [])
-                }
+                    "available_models": status.get("available_models", []),
+                },
             )
 
         # Get recommendations from AI
         result = ai_service.recommend_column_joins(
             table_r=request_data.table_r,
             table_s=request_data.table_s,
-            max_samples=request_data.max_samples
+            max_samples=request_data.max_samples,
         )
 
         return AIColumnMatchResponse(**result)
@@ -75,14 +75,10 @@ async def match_columns_with_ai(request_data: AIColumnMatchRequest, request: Req
         # Re-raise HTTP exceptions as-is
         raise
     except ValueError as e:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Invalid input: {str(e)}"
-        )
+        raise HTTPException(status_code=400, detail=f"Invalid input: {str(e)}")
     except Exception as e:
         raise HTTPException(
-            status_code=500,
-            detail=f"Error getting AI recommendations: {str(e)}"
+            status_code=500, detail=f"Error getting AI recommendations: {str(e)}"
         )
 
 
@@ -134,8 +130,8 @@ async def suggest_best_bridge_entries(request_data: BridgeEntrySuggestionRequest
                 detail={
                     "error": "Ollama service is not available",
                     "suggestion": status.get("suggestion", "Start Ollama service"),
-                    "details": status
-                }
+                    "details": status,
+                },
             )
 
         if not status.get("model_available"):
@@ -144,14 +140,16 @@ async def suggest_best_bridge_entries(request_data: BridgeEntrySuggestionRequest
                 detail={
                     "error": f"Model '{ai_service.model}' is not available",
                     "suggestion": f"Pull the model with: ollama pull {ai_service.model}",
-                    "available_models": status.get("available_models", [])
-                }
+                    "available_models": status.get("available_models", []),
+                },
             )
 
         # Get AI suggestions
         result = ai_service.suggest_best_bridge_entries(
-            bridge_entries=[entry.dict() if hasattr(entry, 'dict') else entry
-                            for entry in request_data.bridge_entries]
+            bridge_entries=[
+                entry.dict() if hasattr(entry, "dict") else entry
+                for entry in request_data.bridge_entries
+            ]
         )
 
         return BridgeEntrySuggestionResponse(**result)
@@ -160,11 +158,9 @@ async def suggest_best_bridge_entries(request_data: BridgeEntrySuggestionRequest
         raise
     except ValueError as e:
         raise HTTPException(
-            status_code=400,
-            detail=f"Invalid input or AI response: {str(e)}"
+            status_code=400, detail=f"Invalid input or AI response: {str(e)}"
         )
     except Exception as e:
         raise HTTPException(
-            status_code=500,
-            detail=f"Error getting AI suggestions: {str(e)}"
+            status_code=500, detail=f"Error getting AI suggestions: {str(e)}"
         )

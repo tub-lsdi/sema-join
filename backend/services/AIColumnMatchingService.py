@@ -20,15 +20,11 @@ class AIColumnMatchingService:
         - OLLAMA_MODEL: mistral
         - OLLAMA_TIMEOUT: 60
         """
-        self.base_url = settings.OLLAMA_BASE_URL.rstrip('/')
+        self.base_url = settings.OLLAMA_BASE_URL.rstrip("/")
         self.model = settings.OLLAMA_MODEL
         self.timeout = settings.OLLAMA_TIMEOUT
 
-    def _build_prompt(
-        self,
-        table_r_schema: dict,
-        table_s_schema: dict
-    ) -> str:
+    def _build_prompt(self, table_r_schema: dict, table_s_schema: dict) -> str:
         """
         Build a prompt for the LLM to analyze column relationships.
 
@@ -39,7 +35,7 @@ class AIColumnMatchingService:
         Returns:
             Formatted prompt string
         """
-        prompt = f"""You are a data analyst expert specializing in database joins. 
+        prompt = f"""You are a data analyst expert specializing in database joins.
 Analyze the following two table schemas and recommend which columns should be joined together.
 
 I'm providing you with extensive data from both tables (up to 100 rows per table) so you can make accurate recommendations.
@@ -125,9 +121,9 @@ IMPORTANT:
                     "model": self.model,
                     "prompt": prompt,
                     "stream": False,
-                    "format": "json"  # Request JSON format
+                    "format": "json",  # Request JSON format
                 },
-                timeout=self.timeout
+                timeout=self.timeout,
             )
             response.raise_for_status()
 
@@ -143,25 +139,23 @@ IMPORTANT:
                 # If JSON parsing fails, try to extract JSON from the text
                 # Sometimes LLMs add extra text around the JSON
                 import re
-                json_match = re.search(r'\{.*\}', llm_output, re.DOTALL)
+
+                json_match = re.search(r"\{.*\}", llm_output, re.DOTALL)
                 if json_match:
                     result = json.loads(json_match.group())
                     return result
                 else:
                     raise ValueError(
-                        f"Could not parse JSON from LLM response: {llm_output}") from e
+                        f"Could not parse JSON from LLM response: {llm_output}"
+                    ) from e
 
         except requests.exceptions.RequestException as e:
-            raise Exception(
-                f"Failed to call Ollama API at {self.base_url}: {str(e)}")
+            raise Exception(f"Failed to call Ollama API at {self.base_url}: {str(e)}")
         except Exception as e:
             raise Exception(f"Error processing LLM response: {str(e)}")
 
     def recommend_column_joins(
-        self,
-        table_r: list[dict],
-        table_s: list[dict],
-        max_samples: int = 100
+        self, table_r: list[dict], table_s: list[dict], max_samples: int = 100
     ) -> dict:
         """
         Analyze two tables and recommend which columns to join.
@@ -243,7 +237,7 @@ IMPORTANT:
                 "sample_values": samples,  # All values from analyzed rows
                 "unique_count": len(unique_values),
                 "total_samples": len(samples),
-                "null_count": rows_to_analyze - len(samples)
+                "null_count": rows_to_analyze - len(samples),
             }
 
         return schema
@@ -257,10 +251,7 @@ IMPORTANT:
         """
         try:
             # Check if Ollama is running
-            response = requests.get(
-                f"{self.base_url}/api/tags",
-                timeout=5
-            )
+            response = requests.get(f"{self.base_url}/api/tags", timeout=5)
             response.raise_for_status()
 
             models = response.json().get("models", [])
@@ -272,13 +263,13 @@ IMPORTANT:
                 "ollama_running": True,
                 "model_requested": self.model,
                 "model_available": model_available,
-                "available_models": model_names
+                "available_models": model_names,
             }
         except Exception as e:
             return {
                 "ollama_running": False,
                 "error": str(e),
-                "suggestion": "Make sure Ollama is running. Try: 'ollama serve'"
+                "suggestion": "Make sure Ollama is running. Try: 'ollama serve'",
             }
 
     def suggest_best_bridge_entries(self, bridge_entries: list[dict]) -> dict:
@@ -297,11 +288,9 @@ IMPORTANT:
             r_val = entry["r_val"]
             if r_val not in grouped:
                 grouped[r_val] = []
-            grouped[r_val].append({
-                "index": idx,
-                "s_val": entry["s_val"],
-                "npmi": entry["npmi"]
-            })
+            grouped[r_val].append(
+                {"index": idx, "s_val": entry["s_val"], "npmi": entry["npmi"]}
+            )
 
         # Build prompt
         prompt = f"""You are a data expert analyzing bridge table matches from a semantic join algorithm.
@@ -353,9 +342,9 @@ Respond with ONLY valid JSON, no markdown, no explanation outside the JSON."""
                     "model": self.model,
                     "prompt": prompt,
                     "stream": False,
-                    "format": "json"
+                    "format": "json",
                 },
-                timeout=self.timeout
+                timeout=self.timeout,
             )
             response.raise_for_status()
 
@@ -387,20 +376,25 @@ Respond with ONLY valid JSON, no markdown, no explanation outside the JSON."""
 
                 # If AI suggested a value not in the list, log it and fall back to best NPMI
                 if not found:
-                    missing_selections.append({
-                        "r_val": r_val,
-                        "suggested_s_val": selected_s_val,
-                        "available_s_vals": [e["s_val"] for e in grouped.get(r_val, [])]
-                    })
+                    missing_selections.append(
+                        {
+                            "r_val": r_val,
+                            "suggested_s_val": selected_s_val,
+                            "available_s_vals": [
+                                e["s_val"] for e in grouped.get(r_val, [])
+                            ],
+                        }
+                    )
 
                     # Fallback: Pick the one with highest NPMI for this r_val
                     entries_for_r = grouped.get(r_val, [])
                     if entries_for_r:
-                        best_entry = max(
-                            entries_for_r, key=lambda e: e.get("npmi", 0))
+                        best_entry = max(entries_for_r, key=lambda e: e.get("npmi", 0))
                         selected_indices.append(best_entry["index"])
-                        print(f"Warning: AI suggested '{selected_s_val}' for '{r_val}' but it's not in the list. "
-                              f"Falling back to best NPMI match: '{best_entry['s_val']}'")
+                        print(
+                            f"Warning: AI suggested '{selected_s_val}' for '{r_val}' but it's not in the list. "
+                            f"Falling back to best NPMI match: '{best_entry['s_val']}'"
+                        )
 
             # Check if AI missed any r_vals - add them with highest NPMI
             all_r_vals = set(grouped.keys())
@@ -409,25 +403,27 @@ Respond with ONLY valid JSON, no markdown, no explanation outside the JSON."""
 
             if missed_r_vals:
                 print(
-                    f"Warning: AI didn't suggest matches for: {missed_r_vals}. Adding best NPMI matches.")
+                    f"Warning: AI didn't suggest matches for: {missed_r_vals}. Adding best NPMI matches."
+                )
                 for r_val in missed_r_vals:
                     entries_for_r = grouped.get(r_val, [])
                     if entries_for_r:
-                        best_entry = max(
-                            entries_for_r, key=lambda e: e.get("npmi", 0))
+                        best_entry = max(entries_for_r, key=lambda e: e.get("npmi", 0))
                         selected_indices.append(best_entry["index"])
-                        selections.append({
-                            "r_val": r_val,
-                            "selected_s_val": best_entry["s_val"],
-                            "reason": "AI didn't provide suggestion, using highest NPMI",
-                            "confidence": 0.5
-                        })
+                        selections.append(
+                            {
+                                "r_val": r_val,
+                                "selected_s_val": best_entry["s_val"],
+                                "reason": "AI didn't provide suggestion, using highest NPMI",
+                                "confidence": 0.5,
+                            }
+                        )
 
             return {
                 "selections": selections,
                 "analysis": ai_result.get("analysis", "AI analysis complete"),
                 "selected_indices": selected_indices,
-                "model_used": self.model
+                "model_used": self.model,
             }
 
         except json.JSONDecodeError as e:

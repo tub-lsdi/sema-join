@@ -17,7 +17,7 @@ class TestCSJPLPPaperExample3(unittest.TestCase):
             ("Germany", "DE", "United Kingdom", "GB"): 0.60,
             ("Germany", "GE", "United Kingdom", "GB"): 0.05,
         }
-        
+
         # Reversed scenario - FIPS is better (hypothetical)
         self.pmi_fips_better = {
             ("Germany", "DE", "United Kingdom", "GB"): 0.05,
@@ -44,18 +44,29 @@ class TestCSJPLPPaperExample3(unittest.TestCase):
         result_mapping = {r["r_val"]: r["s_val"] for r in result}
 
         # Assert - Should choose ISO (DE) because column score is higher (0.60 > 0.05)
-        self.assertEqual(result_mapping["Germany"], "DE",
-                         "Should choose DE when (Germany,DE,UK,GB) score is higher")
-        self.assertEqual(result_mapping["United Kingdom"], "GB",
-                         "UK should map to GB in ISO scenario")
-        
+        self.assertEqual(
+            result_mapping["Germany"],
+            "DE",
+            "Should choose DE when (Germany,DE,UK,GB) score is higher",
+        )
+        self.assertEqual(
+            result_mapping["United Kingdom"],
+            "GB",
+            "UK should map to GB in ISO scenario",
+        )
+
         # Verify that the chosen solution has the higher score
         chosen_score = self._calculate_total_score(result_mapping, self.pmi_iso_better)
         alternative_mapping = {"Germany": "GE", "United Kingdom": "GB"}
-        alternative_score = self._calculate_total_score(alternative_mapping, self.pmi_iso_better)
-        self.assertGreater(chosen_score, alternative_score,
-                          "Chosen solution should have higher score than alternative")
-        
+        alternative_score = self._calculate_total_score(
+            alternative_mapping, self.pmi_iso_better
+        )
+        self.assertGreater(
+            chosen_score,
+            alternative_score,
+            "Chosen solution should have higher score than alternative",
+        )
+
     def test_cs_jp_lp_chooses_higher_column_score_fips(self):
         """Test that CS-JP-LP picks FIPS when FIPS has higher column-level score."""
         # Arrange
@@ -68,17 +79,28 @@ class TestCSJPLPPaperExample3(unittest.TestCase):
         result_mapping = {r["r_val"]: r["s_val"] for r in result}
 
         # Assert - Should choose FIPS (GE) because column score is higher (0.60 > 0.05)
-        self.assertEqual(result_mapping["Germany"], "GE",
-                         "Should choose GE when (Germany,GE,UK,GB) score is higher")
-        self.assertEqual(result_mapping["United Kingdom"], "GB",
-                         "UK should map to GB in FIPS scenario")
-        
+        self.assertEqual(
+            result_mapping["Germany"],
+            "GE",
+            "Should choose GE when (Germany,GE,UK,GB) score is higher",
+        )
+        self.assertEqual(
+            result_mapping["United Kingdom"],
+            "GB",
+            "UK should map to GB in FIPS scenario",
+        )
+
         # Verify that the chosen solution has the higher score
         chosen_score = self._calculate_total_score(result_mapping, self.pmi_fips_better)
         alternative_mapping = {"Germany": "DE", "United Kingdom": "GB"}
-        alternative_score = self._calculate_total_score(alternative_mapping, self.pmi_fips_better)
-        self.assertGreater(chosen_score, alternative_score,
-                          "Chosen solution should have higher score than alternative")
+        alternative_score = self._calculate_total_score(
+            alternative_mapping, self.pmi_fips_better
+        )
+        self.assertGreater(
+            chosen_score,
+            alternative_score,
+            "Chosen solution should have higher score than alternative",
+        )
 
     def test_cs_jp_lp_maximizes_objective_function(self):
         """Test that CS-JP-LP maximizes the objective function."""
@@ -90,7 +112,7 @@ class TestCSJPLPPaperExample3(unittest.TestCase):
         # Act
         result = algo.create_bridge(self.list_r, self.list_s, top_k=10)
         result_mapping = {r["r_val"]: r["s_val"] for r in result}
-        
+
         # Calculate score for all possible valid mappings
         all_possible_mappings = [
             {"Germany": "DE", "United Kingdom": "GB"},
@@ -100,22 +122,27 @@ class TestCSJPLPPaperExample3(unittest.TestCase):
             {"Germany": "DE", "United Kingdom": "DE"},
             {"Germany": "GE", "United Kingdom": "DE"},
         ]
-        
+
         chosen_score = self._calculate_total_score(result_mapping, self.pmi_iso_better)
-        
+
         # Assert that chosen solution has score >= all other solutions
         for alternative_mapping in all_possible_mappings:
-            alternative_score = self._calculate_total_score(alternative_mapping, self.pmi_iso_better)
-            self.assertGreaterEqual(chosen_score, alternative_score,
-                                   f"Chosen solution (score={chosen_score:.4f}) should be >= "
-                                   f"alternative {alternative_mapping} (score={alternative_score:.4f})")
+            alternative_score = self._calculate_total_score(
+                alternative_mapping, self.pmi_iso_better
+            )
+            self.assertGreaterEqual(
+                chosen_score,
+                alternative_score,
+                f"Chosen solution (score={chosen_score:.4f}) should be >= "
+                f"alternative {alternative_mapping} (score={alternative_score:.4f})",
+            )
 
     def test_cs_jp_lp_with_complex_scenario(self):
         """Test CS-JP-LP with more complex PMI scores to verify optimization."""
         # Create a scenario with 3 possible Germany codes and complex interactions
         list_r = ["Germany", "United Kingdom", "France"]
         list_s = ["DE", "GB", "FR", "GE"]
-        
+
         # Complex PMI scores where optimal solution is not immediately obvious
         complex_pmi = {
             # Germany-UK pairs
@@ -129,7 +156,7 @@ class TestCSJPLPPaperExample3(unittest.TestCase):
         }
         # Optimal solution should be: Germany→DE, UK→GB, France→FR
         # Total score: 0.50 + 0.45 + 0.40 = 1.35
-        
+
         mock_conn = MagicMock()
         algo = CSJPLPAlgorithm(mock_conn)
         algo._fetch_pmi_scores = lambda conn: complex_pmi
@@ -137,24 +164,31 @@ class TestCSJPLPPaperExample3(unittest.TestCase):
         # Act
         result = algo.create_bridge(list_r, list_s, top_k=10)
         result_mapping = {r["r_val"]: r["s_val"] for r in result}
-        
+
         # Assert
         chosen_score = self._calculate_total_score(result_mapping, complex_pmi)
-        
+
         # Check against the expected optimal solution
         expected_optimal = {"Germany": "DE", "United Kingdom": "GB", "France": "FR"}
         optimal_score = self._calculate_total_score(expected_optimal, complex_pmi)
-        
-        self.assertAlmostEqual(chosen_score, optimal_score, places=4,
-                              msg=f"Chosen score ({chosen_score:.4f}) should equal optimal ({optimal_score:.4f})")
-        
+
+        self.assertAlmostEqual(
+            chosen_score,
+            optimal_score,
+            places=4,
+            msg=f"Chosen score ({chosen_score:.4f}) should equal optimal ({optimal_score:.4f})",
+        )
+
         # Verify it's better than a suboptimal choice (Germany→GE)
         suboptimal = {"Germany": "GE", "United Kingdom": "GB", "France": "FR"}
         suboptimal_score = self._calculate_total_score(suboptimal, complex_pmi)
-        
-        self.assertGreater(chosen_score, suboptimal_score,
-                          f"Chosen solution ({chosen_score:.4f}) should be better than "
-                          f"suboptimal ({suboptimal_score:.4f})")
+
+        self.assertGreater(
+            chosen_score,
+            suboptimal_score,
+            f"Chosen solution ({chosen_score:.4f}) should be better than "
+            f"suboptimal ({suboptimal_score:.4f})",
+        )
 
     def test_cs_jp_lp_column_level_advantage(self):
         """
@@ -182,14 +216,20 @@ class TestCSJPLPPaperExample3(unittest.TestCase):
         score_fips = self._calculate_total_score(mapping_fips, self.pmi_iso_better)
 
         # Assert - ISO mapping should have higher column-level score
-        self.assertGreater(score_iso, score_fips,
-                           "ISO mapping (DE+GB) should have higher column score than FIPS mixing (GE+GB)")
+        self.assertGreater(
+            score_iso,
+            score_fips,
+            "ISO mapping (DE+GB) should have higher column score than FIPS mixing (GE+GB)",
+        )
         self.assertAlmostEqual(score_iso, 0.60, places=2)
         self.assertAlmostEqual(score_fips, 0.05, places=2)
 
         # Assert - Algorithm should pick the higher column-level score
-        self.assertEqual(result_mapping, mapping_iso,
-                         "Algorithm should pick ISO mapping with higher column-level score")
+        self.assertEqual(
+            result_mapping,
+            mapping_iso,
+            "Algorithm should pick ISO mapping with higher column-level score",
+        )
 
     def test_cs_jp_lp_all_values_mapped(self):
         """Test that all input values get mapped."""
@@ -204,10 +244,12 @@ class TestCSJPLPPaperExample3(unittest.TestCase):
 
         # Assert - All values from R should be present
         for r_val in self.list_r:
-            self.assertIn(r_val, result_mapping,
-                          f"{r_val} should be in the result mapping")
-            self.assertIsNotNone(result_mapping[r_val],
-                                 f"{r_val} should map to a value, not None")
+            self.assertIn(
+                r_val, result_mapping, f"{r_val} should be in the result mapping"
+            )
+            self.assertIsNotNone(
+                result_mapping[r_val], f"{r_val} should map to a value, not None"
+            )
 
     def test_cs_jp_lp_many_to_one_constraint(self):
         """Test that the result satisfies many-to-one constraint."""
@@ -223,13 +265,15 @@ class TestCSJPLPPaperExample3(unittest.TestCase):
         # Assert - Each r maps to at most one s (many-to-one)
         # In this case, each r should map to exactly one s
         mapped_r_values = list(result_mapping.keys())
-        self.assertEqual(len(mapped_r_values), len(set(mapped_r_values)),
-                         "Each r value should appear at most once")
+        self.assertEqual(
+            len(mapped_r_values),
+            len(set(mapped_r_values)),
+            "Each r value should appear at most once",
+        )
 
         # Each s can be mapped by multiple r's, but in this example each maps uniquely
         mapped_s_values = [s for s in result_mapping.values() if s is not None]
-        self.assertGreater(len(mapped_s_values), 0,
-                           "At least one mapping should exist")
+        self.assertGreater(len(mapped_s_values), 0, "At least one mapping should exist")
 
 
 class TestCSJPLPPaperExample3Integration(unittest.TestCase):
@@ -290,10 +334,8 @@ class TestCSJPLPPaperExample3Integration(unittest.TestCase):
         scores = {r["r_val"]: r["npmi"] for r in result}
         self.assertEqual(len(scores), 2)
         for score in scores.values():
-            self.assertGreaterEqual(score, 0.0,
-                                    "Scores should be non-negative")
+            self.assertGreaterEqual(score, 0.0, "Scores should be non-negative")
 
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
-

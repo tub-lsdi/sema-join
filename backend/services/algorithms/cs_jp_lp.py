@@ -29,10 +29,10 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
             list_r: Normalized list of strings from R set
             list_s: Normalized list of strings from S set
             top_k: IGNORED in CS-JP-LP. This parameter is kept for API consistency
-                   with RS-JP but has no effect. CS-JP-LP is a global optimization 
-                   problem that finds ONE complete mapping with the highest aggregate 
-                   column-level score. Unlike RS-JP (which independently finds top-k 
-                   candidates per row), CS-JP-LP considers all rows jointly, so there 
+                   with RS-JP but has no effect. CS-JP-LP is a global optimization
+                   problem that finds ONE complete mapping with the highest aggregate
+                   column-level score. Unlike RS-JP (which independently finds top-k
+                   candidates per row), CS-JP-LP considers all rows jointly, so there
                    is only one globally optimal solution.
 
         Returns:
@@ -58,9 +58,7 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         w_ijkl_scores = self._fetch_pmi_scores(conn)
 
         # Step 2: Solve CILP using Algorithm 2 (which constructs CLP, calls Algorithm 1, and converts to integral)
-        x_star, z_star = self._algorithm_2_solve_cilp(
-            list_r, list_s, w_ijkl_scores
-        )
+        x_star, z_star = self._algorithm_2_solve_cilp(list_r, list_s, w_ijkl_scores)
 
         # Note: z_star is returned by Algorithm 2 per the paper's formal specification (which states
         # Algorithm 2 returns both x* and z*), but is not used in subsequent steps. The z* variables
@@ -85,11 +83,13 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
                 score = self._calculate_mapping_score(
                     r_val, s_val, join_mapping, w_ijkl_scores
                 )
-                result.append({
-                    "r_val": r_val,
-                    "s_val": s_val,
-                    "npmi": score  # Use 'npmi' field name
-                })
+                result.append(
+                    {
+                        "r_val": r_val,
+                        "s_val": s_val,
+                        "npmi": score,  # Use 'npmi' field name
+                    }
+                )
 
         return result
 
@@ -105,8 +105,8 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         Since PMI((ri,sj),(rk,sl)) = PMI((rk,sl),(ri,sj)) (symmetric), we expand
         each stored entry into both directions.
 
-        We assume that the direction of the join J : R → S 
-        is known without loss of generality, since both join directions can be 
+        We assume that the direction of the join J : R → S
+        is known without loss of generality, since both join directions can be
         tested and the one with a better score can be picked.
 
         Returns:
@@ -162,7 +162,7 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         for ri in list_r:
             for sj in list_s:
                 x_vars[(ri, sj)] = pulp.LpVariable(
-                    f"x_{ri}_{sj}", lowBound=0, upBound=1, cat='Continuous'
+                    f"x_{ri}_{sj}", lowBound=0, upBound=1, cat="Continuous"
                 )
 
         # Create decision variables z̄ᵢⱼₖₗ ∈ [0, 1]
@@ -170,15 +170,17 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         for (ri, sj, rk, sl), w_ijkl in w_ijkl_scores.items():
             if ri != rk:  # Only for i ≠ k as per guide
                 z_vars[(ri, sj, rk, sl)] = pulp.LpVariable(
-                    f"z_{ri}_{sj}_{rk}_{sl}", lowBound=0, upBound=1, cat='Continuous'
+                    f"z_{ri}_{sj}_{rk}_{sl}", lowBound=0, upBound=1, cat="Continuous"
                 )
 
         # Objective function: minimize Σ wᵢⱼₖₗ × (1 - z̄ᵢⱼₖₗ)
-        objective = pulp.lpSum([
-            w_ijkl * (1 - z_vars[(ri, sj, rk, sl)])
-            for (ri, sj, rk, sl), w_ijkl in w_ijkl_scores.items()
-            if (ri, sj, rk, sl) in z_vars
-        ])
+        objective = pulp.lpSum(
+            [
+                w_ijkl * (1 - z_vars[(ri, sj, rk, sl)])
+                for (ri, sj, rk, sl), w_ijkl in w_ijkl_scores.items()
+                if (ri, sj, rk, sl) in z_vars
+            ]
+        )
         prob += objective
 
         # Constraint 1: Σ(sj∈S) x̄ᵢⱼ ≤ 1 for all i ∈ [|R|]
@@ -187,9 +189,10 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
             prob += pulp.lpSum([x_vars[(ri, sj)] for sj in list_s]) <= 1
 
         # Constraint 2: z̄ᵢⱼₖₗ ≤ (1/2) × (x̄ᵢⱼ + x̄ₖₗ) for all i≠k
-        for (ri, sj, rk, sl) in z_vars.keys():
-            prob += z_vars[(ri, sj, rk, sl)] <= 0.5 * \
-                (x_vars[(ri, sj)] + x_vars[(rk, sl)])
+        for ri, sj, rk, sl in z_vars.keys():
+            prob += z_vars[(ri, sj, rk, sl)] <= 0.5 * (
+                x_vars[(ri, sj)] + x_vars[(rk, sl)]
+            )
 
         # Solve the LP
         prob.solve(pulp.PULP_CBC_CMD(msg=0))
@@ -204,16 +207,12 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
 
         z_bar = {}
         for (ri, sj, rk, sl), var in z_vars.items():
-            z_bar[(ri, sj, rk, sl)
-                  ] = var.varValue if var.varValue is not None else 0.0
+            z_bar[(ri, sj, rk, sl)] = var.varValue if var.varValue is not None else 0.0
 
         return x_bar, z_bar
 
     def _algorithm_1_round_to_half_integral(
-        self,
-        list_r: list[str],
-        list_s: list[str],
-        w_ijkl_scores: dict
+        self, list_r: list[str], list_s: list[str], w_ijkl_scores: dict
     ):
         """
         Round to Half-Integral Solution.
@@ -234,8 +233,7 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
             # Check if x̄*ᵢⱼ is already integral for all j
             x_values_for_ri = {sj: x_bar.get((ri, sj), 0.0) for sj in list_s}
             all_integral = all(
-                abs(val - round(val)) < 1e-9
-                for val in x_values_for_ri.values()
+                abs(val - round(val)) < 1e-9 for val in x_values_for_ri.values()
             )
 
             if all_integral:
@@ -251,8 +249,7 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
                     for rk in list_r:
                         if rk != ri:  # k ≠ i
                             for sl in list_s:
-                                w_ijkl = w_ijkl_scores.get(
-                                    (ri, sj, rk, sl), 0.0)
+                                w_ijkl = w_ijkl_scores.get((ri, sj, rk, sl), 0.0)
                                 c_ij += 0.5 * w_ijkl
                     contribution_scores[sj] = c_ij
 
@@ -276,15 +273,15 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
                     if rk != ri:  # k ≠ i
                         for sl in list_s:
                             z_tilde[(ri, sj, rk, sl)] = 0.5 * (
-                                x_tilde.get((ri, sj), 0) +
-                                x_tilde.get((rk, sl), 0)
+                                x_tilde.get((ri, sj), 0) + x_tilde.get((rk, sl), 0)
                             )
 
         # Step 4: Return half-integral solution
         return x_tilde, z_tilde
 
-    def _algorithm_2_solve_cilp(self, list_r: list[str], list_s: list[str],
-                                w_ijkl_scores: dict):
+    def _algorithm_2_solve_cilp(
+        self, list_r: list[str], list_s: list[str], w_ijkl_scores: dict
+    ):
         """
         Solve CILP.
 
@@ -315,7 +312,10 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
                     if rk != ri:  # k ≠ i
                         for sl in list_s:
                             # If x*ᵢⱼ = 1 AND x*ₖₗ = 1: z*ᵢⱼₖₗ ← 1, else 0
-                            if x_star.get((ri, sj), 0) == 1 and x_star.get((rk, sl), 0) == 1:
+                            if (
+                                x_star.get((ri, sj), 0) == 1
+                                and x_star.get((rk, sl), 0) == 1
+                            ):
                                 z_star[(ri, sj, rk, sl)] = 1
                             else:
                                 z_star[(ri, sj, rk, sl)] = 0
@@ -324,10 +324,7 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         return x_star, z_star
 
     def _extract_join_function(
-        self,
-        list_r: list[str],
-        list_s: list[str],
-        x_star: dict
+        self, list_r: list[str], list_s: list[str], x_star: dict
     ):
         """
         Extract the Join Function.
@@ -352,7 +349,7 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         list_r: list[str],
         list_s: list[str],
         join_mapping: dict,
-        w_ijkl_scores: dict
+        w_ijkl_scores: dict,
     ):
         """
         Optional Greedy Refinement.
@@ -366,7 +363,8 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         while improved:
             improved = False
             current_score = self._calculate_total_objective(
-                current_mapping, w_ijkl_scores)
+                current_mapping, w_ijkl_scores
+            )
 
             for ri in list_r:
                 best_sj = current_mapping[ri]
@@ -382,7 +380,8 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
                     test_mapping = current_mapping.copy()
                     test_mapping[ri] = sj
                     test_score = self._calculate_total_objective(
-                        test_mapping, w_ijkl_scores)
+                        test_mapping, w_ijkl_scores
+                    )
 
                     if test_score > best_score:
                         best_score = test_score
@@ -410,11 +409,7 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         return total_score
 
     def _calculate_mapping_score(
-        self,
-        r_val: str,
-        s_val: str,
-        join_mapping: dict,
-        w_ijkl_scores: dict
+        self, r_val: str, s_val: str, join_mapping: dict, w_ijkl_scores: dict
     ):
         """
         Calculate the contribution score for a specific (r_val, s_val) mapping.
@@ -429,11 +424,9 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
 
         for (ri, sj, rk, sl), w_ijkl in w_ijkl_scores.items():
             # Count if this mapping is part of a matched pair
-            if (ri == r_val and sj == s_val and
-                    join_mapping.get(rk) == sl):
+            if ri == r_val and sj == s_val and join_mapping.get(rk) == sl:
                 score += w_ijkl
-            elif (rk == r_val and sl == s_val and
-                  join_mapping.get(ri) == sj):
+            elif rk == r_val and sl == s_val and join_mapping.get(ri) == sj:
                 score += w_ijkl
 
         return score
