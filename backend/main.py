@@ -1,12 +1,19 @@
-
 import duckdb
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
+
 from backend.config import settings
 from backend.services import SemanticJoinService
-from backend.routes import health_router, bridge_router, join_router, ai_match_router
+from backend.routes import (
+    health_router,
+    bridge_router,
+    join_router,
+    history_router,
+    ai_match_router,
+)
+from backend.app_db import init_app_db, shutdown_app_db
 
 
 def get_db_path():
@@ -25,11 +32,15 @@ async def lifespan(app: FastAPI):
     # Initialize the service with the connection
     app.state.join_service = SemanticJoinService(app.state.db_connection)
 
+    # Initialize and attach the application MySQL DB (SQLAlchemy)
+    init_app_db(app)
+
     yield
 
-    # Shutdown: close database connection
-    if hasattr(app.state, 'db_connection'):
+    # Shutdown: close database connection(s)
+    if hasattr(app.state, "db_connection"):
         app.state.db_connection.close()
+        shutdown_app_db(app)
 
 
 # Initialize FastAPI app
@@ -52,4 +63,5 @@ app.add_middleware(
 app.include_router(health_router)
 app.include_router(bridge_router)
 app.include_router(join_router)
+app.include_router(history_router)
 app.include_router(ai_match_router)

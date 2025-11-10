@@ -1,4 +1,3 @@
-
 import duckdb
 
 from .SemanticJoinService import SemanticJoinService
@@ -15,7 +14,9 @@ from backend.utils import (
 
 
 # Utility function for database connection (used by setup scripts)
-def get_db_connection(db_path: str = None, read_only: bool = False) -> duckdb.DuckDBPyConnection:
+def get_db_connection(
+    db_path: str = None, read_only: bool = False
+) -> duckdb.DuckDBPyConnection:
     """
     Get a connection to the DuckDB database.
 

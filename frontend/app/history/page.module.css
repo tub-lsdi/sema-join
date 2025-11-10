@@ -1,0 +1,64 @@
+.container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #eff6ff, #e0e7ff);
+  padding: 2rem 1rem;
+}
+
+.wrapper {
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 6px 12px rgba(15, 23, 42, 0.06);
+  display: block;
+  justify-content: flex-start;
+  align-items: stretch;
+  margin-bottom: 1.5rem;
+}
+
+.gridTwoCols {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .gridTwoCols {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.cardColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem 0;
+}
+
+/* layout utilities used by history detail page */
+.stack {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.title {
+  margin: 0;
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}

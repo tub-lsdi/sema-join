@@ -1,0 +1,17 @@
+services:
+  mysql:
+    image: mysql:latest
+    container_name: ${APP_DB_CONTAINER_NAME}
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${APP_DB_DATABASE}
+      MYSQL_USER: ${APP_DB_USERNAME}
+      MYSQL_PASSWORD: ${APP_DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${APP_DB_ROOT_PASSWORD}
+    ports:
+      - "${APP_DB_PORT}:3306"
+    volumes:
+      - mysql_volume:/var/lib/mysql
+
+volumes:
+  mysql_volume:

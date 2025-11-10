@@ -65,14 +65,15 @@ class Settings(BaseSettings):
         if self.DUCKDB_TEMP_DIRECTORY:
             # Pydantic already converted this to a Path,
             # but DuckDB needs a string.
-            config['temp_directory'] = str(self.DUCKDB_TEMP_DIRECTORY)
+            config["temp_directory"] = str(self.DUCKDB_TEMP_DIRECTORY)
         if self.DUCKDB_MEMORY_LIMIT:
-            config['memory_limit'] = self.DUCKDB_MEMORY_LIMIT
+            config["memory_limit"] = self.DUCKDB_MEMORY_LIMIT
         return config
 
     class Config:
         env_file = PROJECT_ROOT / ".env"
-        env_file_encoding = 'utf-8'
+        env_file_encoding = "utf-8"
+        extra = "ignore"
 
 
 settings = Settings()
@@ -103,5 +104,4 @@ if settings.DEFAULT_DB_CONFIG:
     for key, value in settings.DEFAULT_DB_CONFIG.items():
         logger.debug(f"    {key} = '{value}'")
 else:
-    logger.debug(
-        "  No extra DuckDB config (temp_directory or memory_limit) found.")
+    logger.debug("  No extra DuckDB config (temp_directory or memory_limit) found.")

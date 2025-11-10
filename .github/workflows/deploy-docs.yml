@@ -2,8 +2,10 @@ name: Deploy Documentation
 
 on:
   push:
+    branches:
+      - develop
     paths:
-      - 'docs/**'
+      - "docs/**"
   workflow_dispatch:
 
 jobs:
@@ -12,24 +14,24 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: "npm"
           cache-dependency-path: docs/package-lock.json
-          
+
       - name: Install dependencies
         run: |
           cd docs
           npm ci
-          
+
       - name: Build documentation
         run: |
           cd docs
           npm run build
-          
+
       - name: Generate GitHub App Token
         id: generate-token
         uses: actions/create-github-app-token@v1
@@ -38,7 +40,7 @@ jobs:
           private-key: ${{ secrets.DOCS_DEPLOY_APP_PRIVATE_KEY }}
           owner: tub-lsdi
           repositories: sema-join-docs
-          
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -47,7 +49,6 @@ jobs:
           publish_branch: main
           publish_dir: ./docs/build
           cname: false
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
-          commit_message: 'Deploy documentation from ${{ github.sha }}'
-
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
+          commit_message: "Deploy documentation from ${{ github.sha }}"

@@ -1,10 +1,13 @@
 """
 Join operation endpoints.
 """
+
 from fastapi import APIRouter, HTTPException, Request
 
 from backend.models import JoinResponse, JoinWithBridgeRequest
 from backend.services import SemanticJoinService
+from backend.persistence.table_entry import create_table_entry
+from backend.persistence.join_history import create_join_history
 
 
 router = APIRouter(
@@ -40,8 +43,7 @@ async def join_from_bridge(request_data: JoinWithBridgeRequest, request: Request
         join_service: SemanticJoinService = request.app.state.join_service
 
         # Convert Pydantic models to dicts
-        bridge_table_dicts = [entry.model_dump()
-                              for entry in request_data.bridge_table]
+        bridge_table_dicts = [entry.model_dump() for entry in request_data.bridge_table]
 
         # Perform three-way join
         result = join_service.perform_join_from_bridge(
@@ -51,6 +53,33 @@ async def join_from_bridge(request_data: JoinWithBridgeRequest, request: Request
             list_s=request_data.list_s,
             s_join_col=request_data.s_join_col,
         )
+
+        # Persist the input and output tables to the application DB if available
+        try:
+            Session = request.app.state.app_db_sessionmaker
+            db_session = Session()
+            try:
+                list_r_entry = create_table_entry(db_session, request_data.list_r)
+                list_s_entry = create_table_entry(db_session, request_data.list_s)
+                bridge_table_entry = create_table_entry(db_session, bridge_table_dicts)
+                result_entry = create_table_entry(db_session, result)
+                create_join_history(
+                    session=db_session,
+                    list_r_entry=list_r_entry,
+                    list_s_entry=list_s_entry,
+                    bridge_table_entry=bridge_table_entry,
+                    result_entry=result_entry,
+                    r_join_col=request_data.r_join_col,
+                    s_join_col=request_data.s_join_col,
+                )
+            finally:
+                db_session.close()
+        except Exception as e:
+            # If persistence fails, continue but log the issue by raising a HTTPException
+            raise HTTPException(
+                status_code=500,
+                detail=f"Error saving uploaded tables to DB: {str(e)}",
+            )
 
         return JoinResponse(
             result=result,

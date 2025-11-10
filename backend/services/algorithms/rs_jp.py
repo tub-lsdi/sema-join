@@ -1,6 +1,7 @@
 """
 RS-JP algorithm implementation.
 """
+
 import polars as pl
 from .base import BridgeAlgorithm
 
@@ -8,11 +9,11 @@ from .base import BridgeAlgorithm
 class RSJPAlgorithm(BridgeAlgorithm):
     """
     RS-JP algorithm.
-    
+
     Greedy algorithm: Each r independently picks its best s based on row-level PMI.
     Fast and efficient for most use cases.
     """
-    
+
     def create_bridge(
         self,
         list_r: list[str],
@@ -21,14 +22,14 @@ class RSJPAlgorithm(BridgeAlgorithm):
     ) -> list[dict]:
         """
         Create a bridge table using RS-JP algorithm.
-        
+
         Greedy algorithm: Each r independently picks its best s based on row-level PMI.
-        
+
         Args:
             list_r: Normalized list of strings from R set
             list_s: Normalized list of strings from S set
             top_k: Number of top candidates to return per R value
-            
+
         Returns:
             List of dictionaries with r_val, s_val, and pmi fields
         """
@@ -66,4 +67,3 @@ class RSJPAlgorithm(BridgeAlgorithm):
         """
         bridge_df = conn.execute(bridge_query).pl()
         return bridge_df.to_dicts()
-

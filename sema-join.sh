@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -e
-source load_env.sh
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -48,19 +47,19 @@ command_exists() {
 # Check dependencies
 check_dependencies() {
     local missing_deps=()
-    
+
     if ! command_exists uv; then
         missing_deps+=("uv (Python package manager)")
     fi
-    
+
     if ! command_exists node; then
         missing_deps+=("node (JavaScript runtime)")
     fi
-    
+
     if ! command_exists npm; then
         missing_deps+=("npm (Node package manager)")
     fi
-    
+
     if [ ${#missing_deps[@]} -gt 0 ]; then
         log_error "Missing required dependencies:"
         for dep in "${missing_deps[@]}"; do
@@ -72,143 +71,180 @@ check_dependencies() {
         echo "  • node/npm: https://nodejs.org/ or use nvm"
         return 1
     fi
-    
+
     return 0
 }
 
 # Install backend dependencies
 install_backend() {
     log_header "Installing Backend Dependencies"
-    
+
     if ! command_exists uv; then
         log_error "uv is not installed. Please install it first:"
         echo "  curl -LsSf https://astral.sh/uv/install.sh | sh"
         return 1
     fi
-    
+
     cd "$PROJECT_ROOT"
-    
+
     log_info "Installing Python dependencies with uv..."
-    uv sync --extra backend
-    
+    uv sync
+
+    if ! command_exists pre-commit; then
+        log_error "pre-commit is not installed in the virtual environment."
+        return 1
+    fi
+
+    log_info "Setting up pre-commit hooks..."
+    pre-commit install
+
     log_success "Backend dependencies installed successfully!"
 }
 
 # Install frontend dependencies
 install_frontend() {
     log_header "Installing Frontend Dependencies"
-    
+
     if ! command_exists npm; then
         log_error "npm is not installed. Please install Node.js and npm first."
         return 1
     fi
-    
+
     cd "$FRONTEND_DIR"
-    
+
     log_info "Installing Node.js dependencies..."
     npm install
-    
+
     log_success "Frontend dependencies installed successfully!"
 }
 
 # Install both
 install_all() {
     log_header "Installing All Dependencies"
-    
+
     install_backend
     echo ""
     install_frontend
-    
+
     log_success "All dependencies installed successfully!"
 }
 
 # Run backend
 run_backend() {
     log_header "Starting Backend Server"
-    
+
     cd "$PROJECT_ROOT"
-    
+
     if [ ! -f "$PROJECT_ROOT/$DB_NAME" ]; then
         log_warning "Database not found at $PROJECT_ROOT/corpus.db"
         log_info "You may need to run the setup script first:"
         echo "  ./backend/setup_database.sh"
         echo ""
     fi
-    
+
     log_info "Starting FastAPI server on http://localhost:8000"
     log_info "API docs available at: http://localhost:8000/docs"
     log_info "Press CTRL+C to stop the server"
     echo ""
-    
+
     uv run uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
 }
 
 # Run frontend
 run_frontend() {
     log_header "Starting Frontend Development Server"
-    
+
     cd "$FRONTEND_DIR"
-    
+
     if [ ! -d "$FRONTEND_DIR/node_modules" ]; then
         log_warning "node_modules not found. Installing dependencies first..."
         npm install
         echo ""
     fi
-    
+
     log_info "Starting Next.js development server on http://localhost:3000"
     log_info "Press CTRL+C to stop the server"
     echo ""
-    
+
     npm run dev
 }
 
 # Run both backend and frontend
 run_both() {
     log_header "Starting Backend and Frontend Servers"
-    
+
     # Check if dependencies are installed
     if [ ! -d "$FRONTEND_DIR/node_modules" ]; then
         log_warning "Frontend dependencies not found. Installing..."
         install_frontend
         echo ""
     fi
-    
+
     log_info "Starting both servers..."
     log_info "Backend: http://localhost:8000"
     log_info "Frontend: http://localhost:3000"
     log_info "Press CTRL+C to stop both servers"
     echo ""
-    
+
     # Create a trap to kill both processes on exit
     trap 'kill $(jobs -p) 2>/dev/null' EXIT
-    
+
     # Start backend in background
     cd "$PROJECT_ROOT"
     uv run uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000 &
     BACKEND_PID=$!
-    
+
     # Wait a bit for backend to start
     sleep 2
-    
+
     # Start frontend in background
     cd "$FRONTEND_DIR"
     npm run dev &
     FRONTEND_PID=$!
-    
+
     # Show process IDs
     log_success "Backend started (PID: $BACKEND_PID)"
     log_success "Frontend started (PID: $FRONTEND_PID)"
     echo ""
     log_info "Monitoring servers... (Press CTRL+C to stop)"
-    
+
     # Wait for both processes
     wait
+}
+
+# Docker compose helpers
+docker_run() {
+    log_header "Starting Docker Compose (build & up)"
+
+    cd "$PROJECT_ROOT"
+
+    if ! command_exists docker; then
+        log_error "docker is not installed. Please install Docker Desktop or the docker CLI."
+        return 1
+    fi
+
+    log_info "Running: docker compose up --build -d"
+    docker compose up --build -d
+}
+
+docker_down() {
+    log_header "Stopping Docker Compose"
+
+    cd "$PROJECT_ROOT"
+
+    if ! command_exists docker; then
+        log_error "docker is not installed. Please install Docker Desktop or the docker CLI."
+        return 1
+    fi
+
+    log_info "Running: docker compose down"
+    docker compose down
 }
 
 # Setup database
 setup_database() {
     log_header "Setting Up Database"
-    
+
     if [ -f "$BACKEND_DIR/setup_database.sh" ]; then
         cd "$BACKEND_DIR"
         bash setup_database.sh "$@"
@@ -218,24 +254,46 @@ setup_database() {
     fi
 }
 
+
+# Run alembic migrations for the application DB
+app_db() {
+    log_header "Running Alembic migrations (app DB)"
+
+    if ! command_exists uv; then
+        log_error "uv is not installed. Please install it first to run migrations."
+        return 1
+    fi
+
+    cd "$PROJECT_ROOT"
+
+    log_info "Running: uv run alembic upgrade head"
+    if uv run alembic upgrade head; then
+        log_success "Alembic migrations applied successfully"
+        return 0
+    else
+        log_error "Alembic migration failed"
+        return 1
+    fi
+}
+
 # Run tests
 run_tests() {
     log_header "Running Tests"
-    
+
     cd "$PROJECT_ROOT"
-    
+
     # Check if tests directory exists
     if [ ! -d "$BACKEND_DIR/tests" ]; then
         log_error "Tests directory not found: backend/tests"
         return 1
     fi
-    
+
     log_info "Running backend tests..."
     echo ""
-    
+
     # Run all tests in backend/tests directory using unittest
     uv run python -m unittest discover -s "$BACKEND_DIR/tests" -p "test_*.py" -v
-    
+
     if [ $? -eq 0 ]; then
         echo ""
         log_success "All tests passed!"
@@ -249,7 +307,7 @@ run_tests() {
 # AI-related functions
 ai_setup() {
     log_header "Setting Up AI (Ollama + Mistral)"
-    
+
     # Check if Ollama is already installed
     if command_exists ollama; then
         log_success "Ollama is already installed"
@@ -259,7 +317,7 @@ ai_setup() {
     else
         log_info "Installing Ollama..."
         echo ""
-        
+
         # Detect OS
         if [[ "$OSTYPE" == "linux-gnu"* ]]; then
             log_info "Detected Linux. Installing Ollama..."
@@ -272,19 +330,19 @@ ai_setup() {
             echo "  https://ollama.ai"
             return 1
         fi
-        
+
         log_success "Ollama installed successfully!"
         echo ""
     fi
-    
+
     # Pull Mistral model
     log_info "Pulling Mistral model (this may take a few minutes, ~4GB download)..."
     echo ""
-    
+
     if ollama pull mistral; then
         log_success "Mistral model downloaded successfully!"
         echo ""
-        
+
         log_success "AI setup complete!"
         echo ""
         log_info "Next steps:"
@@ -300,10 +358,10 @@ ai_setup() {
 
 ai_status() {
     log_header "AI Status"
-    
+
     echo "🤖 Ollama Status:"
     echo ""
-    
+
     # Check if Ollama is installed
     if command_exists ollama; then
         OLLAMA_VERSION=$(ollama --version 2>/dev/null || echo "unknown")
@@ -314,15 +372,15 @@ ai_status() {
         log_info "Install with: ./sema-join.sh ai setup"
         return 1
     fi
-    
+
     # Check if Ollama is running
     if curl -s http://localhost:11434/api/tags >/dev/null 2>&1; then
         log_success "Ollama service is running on http://localhost:11434"
-        
+
         # Get list of models
         echo ""
         log_info "Checking for Mistral model..."
-        
+
         if ollama list 2>/dev/null | grep -q "mistral"; then
             log_success "Mistral model is available"
         else
@@ -335,40 +393,40 @@ ai_status() {
         echo ""
         log_info "Start with: ./sema-join.sh ai serve"
     fi
-    
+
     echo ""
 }
 
 ai_serve() {
     log_header "Starting Ollama Service"
-    
+
     if ! command_exists ollama; then
         log_error "Ollama is not installed"
         echo ""
         log_info "Install with: ./sema-join.sh ai setup"
         return 1
     fi
-    
+
     # Check if already running
     if curl -s http://localhost:11434/api/tags >/dev/null 2>&1; then
         log_warning "Ollama is already running on http://localhost:11434"
         return 0
     fi
-    
+
     log_info "Starting Ollama on http://localhost:11434"
     log_info "Press CTRL+C to stop the service"
     echo ""
-    
+
     ollama serve
 }
 
 # Show project status
 show_status() {
     log_header "Project Status"
-    
+
     echo "📦 Dependencies:"
     echo ""
-    
+
     # Check uv
     if command_exists uv; then
         UV_VERSION=$(uv --version 2>/dev/null || echo "unknown")
@@ -376,7 +434,7 @@ show_status() {
     else
         log_error "uv: not installed"
     fi
-    
+
     # Check node
     if command_exists node; then
         NODE_VERSION=$(node --version)
@@ -384,7 +442,7 @@ show_status() {
     else
         log_error "node: not installed"
     fi
-    
+
     # Check npm
     if command_exists npm; then
         NPM_VERSION=$(npm --version)
@@ -392,12 +450,12 @@ show_status() {
     else
         log_error "npm: not installed"
     fi
-    
+
     # Check Ollama
     if command_exists ollama; then
         OLLAMA_VERSION=$(ollama --version 2>/dev/null || echo "unknown")
         log_success "ollama: $OLLAMA_VERSION"
-        
+
         # Check if running
         if curl -s http://localhost:11434/api/tags >/dev/null 2>&1; then
             log_success "  → Service running ✓"
@@ -407,11 +465,11 @@ show_status() {
     else
         log_warning "ollama: not installed (optional, for AI features)"
     fi
-    
+
     echo ""
     echo "📁 Project Structure:"
     echo ""
-    
+
     # Check backend
     if [ -d "$BACKEND_DIR" ]; then
         log_success "Backend directory exists"
@@ -423,7 +481,7 @@ show_status() {
     else
         log_error "Backend directory not found"
     fi
-    
+
     # Check frontend
     if [ -d "$FRONTEND_DIR" ]; then
         log_success "Frontend directory exists"
@@ -435,7 +493,7 @@ show_status() {
     else
         log_error "Frontend directory not found"
     fi
-    
+
     # Check database
     if [ -f "$PROJECT_ROOT/corpus.db" ]; then
         DB_SIZE=$(du -h "$PROJECT_ROOT/corpus.db" | cut -f1)
@@ -443,7 +501,7 @@ show_status() {
     else
         log_warning "Database not found (run setup)"
     fi
-    
+
     echo ""
 }
 
@@ -465,12 +523,19 @@ show_help() {
     echo "    backend          Start backend server only (http://localhost:8000)"
     echo "    frontend         Start frontend server only (http://localhost:3000)"
     echo ""
+    echo -e "  ${GREEN}docker${NC} <target>"
+    echo "    run              Start services with 'docker compose up --build'"
+    echo "    down             Stop and remove services with 'docker compose down'"
+    echo ""
     echo -e "  ${GREEN}db${NC} [--large]"
     echo "                     Setup and initialize the database"
     echo "                     (Use --large for large datasets)"
     echo ""
     echo -e "  ${GREEN}tests${NC}"
     echo "                     Run tests"
+    echo ""
+    echo -e "  ${GREEN}app_db${NC}"
+    echo "                     Run alembic migrations to upgrade the application DB"
     echo ""
     echo -e "  ${GREEN}status${NC}"
     echo "                     Show project status and dependencies"
@@ -485,10 +550,12 @@ show_help() {
     echo ""
     echo -e "${YELLOW}Quick Start:${NC}"
     echo "  1. ./sema-join.sh install all"
-    echo "  2. ./sema-join.sh db"
-    echo "  3. ./sema-join.sh ai setup"
-    echo "  4. ./sema-join.sh ai serve"
-    echo "  5. ./sema-join.sh run"
+    echo "  2. ./sema-join.sh docker run"
+    echo "  3. ./sema-join.sh app_db"
+    echo "  4. ./sema-join.sh db"
+    echo "  5. ./sema-join.sh ai setup"
+    echo "  6. ./sema-join.sh ai serve"
+    echo "  7. ./sema-join.sh run"
     echo ""
 }
 
@@ -500,7 +567,7 @@ main() {
         show_help
         exit 0
     fi
-    
+
     # Parse command line arguments
     case "$1" in
         install)
@@ -519,11 +586,21 @@ main() {
                 *) log_error "Unknown run target: $2"; show_help; exit 1 ;;
             esac
             ;;
+            docker)
+                case "$2" in
+                    run) docker_run ;;
+                    down) docker_down ;;
+                    *) log_error "Unknown docker target: $2"; show_help; exit 1 ;;
+                esac
+                ;;
         db)
             setup_database "$2"
             ;;
         tests|test)
             run_tests
+            ;;
+        app_db)
+            app_db
             ;;
         status)
             show_status
@@ -550,4 +627,3 @@ main() {
 
 # Run main function
 main "$@"
-

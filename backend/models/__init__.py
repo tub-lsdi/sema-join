@@ -7,6 +7,11 @@ from .join import (
     JoinWithBridgeRequest,
     JoinResponse,
 )
+from .history import (
+    HistoryEntry,
+    HistoryResponse,
+    HistoryDetailEntry,
+)
 from .ai_match import (
     AIColumnMatchRequest,
     AIColumnMatchResponse,
@@ -22,6 +27,10 @@ __all__ = [
     # Join models
     "JoinWithBridgeRequest",
     "JoinResponse",
+    # History models
+    "HistoryEntry",
+    "HistoryResponse",
+    "HistoryDetailEntry",
     # AI matching models
     "AIColumnMatchRequest",
     "AIColumnMatchResponse",

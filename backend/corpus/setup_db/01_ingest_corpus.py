@@ -26,7 +26,8 @@ set_normalization_strategy(NormalizationStrategy.ALPHANUMERIC_STRICT)
 
 def create_schema(con: duckdb.DuckDBPyConnection):
     """Creates the core tables for storing corpus metadata and cells."""
-    con.execute("""
+    con.execute(
+        """
                 CREATE TABLE IF NOT EXISTS tables_meta (
                                                            table_id BIGINT,
                                                            table_hash TEXT UNIQUE,
@@ -34,15 +35,18 @@ def create_schema(con: duckdb.DuckDBPyConnection):
                                                            url TEXT,
                                                            PRIMARY KEY(table_id)
                     );
-                """)
-    con.execute("""
+                """
+    )
+    con.execute(
+        """
                 CREATE TABLE IF NOT EXISTS cells (
                                                      table_id BIGINT,
                                                      row_id INTEGER,
                                                      col_id INTEGER,
                                                      value TEXT
                 );
-                """)
+                """
+    )
     con.commit()
     logger.info("Schema created successfully.")
 
@@ -55,8 +59,7 @@ def main():
     existing_hashes = set(
         h[0] for h in con.execute("SELECT table_hash FROM tables_meta;").fetchall()
     )
-    logger.info(
-        f"Found {len(existing_hashes)} existing tables. Resuming ingestion.")
+    logger.info(f"Found {len(existing_hashes)} existing tables. Resuming ingestion.")
 
     # Get the next available table_id
     table_counter = con.execute(
@@ -95,7 +98,9 @@ def main():
             continue
 
         for table_json in tqdm(
-            stream_json_tables(file_path), desc=f"Loading {os.path.basename(file_path)}", total=total_tables
+            stream_json_tables(file_path),
+            desc=f"Loading {os.path.basename(file_path)}",
+            total=total_tables,
         ):
             rows = extract_rows(table_json)
             if not rows:
@@ -125,9 +130,10 @@ def main():
 
             # Flush batch if too large
             if len(cell_batch) >= settings.TABLE_BATCH_SIZE:
-                logger.debug(f"{table_counter}/{total_tables - len(existing_hashes)} rows ingested")
-                con.executemany(
-                    "INSERT INTO cells VALUES (?, ?, ?, ?)", cell_batch)
+                logger.debug(
+                    f"{table_counter}/{total_tables - len(existing_hashes)} rows ingested"
+                )
+                con.executemany("INSERT INTO cells VALUES (?, ?, ?, ?)", cell_batch)
                 logger.debug(f"Ingested latest batch")
 
                 cell_batch = []
@@ -144,10 +150,8 @@ def main():
 
     con.commit()
     con.close()
-    logger.info(
-        f"✅ Ingestion complete. Total tables in database: {table_counter}")
+    logger.info(f"✅ Ingestion complete. Total tables in database: {table_counter}")
 
 
 if __name__ == "__main__":
     main()
-

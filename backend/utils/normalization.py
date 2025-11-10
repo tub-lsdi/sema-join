@@ -1,6 +1,7 @@
 """
 Text normalization utilities for corpus processing.
 """
+
 import re
 from enum import Enum
 from typing import Any
@@ -39,7 +40,7 @@ DEFAULT_NORMALIZATION_STRATEGY = NormalizationStrategy.ALPHANUMERIC_STRICT
 def set_normalization_strategy(strategy: NormalizationStrategy):
     """
     Globally sets the normalization strategy.
-    
+
     Convenience function for backward compatibility.
     """
     global DEFAULT_NORMALIZATION_STRATEGY
@@ -49,8 +50,7 @@ def set_normalization_strategy(strategy: NormalizationStrategy):
 def normalize_value(v: Any) -> str:
     """
     Normalize a value using the global strategy.
-    
+
     Convenience function for backward compatibility.
     """
     return DEFAULT_NORMALIZATION_STRATEGY.normalize(v)
-

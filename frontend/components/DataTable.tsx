@@ -1,15 +1,18 @@
-"use client";
-
 import { type JoinMethod } from "@/lib/api";
 import { getScoreColumnConfig } from "@/lib/utils";
 import styles from "./DataTable.module.css";
 
 interface Props {
   data: Array<Record<string, any>>;
+  highlightColumn?: string | null;
   joinMethod?: JoinMethod;
 }
 
-export default function DataTable({ data, joinMethod }: Props) {
+export default function DataTable({
+  data,
+  highlightColumn,
+  joinMethod,
+}: Props) {
   if (!data || data.length === 0) return null;
 
   const columns = Array.from(
@@ -34,7 +37,14 @@ export default function DataTable({ data, joinMethod }: Props) {
         <thead>
           <tr>
             {columns.map((col) => (
-              <th key={col}>{getColumnDisplayName(col)}</th>
+              <th
+                key={col}
+                className={
+                  col === highlightColumn ? styles.highlightedHeader : undefined
+                }
+              >
+                {getColumnDisplayName(col)}
+              </th>
             ))}
           </tr>
         </thead>
@@ -42,7 +52,12 @@ export default function DataTable({ data, joinMethod }: Props) {
           {displayData.map((row, idx) => (
             <tr key={idx}>
               {columns.map((col) => (
-                <td key={col}>
+                <td
+                  key={col}
+                  className={
+                    col === highlightColumn ? styles.highlightedCell : undefined
+                  }
+                >
                   {typeof row[col] === "object"
                     ? JSON.stringify(row[col])
                     : String(row[col] ?? "")}

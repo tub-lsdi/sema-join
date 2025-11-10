@@ -11,7 +11,7 @@ This guide walks you through installing Project SEMA-JOIN on your system.
 Ensure your system meets these requirements:
 
 - Python 3.13 or higher
-- Node.js 20 or higher  
+- Node.js 20 or higher
 - uv package manager for Python
 - At least 4GB RAM
 - 2GB free disk space
@@ -35,7 +35,27 @@ Make the management script executable:
 chmod +x sema-join.sh
 ```
 
-### Step 3: Install All Dependencies
+### Step 3: Configure Environment
+
+Create a `.env` file in the project root with the required configuration. See the [Environment Setup](./environment-setup.md) guide for details.
+
+At minimum, create `.env` with:
+
+```bash
+DB_PATH=corpus.db
+LOG_LEVEL=DEBUG
+
+# Application Database Configuration
+APP_DB_CONTAINER_NAME=sema_app_db
+APP_DB_HOST=localhost
+APP_DB_PORT=3306
+APP_DB_DATABASE=sema_app_db
+APP_DB_USERNAME=your_username
+APP_DB_PASSWORD=your_password
+APP_DB_ROOT_PASSWORD=your_root_password
+```
+
+### Step 4: Install All Dependencies
 
 Install both backend and frontend dependencies:
 
@@ -48,7 +68,27 @@ This will:
 - Install Node.js frontend dependencies
 - Set up the virtual environment
 
-### Step 4: Install AI Service (Optional)
+### Step 5: Start Docker Services
+
+Start the application database using Docker Compose:
+
+```bash
+./sema-join.sh docker run
+```
+
+This will build and start the Docker containers defined in `docker-compose.yml`.
+
+### Step 6: Initialize Application Database
+
+Run Alembic migrations to set up the application database schema:
+
+```bash
+./sema-join.sh app_db
+```
+
+This will create the necessary tables for storing join history.
+
+### Step 7: Install AI Service (Optional)
 
 The AI-powered column matching feature requires Ollama with the Mistral model:
 
@@ -58,7 +98,7 @@ The AI-powered column matching feature requires Ollama with the Mistral model:
 
 This will install Ollama and download the Mistral model.
 
-### Step 5: Verify Installation
+### Step 8: Verify Installation
 
 Check that all components are properly installed:
 
@@ -121,13 +161,12 @@ ollama pull mistral
 
 ## Troubleshooting
 
-**Port Conflicts**  
+**Port Conflicts**
 The backend uses port 8000 and frontend uses port 3000. Ensure these ports are available.
 
-**AI Features Not Working**  
+**AI Features Not Working**
 The AI-powered column matching requires Ollama to be running on port 11434. Start Ollama with `ollama serve` or use `./sema-join.sh ai serve`.
 
 ## Next Steps
 
 After installation, proceed to corpus ingestion to build the semantic join database.
-

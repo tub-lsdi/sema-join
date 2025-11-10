@@ -17,8 +17,10 @@ import {
 import { getErrorMessage, selectBestMatches } from "@/lib/utils";
 import { DEFAULTS, ERROR_MESSAGES } from "@/lib/constants";
 import styles from "./page.module.css";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   // State
   const [tableR, setTableR] = useState<TableRow[]>([]);
   const [tableS, setTableS] = useState<TableRow[]>([]);
@@ -164,7 +166,15 @@ export default function Home() {
       <div className={styles.wrapper}>
         <Header />
         <ErrorAlert message={error} />
-
+        <div className={styles.topCard}>
+          <button
+            className={styles.historyButton}
+            aria-label="View history"
+            onClick={() => router.push("/history")}
+          >
+            View History
+          </button>
+        </div>
         <div className={styles.gridTwoCols}>
           <TableUploadPanel
             title="Table R (Left Table)"

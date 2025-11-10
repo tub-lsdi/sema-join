@@ -1,15 +1,15 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 // Types
 
-export type JoinMethod = 'row' | 'column';
+export type JoinMethod = "row" | "column";
 
 export type TableRow = Record<string, unknown>;
 
 export interface BridgeTableEntry {
   r_val: string;
   s_val: string;
-  npmi: number;  // For RS-JP: single pairwise NPMI; For CS-JP-LP: aggregate column-level score
+  npmi: number; // For RS-JP: single pairwise NPMI; For CS-JP-LP: aggregate column-level score
 }
 
 interface BridgeTableResponse {
@@ -26,6 +26,24 @@ interface JoinResponse {
   matched_count: number;
 }
 
+export interface HistoryEntry {
+  id: number;
+  timestamp: string; // ISO datetime string
+  r_join_col: string;
+  s_join_col: string;
+}
+
+export interface HistoryResponse {
+  entries: HistoryEntry[];
+}
+
+export interface HistoryDetailResponse extends HistoryEntry {
+  list_r: any[];
+  list_s: any[];
+  bridge_table: any[];
+  result: any[];
+}
+
 // Helper Functions
 
 /**
@@ -38,7 +56,7 @@ async function apiRequest<T>(url: string, options: RequestInit): Promise<T> {
     const error = await response.json().catch(() => ({
       detail: `Request failed with status ${response.status}`,
     }));
-    throw new Error(error.detail || error.error || 'Request failed');
+    throw new Error(error.detail || error.error || "Request failed");
   }
 
   return response.json();
@@ -92,7 +110,7 @@ export interface OllamaStatus {
 export async function createBridgeTable(
   listR: string[],
   listS: string[],
-  joinMethod: JoinMethod = 'row',
+  joinMethod: JoinMethod = "row",
   topK: number = 1
 ): Promise<BridgeTableResponse> {
   // Only send top_k for RS-JP (row method); CS-JP-LP ignores it
@@ -100,12 +118,12 @@ export async function createBridgeTable(
     list_r: listR,
     list_s: listS,
     join_method: joinMethod,
-    top_k: joinMethod === 'row' ? topK : 1,
+    top_k: joinMethod === "row" ? topK : 1,
   };
 
   return apiRequest<BridgeTableResponse>(`${API_BASE_URL}/bridge-table`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(requestBody),
   });
 }
@@ -121,8 +139,8 @@ export async function joinFromBridge(
   sJoinCol: string
 ): Promise<JoinResponse> {
   return apiRequest<JoinResponse>(`${API_BASE_URL}/join-from-bridge`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       list_r: listR,
       r_join_col: rJoinCol,
@@ -142,8 +160,8 @@ export async function getAIColumnRecommendations(
   maxSamples: number = 100
 ): Promise<AIColumnMatchResponse> {
   return apiRequest<AIColumnMatchResponse>(`${API_BASE_URL}/ai/match-columns`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       table_r: tableR,
       table_s: tableS,
@@ -157,8 +175,8 @@ export async function getAIColumnRecommendations(
  */
 export async function checkOllamaStatus(): Promise<OllamaStatus> {
   return apiRequest<OllamaStatus>(`${API_BASE_URL}/ai/status`, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
   });
 }
 
@@ -171,9 +189,25 @@ export async function suggestBestBridgeEntries(
   return apiRequest<BridgeEntrySuggestionResponse>(
     `${API_BASE_URL}/ai/suggest-bridge-entries`,
     {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ bridge_entries: bridgeEntries }),
     }
   );
+}
+
+export async function fetchHistory(): Promise<HistoryResponse> {
+  return apiRequest<HistoryResponse>(`${API_BASE_URL}/history`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+export async function fetchHistoryDetail(
+  id: number
+): Promise<HistoryDetailResponse> {
+  return apiRequest<HistoryDetailResponse>(`${API_BASE_URL}/history/${id}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
 }

@@ -1,6 +1,7 @@
 """
 Corpus data processing utilities for WDC table parsing.
 """
+
 import json
 import hashlib
 from typing import Iterator, Any
@@ -13,46 +14,48 @@ from backend.utils.normalization import NormalizationStrategy
 
 class CorpusParser:
     """Utility class for parsing and processing corpus tables."""
-    
-    def __init__(self, strategy: NormalizationStrategy = NormalizationStrategy.ALPHANUMERIC_LOOSE):
+
+    def __init__(
+        self, strategy: NormalizationStrategy = NormalizationStrategy.ALPHANUMERIC_LOOSE
+    ):
         """
         Initialize the corpus parser.
-        
+
         Args:
             strategy: Normalization strategy to use
         """
         self.strategy = strategy
         logger.info(f"Initialized CorpusParser with strategy: {strategy.name}")
-    
+
     def set_strategy(self, strategy: NormalizationStrategy):
         """
         Set the normalization strategy.
-        
+
         Args:
             strategy: New normalization strategy
         """
         self.strategy = strategy
         logger.info(f"Changed normalization strategy to: {strategy.name}")
-    
+
     def normalize_value(self, v: Any) -> str:
         """
         Normalize a value using the current strategy.
-        
+
         Args:
             v: Value to normalize
-            
+
         Returns:
             Normalized string value
         """
         return self.strategy.normalize(v)
-    
+
     def extract_rows_from_wdc_dict(self, table: dict[str, Any]) -> list[list[str]]:
         """
         Extract and normalize rows from WDC-style table JSON.
-        
+
         Args:
             table: WDC format table dictionary
-            
+
         Returns:
             List of normalized rows
         """
@@ -140,20 +143,20 @@ class CorpusParser:
                 normalized_rows.append(cleaned_row)
 
         return normalized_rows
-    
+
     def stream_json_tables(self, path: str) -> Iterator[dict[str, Any]]:
         """
         Generator yielding parsed JSON tables from an NDJSON file.
-        
+
         Args:
             path: Path to NDJSON file
-            
+
         Yields:
             Parsed table dictionaries
         """
         try:
             # Use utf-8 but replace errors instead of crashing.
-            with open(path,"rb") as f:
+            with open(path, "rb") as f:
                 for line in f:
                     line = line.strip()
                     if not line:
@@ -165,15 +168,15 @@ class CorpusParser:
 
         except Exception as e:
             logger.error(f"Could not read {path}: {e}")
-    
+
     @staticmethod
     def table_hash(rows: list[list[str]]) -> str:
         """
         Compute a stable hash for a table given normalized rows.
-        
+
         Args:
             rows: Normalized rows from extract_rows_from_wdc_dict
-            
+
         Returns:
             SHA1 hash of the table
         """
@@ -188,7 +191,7 @@ _default_parser = CorpusParser()
 def set_corpus_strategy(strategy: NormalizationStrategy):
     """
     Set the normalization strategy for the global parser.
-    
+
     Convenience function for backward compatibility.
     """
     _default_parser.set_strategy(strategy)
@@ -196,14 +199,14 @@ def set_corpus_strategy(strategy: NormalizationStrategy):
 
 def extract_rows(table: dict[str, Any]) -> list[list[str]]:
     """
-        Extracts rows from a table, automatically detecting WDC or Wiki format.
+    Extracts rows from a table, automatically detecting WDC or Wiki format.
 
-        Args:
-            table: The table dictionary.
+    Args:
+        table: The table dictionary.
 
-        Returns:
-            A list of normalized rows.
-        """
+    Returns:
+        A list of normalized rows.
+    """
 
     # WDC format
     if "relation" in table:
@@ -214,16 +217,14 @@ def extract_rows(table: dict[str, Any]) -> list[list[str]]:
         return _default_parser.extract_rows_from_wiki_dict(table)
 
     else:
-        logger.warning(
-            f"Unknown table format. No 'relation' or 'tableData' key found."
-        )
+        logger.warning(f"Unknown table format. No 'relation' or 'tableData' key found.")
         return []
 
 
 def stream_json_tables(path: str) -> Iterator[dict[str, Any]]:
     """
     Stream JSON tables from file using global parser.
-    
+
     Convenience function for backward compatibility.
     """
     return _default_parser.stream_json_tables(path)
@@ -232,8 +233,7 @@ def stream_json_tables(path: str) -> Iterator[dict[str, Any]]:
 def table_hash(rows: list[list[str]]) -> str:
     """
     Compute table hash.
-    
+
     Convenience function for backward compatibility.
     """
     return CorpusParser.table_hash(rows)
-
