@@ -30,6 +30,11 @@ class Settings(BaseSettings):
     CELL_BATCH_SIZE: int = 1_000_000
     TABLE_BATCH_SIZE: int = 50_000
 
+    # Ollama AI settings
+    OLLAMA_BASE_URL: str = "http://localhost:11434"
+    OLLAMA_MODEL: str = "mistral"
+    OLLAMA_TIMEOUT: int = 60
+
     @property
     def DEFAULT_DB_PATH(self) -> Path:
         """Provides the absolute path to the database file."""

@@ -1,13 +1,7 @@
-"""
-Services layer for semantic join API.
-"""
-
-import os
 import duckdb
-from dotenv import load_dotenv
-from loguru import logger
 
 from .SemanticJoinService import SemanticJoinService
+from .AIColumnMatchingService import AIColumnMatchingService
 from backend.config import settings
 from backend.utils import (
     NormalizationStrategy,
@@ -44,6 +38,7 @@ def get_db_connection(
 __all__ = [
     # Services
     "SemanticJoinService",
+    "AIColumnMatchingService",
     # Utility functions
     "NormalizationStrategy",
     "get_db_connection",

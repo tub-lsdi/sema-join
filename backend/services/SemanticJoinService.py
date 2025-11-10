@@ -1,7 +1,6 @@
 """
 Semantic Join Service class with integrated RS-JP and CS-JP-LP join algorithms.
 """
-
 import duckdb
 import polars as pl
 from typing import Literal
@@ -73,8 +72,7 @@ class SemanticJoinService:
             raise ValueError("list_s cannot be empty")
         if join_method not in ["row", "column"]:
             raise ValueError(
-                f"join_method must be 'row' or 'column', got '{join_method}'"
-            )
+                f"join_method must be 'row' or 'column', got '{join_method}'")
         if top_k < 1:
             raise ValueError("top_k must be at least 1")
 
@@ -86,7 +84,27 @@ class SemanticJoinService:
         if join_method == "row":
             return self.rs_jp_algorithm.create_bridge(normalized_r, normalized_s, top_k)
         else:  # join_method == "column"
-            return self.cs_jp_algorithm.create_bridge(normalized_r, normalized_s, top_k)
+            # "we assume that the direction of the join
+            # J : R → S is known without loss of generality, since both join directions
+            # can be tested and the one with a better score can be picked."
+
+            # Test direction 1: R → S
+            result_r_to_s = self.cs_jp_algorithm.create_bridge(
+                normalized_r, normalized_s, top_k)
+            score_r_to_s = sum(entry["npmi"] for entry in result_r_to_s)
+
+            # Test direction 2: S → R (swapped)
+            result_s_to_r = self.cs_jp_algorithm.create_bridge(
+                normalized_s, normalized_r, top_k)
+            score_s_to_r = sum(entry["npmi"] for entry in result_s_to_r)
+
+            # Pick the direction with better score
+            if score_r_to_s >= score_s_to_r:
+                return result_r_to_s
+            else:
+                # Swap back the result (reverse r_val and s_val)
+                return [{"r_val": entry["s_val"], "s_val": entry["r_val"], "npmi": entry["npmi"]}
+                        for entry in result_s_to_r]
 
     def perform_join_from_bridge(
         self,
@@ -155,7 +173,7 @@ class SemanticJoinService:
         # Perform three-way join
         # Bridge table has normalized values
         join_query = f"""
-            SELECT
+            SELECT 
                 r.*,
                 bridge.r_val,
                 bridge.s_val,
@@ -169,10 +187,13 @@ class SemanticJoinService:
             ORDER BY r.{r_join_col}
         """
 
-        result_df = conn.execute(join_query).pl()
+        result_df = (conn.execute(join_query).pl())
         # move join columns to the end
         columns_to_remove = ["r_val", "s_val", "npmi"]
-        result_df = result_df.select(pl.exclude(columns_to_remove), *columns_to_remove)
+        result_df = result_df.select(
+            pl.exclude(columns_to_remove),
+            *columns_to_remove
+        )
 
         # Clean up temp tables
         conn.unregister("temp_r")

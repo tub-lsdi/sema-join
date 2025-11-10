@@ -1,7 +1,3 @@
-"""
-Bridge table models for semantic join API.
-"""
-
 from pydantic import BaseModel, Field
 from typing import Literal
 
@@ -11,7 +7,8 @@ class BridgeTableEntry(BaseModel):
 
     r_val: str = Field(..., description="Value from list R")
     s_val: str = Field(..., description="Candidate value from list S")
-    npmi: float | None = Field(description="NMPI score (confidence) for this match")
+    npmi: float | None = Field(
+        description="Score for this match. RS-JP: single pairwise NPMI score. CS-JP-LP: aggregate column-level PMI score (sum).")
 
 
 class BridgeTableRequest(BaseModel):
@@ -38,7 +35,7 @@ class BridgeTableRequest(BaseModel):
         default=1,
         ge=1,
         le=100,
-        description="Number of top candidates to return per R value",
+        description="Number of top candidates to return per R value (RS-JP only). Ignored for CS-JP-LP which always returns one optimal complete mapping.",
         examples=[5],
     )
 

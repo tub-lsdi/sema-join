@@ -1,7 +1,3 @@
-"""
-Pydantic models for request/response validation.
-"""
-
 from .bridge import (
     BridgeTableEntry,
     BridgeTableRequest,
@@ -14,9 +10,13 @@ from .join import (
 from .history import (
     HistoryEntry,
     HistoryResponse,
-)
-from .history import (
     HistoryDetailEntry,
+)
+from .ai_match import (
+    AIColumnMatchRequest,
+    AIColumnMatchResponse,
+    ColumnJoinRecommendation,
+    OllamaStatusResponse,
 )
 
 __all__ = [
@@ -31,4 +31,9 @@ __all__ = [
     "HistoryEntry",
     "HistoryResponse",
     "HistoryDetailEntry",
+    # AI matching models
+    "AIColumnMatchRequest",
+    "AIColumnMatchResponse",
+    "ColumnJoinRecommendation",
+    "OllamaStatusResponse",
 ]

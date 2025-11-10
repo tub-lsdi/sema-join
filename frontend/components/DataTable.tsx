@@ -1,17 +1,35 @@
+import { type JoinMethod } from "@/lib/api";
+import { getScoreColumnConfig } from "@/lib/utils";
 import styles from "./DataTable.module.css";
 
 interface Props {
   data: Array<Record<string, any>>;
   highlightColumn?: string | null;
+  joinMethod?: JoinMethod;
 }
 
-export default function DataTable({ data, highlightColumn }: Props) {
+export default function DataTable({
+  data,
+  highlightColumn,
+  joinMethod,
+}: Props) {
   if (!data || data.length === 0) return null;
 
   const columns = Array.from(
     new Set(data.flatMap((row) => Object.keys(row || {})))
   );
   const displayData = data.slice(0, 10);
+
+  // Get score column configuration based on the algorithm that was used
+  const scoreColumn = getScoreColumnConfig(joinMethod);
+
+  // Map column names based on join method
+  const getColumnDisplayName = (col: string): string => {
+    if (col === "npmi") {
+      return scoreColumn.label;
+    }
+    return col;
+  };
 
   return (
     <div className={styles.container}>
@@ -25,7 +43,7 @@ export default function DataTable({ data, highlightColumn }: Props) {
                   col === highlightColumn ? styles.highlightedHeader : undefined
                 }
               >
-                {col}
+                {getColumnDisplayName(col)}
               </th>
             ))}
           </tr>

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import ErrorAlert from "@/components/ErrorAlert";
 import TableUploadPanel from "@/components/TableUploadPanel";
+import AISuggestionPanel from "@/components/AISuggestionPanel";
 import BridgeTablePanel from "@/components/BridgeTablePanel";
 import JoinResultPanel from "@/components/JoinResultPanel";
 import {
@@ -12,47 +12,64 @@ import {
   joinFromBridge,
   type BridgeTableEntry,
   type JoinMethod,
+  type TableRow,
 } from "@/lib/api";
+import { getErrorMessage, selectBestMatches } from "@/lib/utils";
+import { DEFAULTS, ERROR_MESSAGES } from "@/lib/constants";
 import styles from "./page.module.css";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   // State
-  const [tableR, setTableR] = useState<Array<Record<string, any>>>([]);
-  const [tableS, setTableS] = useState<Array<Record<string, any>>>([]);
+  const [tableR, setTableR] = useState<TableRow[]>([]);
+  const [tableS, setTableS] = useState<TableRow[]>([]);
   const [rJoinCol, setRJoinCol] = useState("");
   const [sJoinCol, setSJoinCol] = useState("");
   const [joinMethod, setJoinMethod] = useState<JoinMethod>("row");
-  const [topK, setTopK] = useState<number>(5);
+  const [topK, setTopK] = useState<number>(DEFAULTS.TOP_K);
   const [bridgeTable, setBridgeTable] = useState<BridgeTableEntry[]>([]);
+  const [bridgeTableMethod, setBridgeTableMethod] = useState<
+    JoinMethod | undefined
+  >(undefined);
   const [selectedBridgeEntries, setSelectedBridgeEntries] = useState<
     Set<number>
   >(new Set());
-  const [joinResult, setJoinResult] = useState<Array<Record<string, any>>>([]);
+  const [joinResult, setJoinResult] = useState<TableRow[]>([]);
+  const [joinResultMethod, setJoinResultMethod] = useState<
+    JoinMethod | undefined
+  >(undefined);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Handlers
-  const handleFileLoadR = (data: any[]) => {
-    setTableR(data);
-    setRJoinCol("");
+  // Handlers - File Operations
+
+  const resetJoinState = () => {
     setBridgeTable([]);
+    setBridgeTableMethod(undefined);
     setSelectedBridgeEntries(new Set());
     setJoinResult([]);
+    setJoinResultMethod(undefined);
     setError("");
   };
 
-  const handleFileLoadS = (data: any[]) => {
+  const handleFileLoadR = (data: TableRow[]) => {
+    setTableR(data);
+    setRJoinCol("");
+    resetJoinState();
+  };
+
+  const handleFileLoadS = (data: TableRow[]) => {
     setTableS(data);
     setSJoinCol("");
-    setBridgeTable([]);
-    setSelectedBridgeEntries(new Set());
-    setJoinResult([]);
-    setError("");
+    resetJoinState();
   };
+
+  // Handlers - Bridge Table Operations
 
   const handleCreateBridge = async () => {
     if (!tableR.length || !tableS.length || !rJoinCol || !sJoinCol) {
-      setError("Please upload both files and select join columns");
+      setError(ERROR_MESSAGES.MISSING_FILES);
       return;
     }
 
@@ -62,26 +79,17 @@ export default function Home() {
     try {
       const listR = tableR.map((row) => String(row[rJoinCol]));
       const listS = tableS.map((row) => String(row[sJoinCol]));
+
       const response = await createBridgeTable(listR, listS, joinMethod, topK);
-      const bestMatchMap = new Map<string, { npmi: number; index: number }>();
       setBridgeTable(response.bridge_table);
+      setBridgeTableMethod(joinMethod);
 
-      response.bridge_table.forEach((entry, index) => {
-        const currentBest = bestMatchMap.get(entry.r_val);
-        if (!currentBest || entry.npmi > currentBest.npmi) {
-          bestMatchMap.set(entry.r_val, { npmi: entry.npmi, index: index });
-        }
-      });
-      const initialSelection = new Set<number>(
-        Array.from(bestMatchMap.values()).map((match) => match.index)
-      );
-
+      // Auto-select best matches (highest NPMI per r_val)
+      const initialSelection = selectBestMatches(response.bridge_table);
       setSelectedBridgeEntries(initialSelection);
       setJoinResult([]);
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to create bridge table"
-      );
+      setError(getErrorMessage(err, "Failed to create bridge table"));
     } finally {
       setLoading(false);
     }
@@ -89,12 +97,12 @@ export default function Home() {
 
   const handleJoin = async () => {
     if (!bridgeTable.length) {
-      setError("Please create a bridge table first");
+      setError(ERROR_MESSAGES.MISSING_BRIDGE);
       return;
     }
 
     if (selectedBridgeEntries.size === 0) {
-      setError("Please select at least one bridge table entry");
+      setError(ERROR_MESSAGES.NO_SELECTION);
       return;
     }
 
@@ -102,7 +110,6 @@ export default function Home() {
     setError("");
 
     try {
-      // Filter bridge table to only include selected entries
       const selectedBridge = bridgeTable.filter((_, idx) =>
         selectedBridgeEntries.has(idx)
       );
@@ -114,12 +121,15 @@ export default function Home() {
         sJoinCol
       );
       setJoinResult(response.result);
+      setJoinResultMethod(joinMethod);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to perform join");
+      setError(getErrorMessage(err, "Failed to perform join"));
     } finally {
       setLoading(false);
     }
   };
+
+  // Handlers - Selection Operations
 
   const handleToggleBridgeEntry = (index: number) => {
     const newSelected = new Set(selectedBridgeEntries);
@@ -139,7 +149,17 @@ export default function Home() {
     setSelectedBridgeEntries(new Set());
   };
 
-  const router = useRouter();
+  const handleAISuggestBest = (indices: number[]) => {
+    setSelectedBridgeEntries(new Set(indices));
+  };
+
+  // Handlers - AI Recommendations
+
+  const handleAIRecommendationAccept = (rColumn: string, sColumn: string) => {
+    setRJoinCol(rColumn);
+    setSJoinCol(sColumn);
+    resetJoinState();
+  };
 
   return (
     <div className={styles.container}>
@@ -162,6 +182,7 @@ export default function Home() {
             selectedColumn={rJoinCol}
             onFileLoad={handleFileLoadR}
             onColumnSelect={setRJoinCol}
+            onError={setError}
             disabled={loading}
           />
 
@@ -171,14 +192,25 @@ export default function Home() {
             selectedColumn={sJoinCol}
             onFileLoad={handleFileLoadS}
             onColumnSelect={setSJoinCol}
+            onError={setError}
             disabled={loading}
           />
         </div>
+
+        {tableR.length > 0 && tableS.length > 0 && (
+          <AISuggestionPanel
+            tableR={tableR}
+            tableS={tableS}
+            onRecommendationAccept={handleAIRecommendationAccept}
+            disabled={loading}
+          />
+        )}
 
         {(tableR.length > 0 || tableS.length > 0) && (
           <BridgeTablePanel
             bridgeTable={bridgeTable}
             joinMethod={joinMethod}
+            bridgeTableMethod={bridgeTableMethod}
             topK={topK}
             selectedEntries={selectedBridgeEntries}
             onJoinMethodChange={setJoinMethod}
@@ -188,6 +220,7 @@ export default function Home() {
             onToggleEntry={handleToggleBridgeEntry}
             onSelectAll={handleSelectAllBridge}
             onDeselectAll={handleDeselectAllBridge}
+            onAISuggestBest={handleAISuggestBest}
             canCreate={
               !!(tableR.length && tableS.length && rJoinCol && sJoinCol)
             }
@@ -196,7 +229,7 @@ export default function Home() {
           />
         )}
 
-        <JoinResultPanel data={joinResult} />
+        <JoinResultPanel data={joinResult} joinMethod={joinResultMethod} />
       </div>
     </div>
   );

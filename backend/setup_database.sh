@@ -22,6 +22,20 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 DB_NAME="${DB_PATH:-corpus.db}"
 
+
+# Check for the --large flag
+if [ "$1" == "--large" ]; then
+    echo -e "${YELLOW}⚠ Running in LARGE data mode${NC}"
+    INGEST_SCRIPT="01_ingest_corpus_parallel.py"
+    STATS_SCRIPT="02_calculate_stats.py"
+#    Uncomment once parallel stats script is ready
+#    STATS_SCRIPT="02_calculate_stats_parallel.py"
+else
+    echo -e "${BLUE}ℹ Running in standard data mode${NC}"
+    INGEST_SCRIPT="01_ingest_corpus.py"
+    STATS_SCRIPT="02_calculate_stats.py"
+fi
+
 echo -e "${BLUE}Project root: ${PROJECT_ROOT}${NC}"
 echo -e "${BLUE}Backend directory: ${SCRIPT_DIR}${NC}"
 echo ""
@@ -57,7 +71,7 @@ echo -e "${BLUE}Step 1/2: Ingesting corpus data...${NC}"
 echo "This may take a few minutes depending on corpus size."
 echo ""
 
-uv run python "$SCRIPT_DIR/corpus/setup_db/01_ingest_corpus.py"
+uv run python "$SCRIPT_DIR/corpus/setup_db/$INGEST_SCRIPT"
 
 if [ $? -eq 0 ]; then
     echo ""
@@ -73,7 +87,7 @@ echo -e "${BLUE}Step 2/2: Calculating PMI statistics...${NC}"
 echo "This will compute value counts, co-occurrences, and PMI scores."
 echo ""
 
-uv run python "$SCRIPT_DIR/corpus/setup_db/02_calculate_stats.py"
+uv run python "$SCRIPT_DIR/corpus/setup_db/$STATS_SCRIPT"
 
 if [ $? -eq 0 ]; then
     echo ""

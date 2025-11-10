@@ -1,22 +1,12 @@
-"""
-CS-JP-LP algorithm implementation.
-"""
-
 import polars as pl
-from collections import defaultdict
 import pulp
+from loguru import logger
 from .base import BridgeAlgorithm
 
 
 class CSJPLPAlgorithm(BridgeAlgorithm):
     """
-    CS-JP-LP algorithm.
-
-    Algorithm that considers semantic compatibility between matched pairs.
-
-    Paper formulation (Equations 9-13 - CILP):
-    - Algorithm 1: Round half-integral solution to CLP
-    - Algorithm 2: Solve CILP
+    Uses column-level PMI scores and linear programming to find optimal join mappings.
     """
 
     def create_bridge(
@@ -28,385 +18,422 @@ class CSJPLPAlgorithm(BridgeAlgorithm):
         """
         Create a bridge table using CS-JP-LP algorithm.
 
-        This implements a two-stage approach:
-        1. Solve continuous relaxation (CLP)
-        2. Round to integral solution (CILP)
-
-        For top_k > 1, returns the top_k viable candidates per r_val by PMI score.
+        1. Calculate PMI scores (from database)
+        2. Formulate and solve CLP
+        3. Round to half-integral solution (Algorithm 1)
+        4. Convert to integral solution (Algorithm 2)
+        5. Extract join function
+        6. Optional greedy refinement
 
         Args:
             list_r: Normalized list of strings from R set
             list_s: Normalized list of strings from S set
-            top_k: Number of top candidates to return per R value
+            top_k: IGNORED in CS-JP-LP. This parameter is kept for API consistency
+                   with RS-JP but has no effect. CS-JP-LP is a global optimization 
+                   problem that finds ONE complete mapping with the highest aggregate 
+                   column-level score. Unlike RS-JP (which independently finds top-k 
+                   candidates per row), CS-JP-LP considers all rows jointly, so there 
+                   is only one globally optimal solution.
 
         Returns:
-            List of dictionaries with r_val, s_val, and pmi fields
+            List of dictionaries with r_val, s_val, and npmi fields.
+            Each result represents one row in the optimal global mapping.
+            Note: 'npmi' field contains aggregate PMI score (sum), not a single PMI value.
         """
         conn = self.db_connection
 
-        # Step 1: Get all viable (r, s) pairs with positive row-level scores
-        viable_pairs, row_score_dict = self._get_viable_pairs(conn, list_r, list_s)
-
-        if not viable_pairs:
-            return []
-
-        # If top_k > 1, return top_k candidates per r_val instead of optimizing
+        # Warn if top_k > 1 (parameter is ignored)
         if top_k > 1:
-            return self._extract_top_k_candidates(
-                viable_pairs, row_score_dict, list_r, top_k
+            logger.warning(
+                f"CS-JP-LP: top_k={top_k} is ignored. CS-JP-LP always returns "
+                f"ONE globally optimal mapping. Use RS-JP if you need top-k "
+                f"candidates per row."
             )
 
-        # Step 2: Build column-level score lookup (w_ijkl weights)
-        w_ijkl = self._build_column_scores(conn, list_r, list_s)
-
-        # Step 3: Solve CLP
-        x_vars_clp, z_vars_clp = self._solve_clp(viable_pairs, list_r, w_ijkl)
-
-        # Step 4: Algorithm 1 - Round half-integral solution
-        x_tilde = self._round_solution(x_vars_clp, viable_pairs, list_r, w_ijkl)
-
-        # Step 5: Algorithm 2 - Solve CILP
-        x_final = self._solve_cilp(x_tilde, z_vars_clp)
-
-        # Step 6: Extract solution and build result bridge table
-        return self._extract_result(x_final, row_score_dict)
-
-    def _get_viable_pairs(
-        self,
-        conn,
-        list_r: list[str],
-        list_s: list[str],
-    ) -> tuple[list[tuple], dict]:
-        """
-        Get all viable (r, s) pairs with positive row-level scores.
-
-        Args:
-            conn: Database connection
-            list_r: Normalized R values
-            list_s: Normalized S values
-
-        Returns:
-            Tuple of (viable_pairs, row_score_dict)
-        """
+        # Register inputs as temp tables
         conn.register("input_r", pl.DataFrame({"r_val": list_r}))
         conn.register("input_s", pl.DataFrame({"s_val": list_s}))
 
-        row_pairs_query = """
-            SELECT DISTINCT
-                r.r_val,
-                s.s_val,
-                pmi.npmi as row_score
-            FROM input_r AS r
-            JOIN npmi_scores AS pmi
-                ON r.r_val = pmi.v1 OR r.r_val = pmi.v2
-            JOIN input_s AS s
-                ON (s.s_val = pmi.v1 OR s.s_val = pmi.v2)
+        # Step 1: Fetch column-level PMI scores from database
+        w_ijkl_scores = self._fetch_pmi_scores(conn)
+
+        # Step 2: Solve CILP using Algorithm 2 (which constructs CLP, calls Algorithm 1, and converts to integral)
+        x_star, z_star = self._algorithm_2_solve_cilp(
+            list_r, list_s, w_ijkl_scores
+        )
+
+        # Note: z_star is returned by Algorithm 2 per the paper's formal specification (which states
+        # Algorithm 2 returns both x* and z*), but is not used in subsequent steps. The z* variables
+        # are auxiliary variables introduced to linearize the quadratic term xij×xkl in the original
+        # CIQP formulation. Once we have the integral solution x*, we only need it to extract the
+        # join function J(ri) = sj where x*ij = 1. The z* values would only be needed to verify the
+        # objective function value, but are not required for the actual join mapping.
+
+        # Step 3: Extract join function
+        join_mapping = self._extract_join_function(list_r, list_s, x_star)
+
+        # Step 4: Optional greedy refinement
+        join_mapping = self._greedy_refinement(
+            list_r, list_s, join_mapping, w_ijkl_scores
+        )
+
+        # Convert to output format
+        result = []
+        for r_val, s_val in join_mapping.items():
+            if s_val is not None:  # Not ⊥
+                # Calculate the objective score for this mapping
+                score = self._calculate_mapping_score(
+                    r_val, s_val, join_mapping, w_ijkl_scores
+                )
+                result.append({
+                    "r_val": r_val,
+                    "s_val": s_val,
+                    "npmi": score  # Use 'npmi' field name
+                })
+
+        return result
+
+    def _fetch_pmi_scores(self, conn):
+        """
+        Fetch column-level PMI scores from database.
+
+        Note: Assumes input_r and input_s tables have been registered in conn.
+        These tables contain the r_val and s_val columns to filter on.
+
+        The database stores PMI scores in canonicalized form to save space,
+        but the algorithm needs scores for all ordered pairs (ri,sj,rk,sl) where i≠k.
+        Since PMI((ri,sj),(rk,sl)) = PMI((rk,sl),(ri,sj)) (symmetric), we expand
+        each stored entry into both directions.
+
+        We assume that the direction of the join J : R → S 
+        is known without loss of generality, since both join directions can be 
+        tested and the one with a better score can be picked.
+
+        Returns:
+            w_ijkl_scores: dict[(ri, sj, rk, sl)] -> column PMI score
+        """
+        # Fetch column-level PMI scores (only positive, as stored in DB)
+        # Filters based on input_r and input_s tables registered in create_bridge()
+        column_pmi_query = """
+            SELECT
+                cp.ri,
+                cp.sj,
+                cp.rk,
+                cp.sl,
+                cp.column_pmi
+            FROM column_pmi_scores AS cp
             WHERE
-                ((r.r_val = pmi.v1 AND s.s_val = pmi.v2) OR
-                 (r.r_val = pmi.v2 AND s.s_val = pmi.v1))
-                AND pmi.npmi > 0
-            ORDER BY pmi.npmi DESC
+                (cp.ri IN (SELECT r_val FROM input_r)) AND
+                (cp.rk IN (SELECT r_val FROM input_r)) AND
+                (cp.sj IN (SELECT s_val FROM input_s)) AND
+                (cp.sl IN (SELECT s_val FROM input_s))
         """
-        viable_pairs = conn.execute(row_pairs_query).fetchall()
+        column_pmi_df = conn.execute(column_pmi_query).pl()
 
-        # Build row-level score lookup (for output only)
-        row_score_dict = {}
-        for r_val, s_val, row_score in viable_pairs:
-            row_score_dict[(r_val, s_val)] = row_score
+        w_ijkl_scores = {}
+        for row in column_pmi_df.iter_rows(named=True):
+            ri, sj, rk, sl = row["ri"], row["sj"], row["rk"], row["sl"]
+            pmi_value = row["column_pmi"]
 
-        return viable_pairs, row_score_dict
+            # Store the fetched direction: wᵢⱼₖₗ = PMI((rᵢ, sⱼ), (rₖ, sₗ))
+            w_ijkl_scores[(ri, sj, rk, sl)] = pmi_value
 
-    def _build_column_scores(
-        self,
-        conn,
-        list_r: list[str],
-        list_s: list[str],
-    ) -> dict:
+            # The database only stores canonicalized pairs, but the algorithm's
+            # objective function sums over ALL ordered pairs where i≠k.
+            # Since PMI((ri,sj),(rk,sl)) = PMI((rk,sl),(ri,sj)), we can reuse
+            # the same PMI value for the reverse direction.
+            w_ijkl_scores[(rk, sl, ri, sj)] = pmi_value
+
+        return w_ijkl_scores
+
+    def _solve_clp(self, list_r: list[str], list_s: list[str], w_ijkl_scores: dict):
         """
-        Build column-level score lookup (w_ijkl weights).
-
-        Args:
-            conn: Database connection
-            list_r: Normalized R values
-            list_s: Normalized S values
+        Formulate CILP, relax to CLP, and solve.
 
         Returns:
-            Dictionary mapping pair tuples to column scores
+            x_bar: dict[(ri, sj)] -> fractional value in [0, 1]
+            z_bar: dict[(ri, sj, rk, sl)] -> fractional value in [0, 1]
         """
-        r_values_str = "','".join(list_r)
-        s_values_str = "','".join(list_s)
+        # Create LP problem (minimization)
+        prob = pulp.LpProblem("CLP", pulp.LpMinimize)
 
-        col_scores_query = f"""
-            SELECT v1, v2, v3, v4, score
-            FROM column_scores
-            WHERE (v1 IN ('{r_values_str}') OR v2 IN ('{r_values_str}')
-                   OR v3 IN ('{r_values_str}') OR v4 IN ('{r_values_str}'))
-              AND (v1 IN ('{s_values_str}') OR v2 IN ('{s_values_str}')
-                   OR v3 IN ('{s_values_str}') OR v4 IN ('{s_values_str}'))
-        """
-        col_scores = conn.execute(col_scores_query).fetchall()
-
-        # Build column score lookup w_ijkl for pairs of matches
-        w_ijkl = defaultdict(lambda: 0.0)
-        for v1, v2, v3, v4, score in col_scores:
-            # Store all permutations for easy lookup
-            for perm in [
-                ((v1, v2), (v3, v4)),
-                ((v1, v2), (v4, v3)),
-                ((v2, v1), (v3, v4)),
-                ((v2, v1), (v4, v3)),
-                ((v3, v4), (v1, v2)),
-                ((v3, v4), (v2, v1)),
-                ((v4, v3), (v1, v2)),
-                ((v4, v3), (v2, v1)),
-            ]:
-                w_ijkl[perm] = max(w_ijkl[perm], score)
-
-        return w_ijkl
-
-    def _solve_clp(
-        self,
-        viable_pairs: list[tuple],
-        list_r: list[str],
-        w_ijkl: dict,
-    ) -> tuple[dict, dict]:
-        """
-        Solve CLP.
-
-        Paper Algorithm 1, Step 1: Solve CLP using standard LP.
-
-        Args:
-            viable_pairs: List of viable (r, s, score) tuples
-            list_r: Normalized R values
-            w_ijkl: Column score weights
-
-        Returns:
-            Tuple of (x_vars_clp, z_vars_clp)
-        """
-        prob_clp = pulp.LpProblem("CLP", pulp.LpMinimize)
-
-        # Create continuous variables x_ij ∈ [0,1] for LP relaxation
-        x_vars_clp = {}
-        for r_val, s_val, _ in viable_pairs:
-            var_name = f"x_{r_val}_{s_val}"
-            x_vars_clp[(r_val, s_val)] = pulp.LpVariable(
-                var_name, lowBound=0, upBound=1, cat="Continuous"
-            )
-
-        # Create continuous variables z_ijkl ∈ [0,1] for LP relaxation
-        z_vars_clp = {}
-        r_pairs = [(r1, s1) for r1, s1, _ in viable_pairs]
-        for i, (r_i, s_i) in enumerate(r_pairs):
-            for j, (r_j, s_j) in enumerate(r_pairs):
-                if r_i != r_j:  # Different r values (i ≠ k in paper notation)
-                    var_name = f"z_{r_i}_{s_i}_{r_j}_{s_j}"
-                    z_vars_clp[(r_i, s_i, r_j, s_j)] = pulp.LpVariable(
-                        var_name, lowBound=0, upBound=1, cat="Continuous"
-                    )
-
-        # Objective function: min Σ w_ijkl * (1 - z_ijkl)
-        objective_clp = []
-        for (r_i, s_i, r_j, s_j), z_var in z_vars_clp.items():
-            weight = w_ijkl.get(((r_i, s_i), (r_j, s_j)), 0.0)
-            if weight > 0:
-                # w_ijkl * (1 - z_ijkl) = w_ijkl - w_ijkl * z_ijkl
-                objective_clp.append(weight * (1 - z_var))
-
-        prob_clp += pulp.lpSum(objective_clp), "Total_Cost"
-
-        # Constraint: Σ x_ij ≤ 1, ∀i (each r_i matches to at most one s_j)
-        for r_val in list_r:
-            matching_vars = [
-                x_vars_clp[(r, s)] for r, s, _ in viable_pairs if r == r_val
-            ]
-            if matching_vars:
-                prob_clp += pulp.lpSum(matching_vars) <= 1, f"r_constraint_{r_val}"
-
-        # Constraint: z_ijkl ≤ 1/2 * (x_ij + x_kl), ∀i,k ∈ R (i≠k), ∀j,l ∈ S
-        for (r_i, s_i, r_j, s_j), z_var in z_vars_clp.items():
-            x_ij = x_vars_clp.get((r_i, s_i))
-            x_kl = x_vars_clp.get((r_j, s_j))
-            if x_ij is not None and x_kl is not None:
-                prob_clp += (
-                    z_var <= 0.5 * (x_ij + x_kl),
-                    f"z_constraint_{r_i}_{s_i}_{r_j}_{s_j}",
+        # Create decision variables x̄ᵢⱼ ∈ [0, 1]
+        x_vars = {}
+        for ri in list_r:
+            for sj in list_s:
+                x_vars[(ri, sj)] = pulp.LpVariable(
+                    f"x_{ri}_{sj}", lowBound=0, upBound=1, cat='Continuous'
                 )
 
-        # Solve CLP
-        prob_clp.solve(pulp.PULP_CBC_CMD(msg=0))
+        # Create decision variables z̄ᵢⱼₖₗ ∈ [0, 1]
+        z_vars = {}
+        for (ri, sj, rk, sl), w_ijkl in w_ijkl_scores.items():
+            if ri != rk:  # Only for i ≠ k as per guide
+                z_vars[(ri, sj, rk, sl)] = pulp.LpVariable(
+                    f"z_{ri}_{sj}_{rk}_{sl}", lowBound=0, upBound=1, cat='Continuous'
+                )
 
-        if prob_clp.status != pulp.LpStatusOptimal:
-            raise RuntimeError(
-                f"CS-JP-LP: CLP solver failed with status: {pulp.LpStatus[prob_clp.status]}"
-            )
+        # Objective function: minimize Σ wᵢⱼₖₗ × (1 - z̄ᵢⱼₖₗ)
+        objective = pulp.lpSum([
+            w_ijkl * (1 - z_vars[(ri, sj, rk, sl)])
+            for (ri, sj, rk, sl), w_ijkl in w_ijkl_scores.items()
+            if (ri, sj, rk, sl) in z_vars
+        ])
+        prob += objective
 
-        return x_vars_clp, z_vars_clp
+        # Constraint 1: Σ(sj∈S) x̄ᵢⱼ ≤ 1 for all i ∈ [|R|]
+        # Each ri maps to at most one sj
+        for ri in list_r:
+            prob += pulp.lpSum([x_vars[(ri, sj)] for sj in list_s]) <= 1
 
-    def _round_solution(
+        # Constraint 2: z̄ᵢⱼₖₗ ≤ (1/2) × (x̄ᵢⱼ + x̄ₖₗ) for all i≠k
+        for (ri, sj, rk, sl) in z_vars.keys():
+            prob += z_vars[(ri, sj, rk, sl)] <= 0.5 * \
+                (x_vars[(ri, sj)] + x_vars[(rk, sl)])
+
+        # Solve the LP
+        prob.solve(pulp.PULP_CBC_CMD(msg=0))
+
+        if prob.status != pulp.LpStatusOptimal:
+            logger.warning(f"LP solver status: {pulp.LpStatus[prob.status]}")
+
+        # Extract solution (x̄*ᵢⱼ, z̄*ᵢⱼₖₗ)
+        x_bar = {}
+        for (ri, sj), var in x_vars.items():
+            x_bar[(ri, sj)] = var.varValue if var.varValue is not None else 0.0
+
+        z_bar = {}
+        for (ri, sj, rk, sl), var in z_vars.items():
+            z_bar[(ri, sj, rk, sl)
+                  ] = var.varValue if var.varValue is not None else 0.0
+
+        return x_bar, z_bar
+
+    def _algorithm_1_round_to_half_integral(
         self,
-        x_vars_clp: dict,
-        viable_pairs: list[tuple],
         list_r: list[str],
-        w_ijkl: dict,
-    ) -> dict:
+        list_s: list[str],
+        w_ijkl_scores: dict
+    ):
         """
-        Algorithm 1 - Round half-integral solution.
+        Round to Half-Integral Solution.
 
-        Paper Algorithm 1, Lines 2-11.
-
-        Args:
-            x_vars_clp: LP variables from CLP solution
-            viable_pairs: List of viable (r, s, score) tuples
-            list_r: Normalized R values
-            w_ijkl: Column score weights
+        Input: CLP program (via list_r, list_s, w_ijkl_scores)
+        Output: Half-integral solution (x̃*ᵢⱼ, z̃*ᵢⱼₖₗ) where x̃*ᵢⱼ ∈ {0, 1} and z̃*ᵢⱼₖₗ ∈ {0, 1/2, 1}
 
         Returns:
-            Rounded solution x_tilde
+            x_tilde: dict[(ri, sj)] -> value in {0, 1}
+            z_tilde: dict[(ri, sj, rk, sl)] -> value in {0, 1/2, 1}
         """
-        # Extract optimal LP solution
-        x_star = {}
-        for key, var in x_vars_clp.items():
-            x_star[key] = pulp.value(var)
+        # Step 1: Solve CLP to obtain optimal solution
+        x_bar, z_bar = self._solve_clp(list_r, list_s, w_ijkl_scores)
 
-        x_tilde = {}  # Half-integral solution after rounding
-
-        # For each r_i (Line 2)
-        for r_val in list_r:
-            r_pairs_for_i = [(r, s) for r, s, _ in viable_pairs if r == r_val]
-
-            if not r_pairs_for_i:
-                continue
-
-            # Check if all x*_ij are already integral (Line 3)
+        # Step 2: Round x variables to integral values
+        x_tilde = {}
+        for ri in list_r:
+            # Check if x̄*ᵢⱼ is already integral for all j
+            x_values_for_ri = {sj: x_bar.get((ri, sj), 0.0) for sj in list_s}
             all_integral = all(
-                x_star.get((r, s), 0) in [0.0, 1.0] for r, s in r_pairs_for_i
+                abs(val - round(val)) < 1e-9
+                for val in x_values_for_ri.values()
             )
 
             if all_integral:
-                # Line 4: Keep integral values
-                for r, s in r_pairs_for_i:
-                    x_tilde[(r, s)] = x_star.get((r, s), 0)
+                # Already integral, keep as is
+                for sj in list_s:
+                    x_tilde[(ri, sj)] = round(x_bar.get((ri, sj), 0.0))
             else:
-                # Lines 5-9: Round fractional solution
-                # Line 6: Compute c_ij = Σ_{r_k ∈ R, k≠i, s_l ∈ S} 1/2 * w_ijkl
-                c_ij = {}
-                for r, s in r_pairs_for_i:
-                    total = 0.0
-                    # Sum over all other r_k and all s_l
-                    for r_k, s_l, _ in viable_pairs:
-                        if r_k != r:  # k ≠ i
-                            weight = w_ijkl.get(((r, s), (r_k, s_l)), 0.0)
-                            total += 0.5 * weight
-                    c_ij[s] = total
+                # Contains fractional values, need to round
+                # Calculate contribution scores: cᵢⱼ = Σ(rₖ∈R, k≠i) Σ(sₗ∈S) (1/2) × wᵢⱼₖₗ
+                contribution_scores = {}
+                for sj in list_s:
+                    c_ij = 0.0
+                    for rk in list_r:
+                        if rk != ri:  # k ≠ i
+                            for sl in list_s:
+                                w_ijkl = w_ijkl_scores.get(
+                                    (ri, sj, rk, sl), 0.0)
+                                c_ij += 0.5 * w_ijkl
+                    contribution_scores[sj] = c_ij
 
-                # Line 7: p = argmax_j c_ij
-                if c_ij:
-                    p = max(c_ij, key=c_ij.get)
-                    # Line 8: x̃*_ip ← 1
-                    x_tilde[(r_val, p)] = 1.0
-                    # Line 9: x̃*_ij ← 0, ∀j ≠ p
-                    for r, s in r_pairs_for_i:
-                        if s != p:
-                            x_tilde[(r, s)] = 0.0
+                # Pick the best candidate: p = argmaxⱼ cᵢⱼ
+                if contribution_scores:
+                    p = max(contribution_scores.items(), key=lambda x: x[1])[0]
+                    # Round: x̃*ᵢₚ ← 1, x̃*ᵢⱼ ← 0 for all j ≠ p
+                    for sj in list_s:
+                        x_tilde[(ri, sj)] = 1 if sj == p else 0
                 else:
-                    # No weights, set all to 0
-                    for r, s in r_pairs_for_i:
-                        x_tilde[(r, s)] = 0.0
+                    # No contribution scores, set all to 0
+                    for sj in list_s:
+                        x_tilde[(ri, sj)] = 0
 
-        return x_tilde
+        # Step 3: Calculate z̃*ᵢⱼₖₗ from x̃*ᵢⱼ
+        # z̃*ᵢⱼₖₗ = (1/2) × (x̃*ᵢⱼ + x̃*ₖₗ) for all i, k ∈ [|R|], j, l ∈ [|S|], k ≠ i
+        z_tilde = {}
+        for ri in list_r:
+            for sj in list_s:
+                for rk in list_r:
+                    if rk != ri:  # k ≠ i
+                        for sl in list_s:
+                            z_tilde[(ri, sj, rk, sl)] = 0.5 * (
+                                x_tilde.get((ri, sj), 0) +
+                                x_tilde.get((rk, sl), 0)
+                            )
 
-    def _solve_cilp(
-        self,
-        x_tilde: dict,
-        z_vars_clp: dict,
-    ) -> dict:
+        # Step 4: Return half-integral solution
+        return x_tilde, z_tilde
+
+    def _algorithm_2_solve_cilp(self, list_r: list[str], list_s: list[str],
+                                w_ijkl_scores: dict):
         """
-        Algorithm 2 - Solve CILP.
+        Solve CILP.
 
-        Paper Algorithm 2, Lines 3-9.
-
-        Args:
-            x_tilde: Rounded solution from Algorithm 1
-            z_vars_clp: Z variables from CLP
+        Input: CILP program (via list_r, list_s, w_ijkl_scores)
+        Output: Integral solution (x*ᵢⱼ, z*ᵢⱼₖₗ) where both are in {0, 1}
 
         Returns:
-            Final integral solution x_final
+            x_star: dict[(ri, sj)] -> value in {0, 1}
+            z_star: dict[(ri, sj, rk, sl)] -> value in {0, 1}
         """
-        x_final = {}
-        z_final = {}
+        # Step 1: Construct CLP from CILP (relaxation - same formulation, just [0,1] instead of {0,1})
+        # (This is implicit - the CLP is defined by list_r, list_s, w_ijkl_scores)
 
-        # Lines 3-4: Copy x̃* to x*
-        for key, value in x_tilde.items():
-            x_final[key] = value
+        # Step 2: Obtain half-integral solution using Algorithm 1
+        # Algorithm 1 will solve the CLP and round to half-integral
+        x_tilde, z_tilde = self._algorithm_1_round_to_half_integral(
+            list_r, list_s, w_ijkl_scores
+        )
 
-        # Lines 5-9: Compute z*_ijkl
-        for r_i, s_i, r_j, s_j in z_vars_clp.keys():
-            x_ij = x_final.get((r_i, s_i), 0.0)
-            x_kl = x_final.get((r_j, s_j), 0.0)
+        # Step 3: Set x*ᵢⱼ ← x̃*ᵢⱼ (already integral from Algorithm 1)
+        x_star = x_tilde.copy()
 
-            # Line 6-7: if x*_ij = 1 and x*_kl = 1 then z*_ijkl ← 1
-            if x_ij == 1.0 and x_kl == 1.0:
-                z_final[(r_i, s_i, r_j, s_j)] = 1.0
-            else:
-                # Line 8-9: else z*_ijkl ← 0
-                z_final[(r_i, s_i, r_j, s_j)] = 0.0
+        # Step 4: Calculate z*ᵢⱼₖₗ from x*ᵢⱼ
+        z_star = {}
+        for ri in list_r:
+            for sj in list_s:
+                for rk in list_r:
+                    if rk != ri:  # k ≠ i
+                        for sl in list_s:
+                            # If x*ᵢⱼ = 1 AND x*ₖₗ = 1: z*ᵢⱼₖₗ ← 1, else 0
+                            if x_star.get((ri, sj), 0) == 1 and x_star.get((rk, sl), 0) == 1:
+                                z_star[(ri, sj, rk, sl)] = 1
+                            else:
+                                z_star[(ri, sj, rk, sl)] = 0
 
-        return x_final
+        # Step 5: Return integral solution
+        return x_star, z_star
 
-    def _extract_top_k_candidates(
+    def _extract_join_function(
         self,
-        viable_pairs: list[tuple],
-        row_score_dict: dict,
         list_r: list[str],
-        top_k: int,
-    ) -> list[dict]:
+        list_s: list[str],
+        x_star: dict
+    ):
         """
-        Extract top_k candidates per r_val from viable pairs.
-
-        Args:
-            viable_pairs: List of viable (r, s, score) tuples
-            row_score_dict: Dictionary mapping (r,s) pairs to PMI scores
-            list_r: List of r values
-            top_k: Number of top candidates to return per r_val
+        Extract the Join Function.
 
         Returns:
-            List of bridge table entries
+            join_mapping: dict[ri] -> sj or None (for ⊥)
         """
-        # Group candidates by r_val
-        candidates_by_r = defaultdict(list)
-        for r_val, s_val, row_score in viable_pairs:
-            candidates_by_r[r_val].append((s_val, row_score))
+        join_mapping = {}
 
-        result = []
-        for r_val in list_r:
-            # Sort by PMI score descending and take top_k
-            candidates = sorted(
-                candidates_by_r[r_val], key=lambda x: x[1], reverse=True
-            )[:top_k]
-            for s_val, npmi in candidates:
-                result.append({"r_val": r_val, "s_val": s_val, "npmi": npmi})
+        for ri in list_r:
+            mapped_sj = None
+            for sj in list_s:
+                if x_star.get((ri, sj), 0) == 1:
+                    mapped_sj = sj
+                    break
+            join_mapping[ri] = mapped_sj  # None represents ⊥
 
-        return result
+        return join_mapping
 
-    def _extract_result(
+    def _greedy_refinement(
         self,
-        x_final: dict,
-        row_score_dict: dict,
-    ) -> list[dict]:
+        list_r: list[str],
+        list_s: list[str],
+        join_mapping: dict,
+        w_ijkl_scores: dict
+    ):
         """
-        Extract solution and build result bridge table.
-
-        Args:
-            x_final: Final integral solution
-            row_score_dict: Dictionary mapping (r,s) pairs to PMI scores
+        Optional Greedy Refinement.
 
         Returns:
-            List of bridge table entries
+            improved_mapping: dict[ri] -> sj or None
         """
-        result = []
-        for (r_val, s_val), x_val in x_final.items():
-            if x_val == 1.0:
-                row_score = row_score_dict.get((r_val, s_val), 0.0)
-                result.append({"r_val": r_val, "s_val": s_val, "npmi": row_score})
+        improved = True
+        current_mapping = join_mapping.copy()
 
-        return result
+        while improved:
+            improved = False
+            current_score = self._calculate_total_objective(
+                current_mapping, w_ijkl_scores)
+
+            for ri in list_r:
+                best_sj = current_mapping[ri]
+                best_score = current_score
+
+                # Try each possible sj (including None for ⊥)
+                candidates = list_s + [None]
+                for sj in candidates:
+                    if sj == current_mapping[ri]:
+                        continue  # Skip current assignment
+
+                    # Try this assignment
+                    test_mapping = current_mapping.copy()
+                    test_mapping[ri] = sj
+                    test_score = self._calculate_total_objective(
+                        test_mapping, w_ijkl_scores)
+
+                    if test_score > best_score:
+                        best_score = test_score
+                        best_sj = sj
+
+                # If we found a better assignment, update it
+                if best_sj != current_mapping[ri]:
+                    current_mapping[ri] = best_sj
+                    current_score = best_score
+                    improved = True
+
+        return current_mapping
+
+    def _calculate_total_objective(self, join_mapping: dict, w_ijkl_scores: dict):
+        """
+        Calculate the total objective score for a join mapping.
+        """
+        total_score = 0.0
+
+        for (ri, sj, rk, sl), w_ijkl in w_ijkl_scores.items():
+            # Check if both mappings exist
+            if join_mapping.get(ri) == sj and join_mapping.get(rk) == sl:
+                total_score += w_ijkl
+
+        return total_score
+
+    def _calculate_mapping_score(
+        self,
+        r_val: str,
+        s_val: str,
+        join_mapping: dict,
+        w_ijkl_scores: dict
+    ):
+        """
+        Calculate the contribution score for a specific (r_val, s_val) mapping.
+
+        Returns the sum of column-level PMI scores
+
+        Note: This is an aggregate score (sum of multiple PMI values), not bounded.
+        Values can be large as they represent cumulative evidence for this mapping
+        across all column-level co-occurrences.
+        """
+        score = 0.0
+
+        for (ri, sj, rk, sl), w_ijkl in w_ijkl_scores.items():
+            # Count if this mapping is part of a matched pair
+            if (ri == r_val and sj == s_val and
+                    join_mapping.get(rk) == sl):
+                score += w_ijkl
+            elif (rk == r_val and sl == s_val and
+                  join_mapping.get(ri) == sj):
+                score += w_ijkl
+
+        return score
