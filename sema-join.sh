@@ -90,13 +90,12 @@ install_backend() {
     log_info "Installing Python dependencies with uv..."
     uv sync
 
-    if ! command_exists pre-commit; then
-        log_error "pre-commit is not installed in the virtual environment."
-        return 1
-    fi
-
     log_info "Setting up pre-commit hooks..."
-    pre-commit install
+    if uv run pre-commit install; then
+        log_success "Pre-commit hooks installed successfully!"
+    else
+        log_warning "Failed to install pre-commit hooks (this is optional)"
+    fi
 
     log_success "Backend dependencies installed successfully!"
 }
@@ -122,9 +121,21 @@ install_frontend() {
 install_all() {
     log_header "Installing All Dependencies"
 
-    install_backend
+    if install_backend; then
+        log_success "Backend installation completed"
+    else
+        log_error "Backend installation failed"
+        return 1
+    fi
+
     echo ""
-    install_frontend
+
+    if install_frontend; then
+        log_success "Frontend installation completed"
+    else
+        log_error "Frontend installation failed"
+        return 1
+    fi
 
     log_success "All dependencies installed successfully!"
 }
