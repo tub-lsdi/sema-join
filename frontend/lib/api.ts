@@ -1,114 +1,33 @@
+import type { components, paths } from './api-types';
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-// Common Types
+// Re-export types from auto-generated schema
 export type JoinMethod = "row" | "column";
 export type TableRow = Record<string, unknown>;
 
 // Bridge Table Types
-export interface BridgeTableEntry {
-  r_val: string;
-  s_val: string;
-  npmi: number;
-}
-
-interface BridgeTableResponse {
-  bridge_table: BridgeTableEntry[];
-  total_r_values: number;
-  total_s_values: number;
-  total_candidates: number;
-}
-
-interface JoinResponse {
-  result: TableRow[];
-  total_records: number;
-  total_r_records: number;
-  matched_count: number;
-}
+export type BridgeTableEntry = components['schemas']['BridgeTableEntry'];
+type BridgeTableResponse = components['schemas']['BridgeTableResponse'];
+type JoinResponse = components['schemas']['JoinResponse'];
 
 // History Types
-export interface HistoryEntry {
-  id: number;
-  timestamp: string;
-  r_join_col: string;
-  s_join_col: string;
-}
-
-export interface HistoryResponse {
-  entries: HistoryEntry[];
-}
-
-export interface HistoryDetailResponse extends HistoryEntry {
-  list_r: any[];
-  list_s: any[];
-  bridge_table: any[];
-  result: any[];
-}
+export type HistoryEntry = components['schemas']['HistoryEntry'];
+export type HistoryResponse = components['schemas']['HistoryResponse'];
+export type HistoryDetailResponse = components['schemas']['HistoryDetailEntry'];
 
 // AI Types
-export interface ColumnJoinRecommendation {
-  r_column: string;
-  s_column: string;
-  confidence: number;
-  reason: string;
-}
-
-export interface AIColumnMatchResponse {
-  recommended_joins: ColumnJoinRecommendation[];
-  analysis: string;
-  model_used: string;
-  table_r_columns: string[];
-  table_s_columns: string[];
-  rows_analyzed_r: number;
-  rows_analyzed_s: number;
-}
-
-export interface BridgeEntrySuggestion {
-  r_val: string;
-  selected_s_val: string;
-  reason: string;
-  confidence: number;
-}
-
-export interface BridgeEntrySuggestionResponse {
-  selections: BridgeEntrySuggestion[];
-  analysis: string;
-  selected_indices: number[];
-  model_used: string;
-}
-
-export interface OllamaStatus {
-  ollama_running: boolean;
-  model_requested?: string;
-  model_available?: boolean;
-  available_models?: string[];
-  error?: string;
-  suggestion?: string;
-}
+export type AIColumnRecommendation = components['schemas']['AIColumnRecommendation'];
+export type AIColumnRecommendationResponse = components['schemas']['AIColumnRecommendationResponse'];
+export type AIBridgeRecommendation = components['schemas']['AIBridgeRecommendation'];
+export type AIBridgeRecommendationResponse = components['schemas']['AIBridgeRecommendationResponse'];
+export type AIOllamaStatus = components['schemas']['AIOllamaStatus'];
 
 // Table Upload Types
-export interface UploadedTableMetadata {
-  id: number;
-  name: string;
-  description: string | null;
-  upload_timestamp: string;
-  columns: string[];
-  row_count: number;
-}
-
-export interface UploadedTableDetail extends UploadedTableMetadata {
-  body: TableRow[];
-}
-
-export interface UploadTableResponse {
-  id: number;
-  name: string;
-  message: string;
-}
-
-export interface TablesListResponse {
-  tables: UploadedTableMetadata[];
-  total: number;
-}
+export type UploadedTableMetadata = components['schemas']['UploadedTableMetadata'];
+export type UploadedTableDetail = components['schemas']['UploadedTableDetail'];
+export type UploadTableResponse = components['schemas']['UploadTableResponse'];
+export type TablesListResponse = components['schemas']['TablesListResponse'];
 
 // Helper
 async function apiRequest<T>(url: string, options: RequestInit): Promise<T> {
@@ -166,8 +85,8 @@ export async function getAIColumnRecommendations(
   tableR: TableRow[],
   tableS: TableRow[],
   maxSamples: number = 100
-): Promise<AIColumnMatchResponse> {
-  return apiRequest<AIColumnMatchResponse>(`${API_BASE_URL}/ai/match-columns`, {
+): Promise<AIColumnRecommendationResponse> {
+  return apiRequest<AIColumnRecommendationResponse>(`${API_BASE_URL}/ai/recommend-columns`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -178,17 +97,17 @@ export async function getAIColumnRecommendations(
   });
 }
 
-export async function checkOllamaStatus(): Promise<OllamaStatus> {
-  return apiRequest<OllamaStatus>(`${API_BASE_URL}/ai/status`, {
+export async function checkOllamaStatus(): Promise<AIOllamaStatus> {
+  return apiRequest<AIOllamaStatus>(`${API_BASE_URL}/ai/status`, {
     method: "GET",
   });
 }
 
-export async function suggestBestBridgeEntries(
+export async function getAIBridgeRecommendations(
   bridgeEntries: BridgeTableEntry[]
-): Promise<BridgeEntrySuggestionResponse> {
-  return apiRequest<BridgeEntrySuggestionResponse>(
-    `${API_BASE_URL}/ai/suggest-bridge-entries`,
+): Promise<AIBridgeRecommendationResponse> {
+  return apiRequest<AIBridgeRecommendationResponse>(
+    `${API_BASE_URL}/ai/recommend-bridge-entries`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },

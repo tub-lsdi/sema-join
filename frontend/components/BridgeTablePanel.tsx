@@ -4,7 +4,7 @@ import { useState } from "react";
 import {
   type BridgeTableEntry,
   type JoinMethod,
-  suggestBestBridgeEntries,
+  getAIBridgeRecommendations,
 } from "@/lib/api";
 import { getErrorMessage, getScoreColumnConfig } from "@/lib/utils";
 import styles from "./BridgeTablePanel.module.css";
@@ -49,15 +49,15 @@ export default function BridgeTablePanel({
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState("");
 
-  const handleAISuggest = async () => {
+  const handleAIRecommend = async () => {
     setAiLoading(true);
     setAiError("");
 
     try {
-      const result = await suggestBestBridgeEntries(bridgeTable);
-      onAISuggestBest(result.selected_indices);
+      const result = await getAIBridgeRecommendations(bridgeTable);
+      onAISuggestBest(result.recommended_indices);
     } catch (err) {
-      setAiError(getErrorMessage(err, "Failed to get AI suggestions"));
+      setAiError(getErrorMessage(err, "Failed to get AI recommendations"));
     } finally {
       setAiLoading(false);
     }
@@ -258,10 +258,10 @@ export default function BridgeTablePanel({
             {showAISuggestButton && (
               <button
                 type="button"
-                onClick={handleAISuggest}
+                onClick={handleAIRecommend}
                 disabled={aiLoading || loading}
                 className={styles.aiSuggestButton}
-                title="Use AI to pick the best match for each row"
+                title="Use AI to recommend the best match for each row"
               >
                 {aiLoading ? (
                   <>
@@ -271,7 +271,7 @@ export default function BridgeTablePanel({
                 ) : (
                   <>
                     <span className={styles.icon}>✨</span>
-                    AI Suggest Best
+                    AI Recommend Best
                   </>
                 )}
               </button>

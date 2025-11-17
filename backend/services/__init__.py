@@ -1,7 +1,7 @@
 import duckdb
 
 from .SemanticJoinService import SemanticJoinService
-from .AIColumnMatchingService import AIColumnMatchingService
+from .AIRecommendationService import AIRecommendationService
 from .AppDatabaseService import AppDatabaseService
 from backend.config import settings
 from backend.utils import (
@@ -39,7 +39,7 @@ def get_db_connection(
 __all__ = [
     # Services
     "SemanticJoinService",
-    "AIColumnMatchingService",
+    "AIRecommendationService",
     "AppDatabaseService",
     # Utility functions
     "NormalizationStrategy",

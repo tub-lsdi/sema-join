@@ -20,7 +20,19 @@ async def upload_table(
     description: Optional[str] = Form(None),
 ):
     db_service: AppDatabaseService = request.app.state.app_database_service
-    content = (await file.read()).decode("utf-8")
+
+    # Try UTF-8 first, fallback to latin-1
+    file_bytes = await file.read()
+    try:
+        content = file_bytes.decode("utf-8")
+    except UnicodeDecodeError:
+        try:
+            content = file_bytes.decode("latin-1")
+        except UnicodeDecodeError:
+            raise HTTPException(
+                status_code=400,
+                detail="File encoding not supported. Please use UTF-8 or Latin-1 encoded files.",
+            )
 
     try:
         return db_service.upload_table(content, file.filename or "", name, description)
