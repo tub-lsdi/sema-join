@@ -1,47 +1,30 @@
-"""
-Semantic Join Service class with integrated RS-JP and CS-JP-LP join algorithms.
-"""
-
 import duckdb
 import polars as pl
-from typing import Literal
+from typing import Literal, Optional, TYPE_CHECKING
 from backend.utils.normalization import DEFAULT_NORMALIZATION_STRATEGY
 from backend.services.algorithms import RSJPAlgorithm, CSJPLPAlgorithm
 
-# Type alias for join methods
+if TYPE_CHECKING:
+    from backend.services.AppDatabaseService import AppDatabaseService
+
 JoinMethod = Literal["row", "column"]
 
 
 class SemanticJoinService:
-    """
-    Service class that implements semantic join functionality.
-    """
+    """Handles semantic joins between tables using PMI-based algorithms."""
 
-    def __init__(self, db_connection: duckdb.DuckDBPyConnection):
-        """
-        Initialize the semantic join service.
-
-        Args:
-            db_connection: Database connection (created in main.py)
-        """
+    def __init__(
+        self,
+        db_connection: duckdb.DuckDBPyConnection,
+        app_database_service: Optional["AppDatabaseService"] = None,
+    ):
         self.db_connection = db_connection
-        # Use the same normalization strategy as corpus ingestion
+        self.app_database_service = app_database_service
         self.normalizer = DEFAULT_NORMALIZATION_STRATEGY
-
-        # Initialize algorithm instances
         self.rs_jp_algorithm = RSJPAlgorithm(db_connection)
         self.cs_jp_algorithm = CSJPLPAlgorithm(db_connection)
 
     def _normalize(self, value: str) -> str:
-        """
-        Normalize a value using the same strategy as corpus ingestion.
-
-        Args:
-            value: Raw value to normalize
-
-        Returns:
-            Normalized value
-        """
         return self.normalizer.normalize(value)
 
     def create_bridge_table(
@@ -51,178 +34,123 @@ class SemanticJoinService:
         join_method: JoinMethod = "row",
         top_k: int = 1,
     ) -> list[dict]:
-        """
-        Create a bridge table using the specified join algorithm.
-
-        Args:
-            list_r: First list of strings (R set - to be matched)
-            list_s: Second list of strings (S set - candidates)
-            join_method: "row" for RS-JP or "column" for CS-JP
-            top_k: Number of top candidates to return per R value
-
-        Returns:
-            List of dictionaries with r_val, s_val, and pmi/score fields
-
-        Raises:
-            ValueError: If either list is empty or join_method is invalid
-        """
-        # Validation
-        if not list_r:
-            raise ValueError("list_r cannot be empty")
-        if not list_s:
-            raise ValueError("list_s cannot be empty")
+        """Create bridge table with r_val, s_val, and npmi/pmi scores."""
+        if not list_r or not list_s:
+            raise ValueError("Input lists cannot be empty")
         if join_method not in ["row", "column"]:
-            raise ValueError(
-                f"join_method must be 'row' or 'column', got '{join_method}'"
-            )
+            raise ValueError(f"Invalid join_method: {join_method}")
         if top_k < 1:
             raise ValueError("top_k must be at least 1")
 
-        # Normalize input values to match database normalization
         normalized_r = [self._normalize(v) for v in list_r]
         normalized_s = [self._normalize(v) for v in list_s]
 
-        # Delegate to appropriate algorithm
         if join_method == "row":
             return self.rs_jp_algorithm.create_bridge(normalized_r, normalized_s, top_k)
-        else:  # join_method == "column"
-            # "we assume that the direction of the join
-            # J : R → S is known without loss of generality, since both join directions
-            # can be tested and the one with a better score can be picked."
 
-            # Test direction 1: R → S
-            result_r_to_s = self.cs_jp_algorithm.create_bridge(
-                normalized_r, normalized_s, top_k
-            )
-            score_r_to_s = sum(entry["npmi"] for entry in result_r_to_s)
+        # CS-JP: Test both directions, pick better one
+        result_r_to_s = self.cs_jp_algorithm.create_bridge(
+            normalized_r, normalized_s, top_k
+        )
+        result_s_to_r = self.cs_jp_algorithm.create_bridge(
+            normalized_s, normalized_r, top_k
+        )
 
-            # Test direction 2: S → R (swapped)
-            result_s_to_r = self.cs_jp_algorithm.create_bridge(
-                normalized_s, normalized_r, top_k
-            )
-            score_s_to_r = sum(entry["npmi"] for entry in result_s_to_r)
+        score_r_to_s = sum(entry["npmi"] for entry in result_r_to_s)
+        score_s_to_r = sum(entry["npmi"] for entry in result_s_to_r)
 
-            # Pick the direction with better score
-            if score_r_to_s >= score_s_to_r:
-                return result_r_to_s
-            else:
-                # Swap back the result (reverse r_val and s_val)
-                return [
-                    {
-                        "r_val": entry["s_val"],
-                        "s_val": entry["r_val"],
-                        "npmi": entry["npmi"],
-                    }
-                    for entry in result_s_to_r
-                ]
+        if score_r_to_s >= score_s_to_r:
+            return result_r_to_s
+
+        # Swap r_val and s_val in result
+        return [
+            {"r_val": entry["s_val"], "s_val": entry["r_val"], "npmi": entry["npmi"]}
+            for entry in result_s_to_r
+        ]
 
     def perform_join_from_bridge(
         self,
-        list_r: list[dict],
+        table_r_id: int,
         r_join_col: str,
         bridge_table: list[dict],
-        list_s: list[dict],
+        table_s_id: int,
         s_join_col: str,
-    ) -> list[dict]:
+    ) -> tuple[list[dict], int]:
         """
-        Perform a three-way join using a bridge table.
-
-        This performs: list_r JOIN bridge_table ON r_join_col = r_val
-                              JOIN list_s ON s_val = s_join_col
-
-        Args:
-            list_r: List of records from R dataset
-            r_join_col: Column name in list_r to join with bridge_table.r_val
-            bridge_table: Bridge table with r_val, s_val, pmi
-            list_s: List of records from S dataset
-            s_join_col: Column name in list_s to join with bridge_table.s_val
-
-        Returns:
-            List of joined records containing all columns from R, bridge, and S
-
-        Raises:
-            ValueError: If inputs are invalid or join columns don't exist
+        Three-way join: R JOIN bridge ON r_join_col JOIN S ON s_join_col.
+        Returns (result, total_r_records).
         """
-        # Validation
+        if not self.app_database_service:
+            raise ValueError("AppDatabaseService not available")
+
+        list_r = self.app_database_service.get_table_data(table_r_id)
+        list_s = self.app_database_service.get_table_data(table_s_id)
+
         if not list_r:
-            raise ValueError("list_r cannot be empty")
+            raise ValueError(f"Table R with ID {table_r_id} not found")
         if not list_s:
-            raise ValueError("list_s cannot be empty")
+            raise ValueError(f"Table S with ID {table_s_id} not found")
         if not bridge_table:
             raise ValueError("bridge_table cannot be empty")
-
-        # Check if join columns exist
         if r_join_col not in list_r[0]:
-            raise ValueError(f"Column '{r_join_col}' not found in list_r")
+            raise ValueError(f"Column '{r_join_col}' not found in table R")
         if s_join_col not in list_s[0]:
-            raise ValueError(f"Column '{s_join_col}' not found in list_s")
+            raise ValueError(f"Column '{s_join_col}' not found in table S")
 
-        # Use the database connection from main.py
-        conn = self.db_connection
+        # Add normalized columns for joining
+        r_norm_col = "r_normalized_join_key"
+        s_norm_col = "s_normalized_join_key"
 
-        # normalize values before joining using Polars and the classes normalization method
-        r_normalized_col = "r_normalized_join_key"
-        s_normalized_col = "s_normalized_join_key"
-        list_r_normalized = pl.DataFrame(list_r).with_columns(
+        df_r = pl.DataFrame(list_r).with_columns(
             pl.col(r_join_col)
             .map_elements(self._normalize, return_dtype=pl.String)
-            .alias(r_normalized_col)
+            .alias(r_norm_col)
         )
-
-        list_s_normalized = pl.DataFrame(list_s).with_columns(
+        df_s = pl.DataFrame(list_s).with_columns(
             pl.col(s_join_col)
             .map_elements(self._normalize, return_dtype=pl.String)
-            .alias(s_normalized_col)
+            .alias(s_norm_col)
         )
 
-        # Register inputs as temp tables using Polars
-        conn.register("temp_r", list_r_normalized)
+        # Register and join in DuckDB
+        conn = self.db_connection
+        conn.register("temp_r", df_r)
         conn.register("temp_bridge", pl.DataFrame(bridge_table))
-        conn.register("temp_s", list_s_normalized)
+        conn.register("temp_s", df_s)
 
-        # Perform three-way join
-        # Bridge table has normalized values
-        join_query = f"""
-            SELECT
-                r.*,
-                bridge.r_val,
-                bridge.s_val,
-                bridge.npmi,
-                s.*
+        query = f"""
+            SELECT r.*, bridge.r_val, bridge.s_val, bridge.npmi, s.*
             FROM temp_r AS r
-            INNER JOIN temp_bridge AS bridge
-                ON r.{r_normalized_col} = bridge.r_val
-            INNER JOIN temp_s AS s
-                ON s.{s_normalized_col} = bridge.s_val
+            JOIN temp_bridge AS bridge ON r.{r_norm_col} = bridge.r_val
+            JOIN temp_s AS s ON s.{s_norm_col} = bridge.s_val
             ORDER BY r.{r_join_col}
         """
 
-        result_df = conn.execute(join_query).pl()
-        # move join columns to the end
-        columns_to_remove = ["r_val", "s_val", "npmi"]
-        result_df = result_df.select(pl.exclude(columns_to_remove), *columns_to_remove)
+        result_df = conn.execute(query).pl()
+        result_df = result_df.select(
+            pl.exclude(["r_val", "s_val", "npmi"]), "r_val", "s_val", "npmi"
+        ).drop([r_norm_col, s_norm_col])
 
-        # Clean up temp tables
         conn.unregister("temp_r")
         conn.unregister("temp_bridge")
         conn.unregister("temp_s")
 
-        # Drop the helper columns
-        final_df = result_df.drop([r_normalized_col, s_normalized_col])
+        result = result_df.to_dicts()
 
-        return final_df.to_dicts()
+        # Persist to history
+        self.app_database_service.save_join_history(
+            table_r_id=table_r_id,
+            table_s_id=table_s_id,
+            bridge_table=bridge_table,
+            result=result,
+            r_join_col=r_join_col,
+            s_join_col=s_join_col,
+        )
+
+        return result, len(list_r)
 
     def validate_inputs(self, list_r: list[str], list_s: list[str]) -> tuple[bool, str]:
-        """
-        Validate input lists for the semantic join operation.
-
-        Args:
-            list_r: First list of strings
-            list_s: Second list of strings
-
-        Returns:
-            Tuple of (is_valid, error_message)
-        """
+        """Validate that both lists are non-empty and contain only strings."""
         if not list_r:
             return False, "list_r cannot be empty"
         if not list_s:
@@ -231,5 +159,4 @@ class SemanticJoinService:
             return False, "All elements in list_r must be strings"
         if not all(isinstance(x, str) for x in list_s):
             return False, "All elements in list_s must be strings"
-
         return True, ""

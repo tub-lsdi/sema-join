@@ -1,10 +1,12 @@
-from sqlalchemy import Column, Integer, Text, JSON, DateTime, func, String
-from sqlalchemy.orm import Session
-from typing import List, Optional
 import json
 from datetime import datetime
+from typing import List, Optional, Dict, Any
 
-from .base import Base
+from sqlalchemy import Column, Integer, String, Text, DateTime, JSON
+from sqlalchemy.orm import Session
+from sqlalchemy.sql import func
+
+from backend.persistence import Base
 
 
 class UploadedTable(Base):
@@ -26,6 +28,7 @@ def create_uploaded_table(
     name: Optional[str] = None,
     description: Optional[str] = None,
 ) -> UploadedTable:
+    """Create a new uploaded table in the database."""
     if not body or not all(isinstance(item, dict) for item in body):
         raise ValueError("body must be a non-empty list of dicts")
 
@@ -54,6 +57,7 @@ def create_uploaded_table(
 
 
 def list_uploaded_tables(session: Session) -> List[UploadedTable]:
+    """List all uploaded tables, ordered by upload timestamp descending."""
     return (
         session.query(UploadedTable)
         .order_by(UploadedTable.upload_timestamp.desc())
@@ -64,27 +68,21 @@ def list_uploaded_tables(session: Session) -> List[UploadedTable]:
 def get_uploaded_table_by_id(
     session: Session, table_id: int
 ) -> Optional[UploadedTable]:
-    return (
-        session.query(UploadedTable).filter(UploadedTable.id == table_id).one_or_none()
-    )
+    """Get an uploaded table by ID."""
+    return session.query(UploadedTable).filter(UploadedTable.id == table_id).first()
 
 
 def delete_uploaded_table(session: Session, table_id: int) -> bool:
+    """Delete an uploaded table by ID. Returns True if deleted, False if not found."""
     table = get_uploaded_table_by_id(session, table_id)
     if not table:
         return False
 
-    try:
-        session.delete(table)
-        session.commit()
-        return True
-    except Exception:
-        session.rollback()
-        raise
+    session.delete(table)
+    session.commit()
+    return True
 
 
-def get_uploaded_table_body(table: UploadedTable) -> List[dict]:
-    try:
-        return json.loads(table.body)
-    except Exception:
-        return []
+def get_uploaded_table_body(table: UploadedTable) -> List[Dict[str, Any]]:
+    """Parse and return the body of an uploaded table."""
+    return json.loads(table.body)

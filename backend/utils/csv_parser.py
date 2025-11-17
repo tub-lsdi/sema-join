@@ -37,6 +37,7 @@ def parse_csv_to_list_of_dicts(csv_content: str) -> List[Dict[str, Any]]:
 
 
 def _convert_value(value: str) -> Any:
+    """Convert string value to appropriate type (int, float, or str)."""
     if not value or not value.strip():
         return None
 

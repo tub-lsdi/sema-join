@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 
 
 from backend.config import settings
-from backend.services import SemanticJoinService
+from backend.services import SemanticJoinService, AppDatabaseService
 from backend.routes import (
     health_router,
     bridge_router,
@@ -30,11 +30,14 @@ async def lifespan(app: FastAPI):
     db_path = get_db_path()
     app.state.db_connection = duckdb.connect(database=db_path)
 
-    # Initialize the service with the connection
-    app.state.join_service = SemanticJoinService(app.state.db_connection)
-
     # Initialize and attach the application MySQL DB (SQLAlchemy)
     init_app_db(app)
+
+    # Initialize services
+    app.state.app_database_service = AppDatabaseService(app.state.app_db_sessionmaker)
+    app.state.join_service = SemanticJoinService(
+        app.state.db_connection, app.state.app_database_service
+    )
 
     yield
 
