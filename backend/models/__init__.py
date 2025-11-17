@@ -13,7 +13,7 @@ from .history import (
     HistoryDetailEntry,
 )
 from .ai_match import (
-    AIColumnMatchRequest,
+    AIColumnRecommendationRequest,
     AIColumnRecommendation,
     AIColumnRecommendationResponse,
     AIBridgeRecommendation,
@@ -41,7 +41,7 @@ __all__ = [
     "HistoryResponse",
     "HistoryDetailEntry",
     # AI recommendation models
-    "AIColumnMatchRequest",
+    "AIColumnRecommendationRequest",
     "AIColumnRecommendation",
     "AIColumnRecommendationResponse",
     "AIBridgeRecommendation",

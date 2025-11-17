@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Request
 
 from backend.models.ai_match import (
-    AIColumnMatchRequest,
+    AIColumnRecommendationRequest,
     AIColumnRecommendationResponse,
     AIOllamaStatus,
     AIBridgeRecommendationRequest,
@@ -17,7 +17,9 @@ router = APIRouter(
 
 
 @router.post("/recommend-columns", response_model=AIColumnRecommendationResponse)
-async def recommend_columns(request_data: AIColumnMatchRequest, request: Request):
+async def recommend_columns(
+    request_data: AIColumnRecommendationRequest, request: Request
+):
     """Get AI recommendations for which columns to join."""
     try:
         ai_service = AIRecommendationService()

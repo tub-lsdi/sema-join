@@ -384,8 +384,34 @@ export interface components {
             model_used: string;
         };
         /**
-         * AIColumnMatchRequest
-         * @description Request model for AI-powered column matching.
+         * AIColumnRecommendation
+         * @description AI recommendation for which columns to join.
+         */
+        AIColumnRecommendation: {
+            /**
+             * R Column
+             * @description Column name from table R
+             */
+            r_column: string;
+            /**
+             * S Column
+             * @description Column name from table S
+             */
+            s_column: string;
+            /**
+             * Confidence
+             * @description Confidence score between 0.0 and 1.0
+             */
+            confidence: number;
+            /**
+             * Reason
+             * @description Explanation for why these columns should be joined
+             */
+            reason: string;
+        };
+        /**
+         * AIColumnRecommendationRequest
+         * @description Request for AI column recommendations.
          * @example {
          *       "max_samples": 100,
          *       "table_r": [
@@ -421,7 +447,7 @@ export interface components {
          *       ]
          *     }
          */
-        AIColumnMatchRequest: {
+        AIColumnRecommendationRequest: {
             /**
              * Table R
              * @description First table as list of records
@@ -464,32 +490,6 @@ export interface components {
              * @default 100
              */
             max_samples: number;
-        };
-        /**
-         * AIColumnRecommendation
-         * @description AI recommendation for which columns to join.
-         */
-        AIColumnRecommendation: {
-            /**
-             * R Column
-             * @description Column name from table R
-             */
-            r_column: string;
-            /**
-             * S Column
-             * @description Column name from table S
-             */
-            s_column: string;
-            /**
-             * Confidence
-             * @description Confidence score between 0.0 and 1.0
-             */
-            confidence: number;
-            /**
-             * Reason
-             * @description Explanation for why these columns should be joined
-             */
-            reason: string;
         };
         /**
          * AIColumnRecommendationResponse
@@ -1168,7 +1168,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["AIColumnMatchRequest"];
+                "application/json": components["schemas"]["AIColumnRecommendationRequest"];
             };
         };
         responses: {

@@ -14,8 +14,8 @@ class AIColumnRecommendation(BaseModel):
     )
 
 
-class AIColumnMatchRequest(BaseModel):
-    """Request model for AI-powered column matching."""
+class AIColumnRecommendationRequest(BaseModel):
+    """Request for AI column recommendations."""
 
     table_r: list[dict] = Field(
         ...,

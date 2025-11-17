@@ -17,8 +17,10 @@ export type HistoryResponse = components['schemas']['HistoryResponse'];
 export type HistoryDetailResponse = components['schemas']['HistoryDetailEntry'];
 
 // AI Types
+export type AIColumnRecommendationRequest = components['schemas']['AIColumnRecommendationRequest'];
 export type AIColumnRecommendation = components['schemas']['AIColumnRecommendation'];
 export type AIColumnRecommendationResponse = components['schemas']['AIColumnRecommendationResponse'];
+export type AIBridgeRecommendationRequest = components['schemas']['AIBridgeRecommendationRequest'];
 export type AIBridgeRecommendation = components['schemas']['AIBridgeRecommendation'];
 export type AIBridgeRecommendationResponse = components['schemas']['AIBridgeRecommendationResponse'];
 export type AIOllamaStatus = components['schemas']['AIOllamaStatus'];
