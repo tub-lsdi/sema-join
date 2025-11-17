@@ -42,6 +42,13 @@ try:
 except Exception:
     from backend.persistence.base import Base
 
+try:
+    from backend.persistence.table_entry import TableEntry
+    from backend.persistence.join_history import JoinHistory
+    from backend.persistence.uploaded_table import UploadedTable
+except Exception:
+    pass
+
 target_metadata = Base.metadata
 
 

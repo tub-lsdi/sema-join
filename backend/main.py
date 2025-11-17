@@ -12,6 +12,7 @@ from backend.routes import (
     join_router,
     history_router,
     ai_match_router,
+    uploaded_tables_router,
 )
 from backend.app_db import init_app_db, shutdown_app_db
 
@@ -65,3 +66,4 @@ app.include_router(bridge_router)
 app.include_router(join_router)
 app.include_router(history_router)
 app.include_router(ai_match_router)
+app.include_router(uploaded_tables_router)

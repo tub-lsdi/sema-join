@@ -1,11 +1,13 @@
 .container {
   overflow-x: auto;
+  width: 100%;
 }
 
 .table {
   width: 100%;
+  min-width: 100%;
   border-collapse: collapse;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
 }
 
 .table thead {
@@ -13,12 +15,13 @@
 }
 
 .table th {
-  padding: 0.75rem;
+  padding: 1rem;
   text-align: left;
   font-weight: 600;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  white-space: nowrap;
 }
 
 .clickable {
@@ -42,12 +45,18 @@
 }
 
 .table td {
-  padding: 0.75rem;
+  padding: 1rem;
   border-top: 1px solid #e5e7eb;
+  white-space: nowrap;
+  min-width: 100px;
 }
 
 .table tbody tr:hover:not(.empty) {
   background-color: #f9fafb;
+}
+
+.table tbody tr {
+  height: 3rem;
 }
 
 .empty {

@@ -24,24 +24,232 @@
 .topCard {
   background: #ffffff;
   border-radius: 12px;
-  padding: 0.75rem 1rem;
+  padding: 1rem 1.5rem;
   box-shadow: 0 6px 12px rgba(15, 23, 42, 0.06);
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
   margin-bottom: 1.5rem;
 }
 
-.historyButton {
-  background: #2563eb; /* blue-600 */
+.actionButtons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.historyButton,
+.uploadButton {
+  background: #2563eb;
   color: #ffffff;
   border: none;
-  padding: 0.5rem 0.75rem;
+  padding: 0.75rem 1.25rem;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
+  transition: background 0.2s;
+  font-size: 0.95rem;
 }
 
-.historyButton:hover {
-  background: #1e40af; /* blue-800 */
+.historyButton:hover,
+.uploadButton:hover {
+  background: #1e40af;
+}
+
+.uploadButton {
+  background: #16a34a;
+}
+
+.uploadButton:hover {
+  background: #15803d;
+}
+
+.tablePanel {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 6px 12px rgba(15, 23, 42, 0.06);
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.emptyPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  text-align: center;
+  padding: 2rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 1rem 0;
+}
+
+.emptyMessage {
+  color: #64748b;
+  margin: 0 0 1.5rem 0;
+  font-size: 1rem;
+}
+
+.selectTableButton {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.selectTableButton:hover:not(:disabled) {
+  background: #1e40af;
+}
+
+.selectTableButton:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.panelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.titleSmall {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.headerButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.viewFullButton,
+.changeButton {
+  background: #64748b;
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+}
+
+.viewFullButton:hover:not(:disabled),
+.changeButton:hover:not(:disabled) {
+  background: #475569;
+}
+
+.viewFullButton:disabled,
+.changeButton:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.tableContainer {
+  overflow-x: auto;
+  overflow-y: visible;
+  max-width: 100%;
+}
+
+.tableContainer table {
+  width: 100%;
+}
+
+.indicator {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: #eff6ff;
+  border-left: 4px solid #2563eb;
+  border-radius: 4px;
+  color: #1e40af;
+  font-size: 0.95rem;
+}
+
+.fullTableOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 2rem;
+}
+
+.fullTableModal {
+  background: white;
+  border-radius: 8px;
+  width: 95%;
+  max-width: 1600px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.fullTableHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.fullTableHeader h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.closeButton:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.fullTableContent {
+  flex: 1;
+  overflow: auto;
+  padding: 1.5rem;
+  min-height: 0;
+}
+
+.fullTableContent table {
+  width: max-content;
+  min-width: 100%;
 }
