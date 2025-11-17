@@ -58,8 +58,8 @@ export default function InteractiveDataTable({
                     {isEmpty
                       ? "—"
                       : typeof row[col] === "object"
-                        ? JSON.stringify(row[col])
-                        : String(row[col] ?? "")}
+                      ? JSON.stringify(row[col])
+                      : String(row[col] ?? "")}
                   </td>
                 ))}
               </tr>

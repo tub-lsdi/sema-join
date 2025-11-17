@@ -23,4 +23,5 @@ dependencies = [
     "alembic>=1.17.1",
     "cryptography>=46.0.3",
     "pydantic-settings>=2.11.0",
+    "python-multipart>=0.0.20",
 ]

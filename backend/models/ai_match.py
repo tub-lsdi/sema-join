@@ -1,8 +1,8 @@
 from pydantic import BaseModel, Field
 
 
-class ColumnJoinRecommendation(BaseModel):
-    """A single column join recommendation from the AI."""
+class AIColumnRecommendation(BaseModel):
+    """AI recommendation for which columns to join."""
 
     r_column: str = Field(..., description="Column name from table R")
     s_column: str = Field(..., description="Column name from table S")
@@ -14,8 +14,8 @@ class ColumnJoinRecommendation(BaseModel):
     )
 
 
-class AIColumnMatchRequest(BaseModel):
-    """Request model for AI-powered column matching."""
+class AIColumnRecommendationRequest(BaseModel):
+    """Request for AI column recommendations."""
 
     table_r: list[dict] = Field(
         ...,
@@ -67,10 +67,10 @@ class AIColumnMatchRequest(BaseModel):
     }
 
 
-class AIColumnMatchResponse(BaseModel):
-    """Response model for AI-powered column matching."""
+class AIColumnRecommendationResponse(BaseModel):
+    """AI-powered column join recommendations."""
 
-    recommended_joins: list[ColumnJoinRecommendation] = Field(
+    recommendations: list[AIColumnRecommendation] = Field(
         ..., description="List of recommended column join pairs"
     )
     analysis: str = Field(..., description="Overall analysis of the table relationship")
@@ -88,7 +88,7 @@ class AIColumnMatchResponse(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
-                    "recommended_joins": [
+                    "recommendations": [
                         {
                             "r_column": "country_code",
                             "s_column": "country_name",
@@ -108,8 +108,8 @@ class AIColumnMatchResponse(BaseModel):
     }
 
 
-class OllamaStatusResponse(BaseModel):
-    """Response model for Ollama status check."""
+class AIOllamaStatus(BaseModel):
+    """Ollama AI service status."""
 
     ollama_running: bool = Field(..., description="Whether Ollama service is running")
     model_requested: str | None = Field(
@@ -124,26 +124,26 @@ class OllamaStatusResponse(BaseModel):
     error: str | None = Field(
         default=None, description="Error message if Ollama is not running"
     )
-    suggestion: str | None = Field(
-        default=None, description="Suggestion for fixing the issue"
+    recommendation: str | None = Field(
+        default=None, description="Recommendation for fixing the issue"
     )
 
 
-class BridgeEntrySelection(BaseModel):
-    """A single R value with its selected S match."""
+class AIBridgeRecommendation(BaseModel):
+    """AI recommendation for which S value to use for an R value."""
 
     r_val: str = Field(..., description="Value from R")
-    selected_s_val: str = Field(
-        ..., description="Best S value selected for this R value"
+    recommended_s_val: str = Field(
+        ..., description="Recommended S value for this R value"
     )
-    reason: str = Field(..., description="Why this S value was chosen")
+    reason: str = Field(..., description="Why this S value was recommended")
     confidence: float = Field(
-        ..., ge=0.0, le=1.0, description="Confidence in this selection"
+        ..., ge=0.0, le=1.0, description="Confidence in this recommendation"
     )
 
 
-class BridgeEntrySuggestionRequest(BaseModel):
-    """Request model for AI-powered bridge entry selection."""
+class AIBridgeRecommendationRequest(BaseModel):
+    """Request for AI bridge entry recommendations."""
 
     bridge_entries: list[dict] = Field(
         ...,
@@ -175,15 +175,15 @@ class BridgeEntrySuggestionRequest(BaseModel):
     }
 
 
-class BridgeEntrySuggestionResponse(BaseModel):
-    """Response model for AI-powered bridge entry selection."""
+class AIBridgeRecommendationResponse(BaseModel):
+    """AI recommendations for bridge entries."""
 
-    selections: list[BridgeEntrySelection] = Field(
-        ..., description="Best match selected for each R value"
+    recommendations: list[AIBridgeRecommendation] = Field(
+        ..., description="Recommended S value for each R value"
     )
-    analysis: str = Field(..., description="Overall reasoning for the selections")
-    selected_indices: list[int] = Field(
+    analysis: str = Field(..., description="Overall reasoning for the recommendations")
+    recommended_indices: list[int] = Field(
         ...,
-        description="Indices of selected entries in the original bridge_entries array",
+        description="Indices of recommended entries in the original bridge_entries array",
     )
     model_used: str = Field(..., description="Name of AI model used")

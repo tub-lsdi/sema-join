@@ -3,23 +3,10 @@ import json
 from backend.config import settings
 
 
-class AIColumnMatchingService:
-    """
-    This service analyzes two table schemas and uses an LLM to
-    recommend which columns from each table should be joined together based on
-    their names, sample values, and semantic meaning.
-    """
+class AIRecommendationService:
+    """AI-powered recommendation service for semantic joins using LLMs."""
 
     def __init__(self):
-        """
-        Initialize the AI Column Matching Service.
-
-        Configuration is loaded from .env file via settings.
-        If not set in .env, uses defaults from config.py:
-        - OLLAMA_BASE_URL: http://localhost:11434
-        - OLLAMA_MODEL: mistral
-        - OLLAMA_TIMEOUT: 60
-        """
         self.base_url = settings.OLLAMA_BASE_URL.rstrip("/")
         self.model = settings.OLLAMA_MODEL
         self.timeout = settings.OLLAMA_TIMEOUT
@@ -81,7 +68,7 @@ CRITICAL INSTRUCTIONS:
 
 Provide your answer in the following JSON format (respond ONLY with valid JSON, no additional text):
 {{
-  "recommended_joins": [
+  "recommendations": [
     {{
       "r_column": "column_name_from_R",
       "s_column": "column_name_from_S",
@@ -243,20 +230,13 @@ IMPORTANT:
         return schema
 
     def check_ollama_status(self) -> dict:
-        """
-        Check if Ollama is running and the model is available.
-
-        Returns:
-            Dictionary with status information
-        """
+        """Check if Ollama is running and the model is available."""
         try:
-            # Check if Ollama is running
             response = requests.get(f"{self.base_url}/api/tags", timeout=5)
             response.raise_for_status()
 
             models = response.json().get("models", [])
             model_names = [m.get("name", "") for m in models]
-
             model_available = any(self.model in name for name in model_names)
 
             return {
@@ -269,20 +249,11 @@ IMPORTANT:
             return {
                 "ollama_running": False,
                 "error": str(e),
-                "suggestion": "Make sure Ollama is running. Try: 'ollama serve'",
+                "recommendation": "Make sure Ollama is running. Try: 'ollama serve'",
             }
 
-    def suggest_best_bridge_entries(self, bridge_entries: list[dict]) -> dict:
-        """
-        Use LLM to select the best match for each R value from RS-JP top-k results.
-
-        Args:
-            bridge_entries: List of dicts with r_val, s_val, npmi fields
-
-        Returns:
-            Dictionary with selections, analysis, selected_indices, and model_used
-        """
-        # Group entries by r_val
+    def recommend_bridge_entries(self, bridge_entries: list[dict]) -> dict:
+        """Get AI recommendations for which bridge entries to use."""
         grouped = {}
         for idx, entry in enumerate(bridge_entries):
             r_val = entry["r_val"]
@@ -319,10 +290,10 @@ CRITICAL RULES:
 
 OUTPUT FORMAT (JSON):
 {{
-  "selections": [
+  "recommendations": [
     {{
       "r_val": "<EXACTLY as shown above>",
-      "selected_s_val": "<EXACTLY one of the s_val options, copied verbatim>",
+      "recommended_s_val": "<EXACTLY one of the s_val options, copied verbatim>",
       "reason": "<why this one>",
       "confidence": 0.95
     }}
@@ -330,7 +301,7 @@ OUTPUT FORMAT (JSON):
   "analysis": "<overall reasoning>"
 }}
 
-Example: If you see {{"s_val": "united kingdom", "npmi": 0.21}}, you MUST write "selected_s_val": "united kingdom" (not "United Kingdom" or "UK")
+Example: If you see {{"s_val": "united kingdom", "npmi": 0.21}}, you MUST write "recommended_s_val": "united kingdom" (not "United Kingdom" or "UK")
 
 Respond with ONLY valid JSON, no markdown, no explanation outside the JSON."""
 
@@ -348,81 +319,64 @@ Respond with ONLY valid JSON, no markdown, no explanation outside the JSON."""
             )
             response.raise_for_status()
 
-            # Parse response
             response_text = response.json().get("response", "{}")
             ai_result = json.loads(response_text)
 
-            # Map selections back to indices
-            selections = ai_result.get("selections", [])
-            selected_indices = []
-            missing_selections = []
+            recommendations = ai_result.get("recommendations", [])
+            recommended_indices = []
 
-            for selection in selections:
-                r_val = selection["r_val"]
-                selected_s_val = selection["selected_s_val"]
+            for rec in recommendations:
+                r_val = rec["r_val"]
+                recommended_s_val = rec["recommended_s_val"]
 
-                # Find the index of this (r_val, s_val) pair
-                # Use case-insensitive comparison with whitespace stripping
                 found = False
                 for entry_data in grouped.get(r_val, []):
-                    # Normalize both values for comparison
                     entry_s_normalized = entry_data["s_val"].strip().lower()
-                    selected_s_normalized = selected_s_val.strip().lower()
+                    recommended_s_normalized = recommended_s_val.strip().lower()
 
-                    if entry_s_normalized == selected_s_normalized:
-                        selected_indices.append(entry_data["index"])
+                    if entry_s_normalized == recommended_s_normalized:
+                        recommended_indices.append(entry_data["index"])
                         found = True
                         break
 
-                # If AI suggested a value not in the list, log it and fall back to best NPMI
                 if not found:
-                    missing_selections.append(
-                        {
-                            "r_val": r_val,
-                            "suggested_s_val": selected_s_val,
-                            "available_s_vals": [
-                                e["s_val"] for e in grouped.get(r_val, [])
-                            ],
-                        }
-                    )
-
-                    # Fallback: Pick the one with highest NPMI for this r_val
+                    # Fallback: Pick highest NPMI
                     entries_for_r = grouped.get(r_val, [])
                     if entries_for_r:
                         best_entry = max(entries_for_r, key=lambda e: e.get("npmi", 0))
-                        selected_indices.append(best_entry["index"])
+                        recommended_indices.append(best_entry["index"])
                         print(
-                            f"Warning: AI suggested '{selected_s_val}' for '{r_val}' but it's not in the list. "
+                            f"Warning: AI recommended '{recommended_s_val}' for '{r_val}' but it's not in the list. "
                             f"Falling back to best NPMI match: '{best_entry['s_val']}'"
                         )
 
-            # Check if AI missed any r_vals - add them with highest NPMI
+            # Check if AI missed any r_vals
             all_r_vals = set(grouped.keys())
-            suggested_r_vals = {s["r_val"] for s in selections}
-            missed_r_vals = all_r_vals - suggested_r_vals
+            recommended_r_vals = {r["r_val"] for r in recommendations}
+            missed_r_vals = all_r_vals - recommended_r_vals
 
             if missed_r_vals:
                 print(
-                    f"Warning: AI didn't suggest matches for: {missed_r_vals}. Adding best NPMI matches."
+                    f"Warning: AI didn't recommend matches for: {missed_r_vals}. Adding best NPMI matches."
                 )
                 for r_val in missed_r_vals:
                     entries_for_r = grouped.get(r_val, [])
                     if entries_for_r:
                         best_entry = max(entries_for_r, key=lambda e: e.get("npmi", 0))
-                        selected_indices.append(best_entry["index"])
-                        selections.append(
+                        recommended_indices.append(best_entry["index"])
+                        recommendations.append(
                             {
                                 "r_val": r_val,
-                                "selected_s_val": best_entry["s_val"],
-                                "reason": "AI didn't provide suggestion, using highest NPMI",
+                                "recommended_s_val": best_entry["s_val"],
+                                "reason": "AI didn't provide recommendation, using highest NPMI",
                                 "confidence": 0.5,
                             }
                         )
 
             return {
-                "selections": selections,
+                "recommendations": recommendations,
                 "analysis": ai_result.get("analysis", "AI analysis complete"),
-                "selected_indices": selected_indices,
+                "recommended_indices": recommended_indices,
                 "model_used": self.model,
             }
 

@@ -13,10 +13,19 @@ from .history import (
     HistoryDetailEntry,
 )
 from .ai_match import (
-    AIColumnMatchRequest,
-    AIColumnMatchResponse,
-    ColumnJoinRecommendation,
-    OllamaStatusResponse,
+    AIColumnRecommendationRequest,
+    AIColumnRecommendation,
+    AIColumnRecommendationResponse,
+    AIBridgeRecommendation,
+    AIBridgeRecommendationRequest,
+    AIBridgeRecommendationResponse,
+    AIOllamaStatus,
+)
+from .uploaded_table import (
+    UploadedTableMetadata,
+    UploadedTableDetail,
+    UploadTableResponse,
+    TablesListResponse,
 )
 
 __all__ = [
@@ -31,9 +40,17 @@ __all__ = [
     "HistoryEntry",
     "HistoryResponse",
     "HistoryDetailEntry",
-    # AI matching models
-    "AIColumnMatchRequest",
-    "AIColumnMatchResponse",
-    "ColumnJoinRecommendation",
-    "OllamaStatusResponse",
+    # AI recommendation models
+    "AIColumnRecommendationRequest",
+    "AIColumnRecommendation",
+    "AIColumnRecommendationResponse",
+    "AIBridgeRecommendation",
+    "AIBridgeRecommendationRequest",
+    "AIBridgeRecommendationResponse",
+    "AIOllamaStatus",
+    # Uploaded table models
+    "UploadedTableMetadata",
+    "UploadedTableDetail",
+    "UploadTableResponse",
+    "TablesListResponse",
 ]

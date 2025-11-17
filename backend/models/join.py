@@ -7,17 +7,16 @@ from .bridge import BridgeTableEntry
 
 
 class JoinWithBridgeRequest(BaseModel):
-    """Request model for three-way join with a pre-computed bridge table."""
+    """Request model for three-way join using table IDs from database."""
 
-    list_r: list[dict] = Field(
+    table_r_id: int = Field(
         ...,
-        description="First list of records (R dataset)",
-        min_length=1,
-        examples=[[{"id": 1, "country_code": "US"}, {"id": 2, "country_code": "UK"}]],
+        description="ID of uploaded table R from database",
+        examples=[1],
     )
     r_join_col: str = Field(
         ...,
-        description="Column name in list_r to join with bridge table r_val",
+        description="Column name in table R to join with bridge table r_val",
         examples=["country_code"],
     )
     bridge_table: list[BridgeTableEntry] = Field(
@@ -25,15 +24,14 @@ class JoinWithBridgeRequest(BaseModel):
         description="Pre-computed bridge table with candidates and PMI scores",
         min_length=1,
     )
-    list_s: list[dict] = Field(
+    table_s_id: int = Field(
         ...,
-        description="Second list of records (S dataset)",
-        min_length=1,
-        examples=[[{"country_name": "USA", "population": 331000000}]],
+        description="ID of uploaded table S from database",
+        examples=[2],
     )
     s_join_col: str = Field(
         ...,
-        description="Column name in list_s to join with bridge table s_val",
+        description="Column name in table S to join with bridge table s_val",
         examples=["country_name"],
     )
 
@@ -41,19 +39,13 @@ class JoinWithBridgeRequest(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
-                    "list_r": [
-                        {"id": 1, "country_code": "US"},
-                        {"id": 2, "country_code": "UK"},
-                    ],
+                    "table_r_id": 1,
                     "r_join_col": "country_code",
                     "bridge_table": [
                         {"r_val": "US", "s_val": "USA", "pmi": 5.32},
                         {"r_val": "UK", "s_val": "United Kingdom", "pmi": 6.12},
                     ],
-                    "list_s": [
-                        {"country_name": "USA", "population": 331000000},
-                        {"country_name": "United Kingdom", "population": 67000000},
-                    ],
+                    "table_s_id": 2,
                     "s_join_col": "country_name",
                 }
             ]

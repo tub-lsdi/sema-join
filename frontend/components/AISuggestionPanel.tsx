@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import {
   getAIColumnRecommendations,
-  type AIColumnMatchResponse,
-  type ColumnJoinRecommendation,
+  type AIColumnRecommendationResponse,
+  type AIColumnRecommendation,
   type TableRow,
 } from '@/lib/api';
 import {
@@ -31,11 +31,11 @@ export default function AISuggestionPanel({
   disabled = false,
 }: Props) {
   const [loading, setLoading] = useState(false);
-  const [recommendations, setRecommendations] = useState<AIColumnMatchResponse | null>(null);
+  const [recommendations, setRecommendations] = useState<AIColumnRecommendationResponse | null>(null);
   const [error, setError] = useState('');
   const [expanded, setExpanded] = useState(false);
 
-  const handleGetSuggestions = async () => {
+  const handleGetRecommendations = async () => {
     if (!tableR.length || !tableS.length) {
       setError(ERROR_MESSAGES.MISSING_TABLES);
       return;
@@ -68,7 +68,7 @@ export default function AISuggestionPanel({
     }
   };
 
-  const handleAcceptRecommendation = (recommendation: ColumnJoinRecommendation) => {
+  const handleAcceptRecommendation = (recommendation: AIColumnRecommendation) => {
     onRecommendationAccept(recommendation.r_column, recommendation.s_column);
     setExpanded(false);
   };
@@ -89,10 +89,10 @@ export default function AISuggestionPanel({
             Let AI analyze your tables and suggest which columns to join
           </p>
         </div>
-        
+
         <button
           type="button"
-          onClick={handleGetSuggestions}
+          onClick={handleGetRecommendations}
           disabled={disabled || loading}
           className={styles.suggestButton}
         >
@@ -104,7 +104,7 @@ export default function AISuggestionPanel({
           ) : (
             <>
               <span className={styles.icon}>🤖</span>
-              Get AI Suggestions
+              Get AI Recommendations
             </>
           )}
         </button>
@@ -128,10 +128,10 @@ export default function AISuggestionPanel({
             </p>
           </div>
 
-          {recommendations.recommended_joins.length > 0 ? (
+          {recommendations.recommendations.length > 0 ? (
             <div className={styles.recommendations}>
               <h4>Recommended Joins:</h4>
-              {recommendations.recommended_joins.map((rec, idx) => (
+              {recommendations.recommendations.map((rec, idx) => (
                 <div key={idx} className={styles.recommendation}>
                   <div className={styles.recHeader}>
                     <div className={styles.columns}>
@@ -181,4 +181,3 @@ export default function AISuggestionPanel({
     </div>
   );
 }
-
