@@ -1,8 +1,13 @@
 from fastapi import APIRouter, HTTPException, Request, UploadFile, File, Form
-from pydantic import BaseModel
-from typing import Optional, List
+from typing import Optional
 import json
 
+from backend.models.uploaded_table import (
+    UploadedTableMetadata,
+    UploadedTableDetail,
+    UploadTableResponse,
+    TablesListResponse,
+)
 from backend.persistence.uploaded_table import (
     create_uploaded_table,
     list_uploaded_tables,
@@ -14,30 +19,6 @@ from backend.utils.csv_parser import parse_csv_to_list_of_dicts
 
 
 router = APIRouter(prefix="/tables", tags=["tables"])
-
-
-class UploadedTableMetadata(BaseModel):
-    id: int
-    name: str
-    description: Optional[str]
-    upload_timestamp: str
-    columns: List[str]
-    row_count: int
-
-
-class UploadedTableDetail(UploadedTableMetadata):
-    body: List[dict]
-
-
-class UploadTableResponse(BaseModel):
-    id: int
-    name: str
-    message: str
-
-
-class TablesListResponse(BaseModel):
-    tables: List[UploadedTableMetadata]
-    total: int
 
 
 @router.post("/upload", response_model=UploadTableResponse)

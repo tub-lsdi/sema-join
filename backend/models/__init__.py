@@ -18,6 +18,12 @@ from .ai_match import (
     ColumnJoinRecommendation,
     OllamaStatusResponse,
 )
+from .uploaded_table import (
+    UploadedTableMetadata,
+    UploadedTableDetail,
+    UploadTableResponse,
+    TablesListResponse,
+)
 
 __all__ = [
     # Bridge models
@@ -36,4 +42,9 @@ __all__ = [
     "AIColumnMatchResponse",
     "ColumnJoinRecommendation",
     "OllamaStatusResponse",
+    # Uploaded table models
+    "UploadedTableMetadata",
+    "UploadedTableDetail",
+    "UploadTableResponse",
+    "TablesListResponse",
 ]
