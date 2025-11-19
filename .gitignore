@@ -8,6 +8,13 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# corpus data
+backend/corpus/data/
+temp_parquet_cells/
+
 # Database file
 corpus.db
 wiki_corpus.db
+
+# macOS
+.DS_Store

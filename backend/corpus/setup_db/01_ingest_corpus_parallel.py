@@ -79,7 +79,25 @@ def create_schema(con: duckdb.DuckDBPyConnection):
 
     con.execute(
         """
-                CREATE INDEX IF NOT EXISTS idx_cells_table_id ON cells (table_id);
+                CREATE INDEX IF NOT EXISTS idx_cells_table_id ON cells(table_id);
+                """
+    )
+
+    con.execute(
+        """
+                CREATE INDEX IF NOT EXISTS idx_cells_value ON cells(value);
+                """
+    )
+
+    con.execute(
+        """
+                CREATE INDEX IF NOT EXISTS idx_cells_table_row ON cells(table_id, row_id);
+                """
+    )
+
+    con.execute(
+        """
+                CREATE INDEX IF NOT EXISTS idx_cells_table_col ON cells(table_id, col_id);
                 """
     )
 
