@@ -1,3 +1,0 @@
-[submodule "evaluation/semantic-join-benchmark"]
-	path = evaluation/semantic-join-benchmark
-	url = https://github.com/Yeye-He/Semantic-Join.git

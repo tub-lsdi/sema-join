@@ -2,6 +2,7 @@ from logging.config import fileConfig
 
 import os
 import sys
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -22,7 +23,12 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-load_dotenv()
+# Get project root (two levels up from backend/alembic/env.py)
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+ENV_FILE = PROJECT_ROOT / ".env"
+
+# Explicitly load .env from project root
+load_dotenv(dotenv_path=ENV_FILE)
 
 db_user = os.getenv("APP_DB_USERNAME")
 db_pass = os.getenv("APP_DB_PASSWORD")
@@ -35,7 +41,8 @@ print(sqlalchemy_url)
 
 config.set_main_option("sqlalchemy.url", sqlalchemy_url)
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+# Add project root to sys.path so backend imports work
+sys.path.insert(0, str(PROJECT_ROOT))
 
 try:
     from backend.persistence import Base

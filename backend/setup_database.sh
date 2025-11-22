@@ -71,7 +71,9 @@ echo -e "${BLUE}Step 1/2: Ingesting corpus data...${NC}"
 echo "This may take a few minutes depending on corpus size."
 echo ""
 
+cd "$SCRIPT_DIR"
 uv run python "$SCRIPT_DIR/corpus/setup_db/$INGEST_SCRIPT"
+cd "$PROJECT_ROOT"
 
 if [ $? -eq 0 ]; then
     echo ""
@@ -87,7 +89,9 @@ echo -e "${BLUE}Step 2/2: Calculating PMI statistics...${NC}"
 echo "This will compute value counts, co-occurrences, and PMI scores."
 echo ""
 
+cd "$SCRIPT_DIR"
 uv run python "$SCRIPT_DIR/corpus/setup_db/$STATS_SCRIPT"
+cd "$PROJECT_ROOT"
 
 if [ $? -eq 0 ]; then
     echo ""

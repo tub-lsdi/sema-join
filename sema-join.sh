@@ -85,17 +85,10 @@ install_backend() {
         return 1
     fi
 
-    cd "$PROJECT_ROOT"
+    cd "$BACKEND_DIR"
 
     log_info "Installing Python dependencies with uv..."
     uv sync
-
-    log_info "Setting up pre-commit hooks..."
-    if uv run pre-commit install; then
-        log_success "Pre-commit hooks installed successfully!"
-    else
-        log_warning "Failed to install pre-commit hooks (this is optional)"
-    fi
 
     log_success "Backend dependencies installed successfully!"
 }
@@ -144,8 +137,6 @@ install_all() {
 run_backend() {
     log_header "Starting Backend Server"
 
-    cd "$PROJECT_ROOT"
-
     if [ ! -f "$PROJECT_ROOT/$DB_NAME" ]; then
         log_warning "Database not found at $PROJECT_ROOT/corpus.db"
         log_info "You may need to run the setup script first:"
@@ -158,6 +149,7 @@ run_backend() {
     log_info "Press CTRL+C to stop the server"
     echo ""
 
+    cd "$BACKEND_DIR"
     uv run uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
 }
 
@@ -201,7 +193,7 @@ run_both() {
     trap 'kill $(jobs -p) 2>/dev/null' EXIT
 
     # Start backend in background
-    cd "$PROJECT_ROOT"
+    cd "$BACKEND_DIR"
     uv run uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000 &
     BACKEND_PID=$!
 
@@ -275,7 +267,7 @@ app_db() {
         return 1
     fi
 
-    cd "$PROJECT_ROOT"
+    cd "$BACKEND_DIR"
 
     log_info "Running: uv run alembic upgrade head"
     if uv run alembic upgrade head; then
@@ -484,7 +476,7 @@ show_status() {
     # Check backend
     if [ -d "$BACKEND_DIR" ]; then
         log_success "Backend directory exists"
-        if [ -f "$PROJECT_ROOT/.venv/bin/python" ] || [ -f "$PROJECT_ROOT/.venv/Scripts/python" ]; then
+        if [ -f "$BACKEND_DIR/.venv/bin/python" ] || [ -f "$BACKEND_DIR/.venv/Scripts/python" ]; then
             log_success "Python virtual environment exists"
         else
             log_warning "Python virtual environment not found"
