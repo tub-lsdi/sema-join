@@ -45,16 +45,9 @@ config.set_main_option("sqlalchemy.url", sqlalchemy_url)
 sys.path.insert(0, str(PROJECT_ROOT))
 
 try:
-    from backend.persistence import Base
+    from persistence import Base
 except Exception:
-    from backend.persistence.base import Base
-
-try:
-    from backend.persistence.table_entry import TableEntry
-    from backend.persistence.join_history import JoinHistory
-    from backend.persistence.uploaded_table import UploadedTable
-except Exception:
-    pass
+    from persistence.base import Base
 
 target_metadata = Base.metadata
 

@@ -14,6 +14,12 @@ Implementation of the SEMA-JOIN paper for semantic table joins.
 * `/frontend`: Next.js web application
 
 ## Prerequisites
+
+### For Docker Setup (Recommended)
+- Docker and Docker Compose
+- Make (for running Makefile commands)
+
+### For Manual Setup
 - Python 3.13+
 - uv (Python package manager)
 - Node.js 20+ and npm
@@ -21,7 +27,46 @@ Implementation of the SEMA-JOIN paper for semantic table joins.
 - Ollama (optional, for AI features)
 - Mistral model (optional, via Ollama: `ollama pull mistral`)
 
-## 🚀 Quick Start (Recommended)
+## 🚀 Quick Start with Docker (Recommended)
+
+The easiest way to run SEMA-JOIN is using Docker with the provided Makefile:
+
+```bash
+# 1. Create .env file with required configuration (see Environment Setup below)
+# 2. Start all services
+make up
+
+# 3. Run database migrations
+make migrate
+
+# 4. (Optional) Ingest corpus data
+make ingest
+
+# 5. Access the application:
+#    - Frontend: http://localhost:3000
+#    - Backend API: http://localhost:8000
+#    - API Docs: http://localhost:8000/docs
+```
+
+### Available Make Commands
+
+```bash
+make up              # Start all services
+make down            # Stop all services
+make build           # Build all Docker images
+make logs            # View logs from all services
+make logs-backend    # View backend logs only
+make logs-frontend   # View frontend logs only
+make migrate         # Run Alembic migrations
+make migrate-down    # Rollback one migration
+make migrate-create  # Create new migration (usage: make migrate-create MSG='message')
+make ingest          # Run corpus ingestion script
+make test            # Run tests
+make clean           # Stop and remove containers and volumes
+make restart         # Restart all services
+```
+
+## 🚀 Quick Start (Manual Setup)
 
 We provide a convenient management script for easy setup and running:
 
@@ -54,6 +99,33 @@ chmod +x sema-join.sh
 ### Environment Setup
 
 Before running the project, create a `.env` file in the project root with the required configuration:
+
+#### For Docker Setup:
+
+```bash
+# External JSON files directory (absolute path on host)
+INPUT_DIR=/absolute/path/to/json/files
+
+# Application Database Configuration
+APP_DB_CONTAINER_NAME=sema_app_db
+APP_DB_HOST=mysql
+APP_DB_PORT=3306
+APP_DB_DATABASE=sema_app_db
+APP_DB_USERNAME=your_username
+APP_DB_PASSWORD=your_password
+APP_DB_ROOT_PASSWORD=your_root_password
+
+# Ollama Configuration
+OLLAMA_BASE_URL=http://ollama:11434
+
+# Other Settings
+LOG_LEVEL=DEBUG
+DUCKDB_MEMORY_LIMIT=10GB
+
+# Note: DB_PATH is NOT needed - DuckDB is managed by Docker volume at /app/data/corpus.db
+```
+
+#### For Manual Setup:
 
 ```bash
 DB_PATH=corpus.db

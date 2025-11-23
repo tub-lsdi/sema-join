@@ -1,7 +1,6 @@
 .idea/
 .venv
 .env
-uv.lock
 
 # Python cache
 __pycache__/
@@ -9,6 +8,7 @@ __pycache__/
 *$py.class
 
 # corpus data
+/data
 backend/corpus/data/
 temp_parquet_cells/
 temp_parquet_meta/
