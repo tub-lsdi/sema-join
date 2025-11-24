@@ -118,11 +118,13 @@ APP_DB_ROOT_PASSWORD=your_root_password
 # Ollama Configuration
 OLLAMA_BASE_URL=http://ollama:11434
 
+# DuckDB Configuration
+# Directory path on host where corpus.db will be stored
+DUCKDB_HOST_PATH=/absolute/path/to/data/directory
+
 # Other Settings
 LOG_LEVEL=DEBUG
 DUCKDB_MEMORY_LIMIT=10GB
-
-# Note: DB_PATH is NOT needed - DuckDB is managed by Docker volume at /app/data/corpus.db
 ```
 
 #### For Manual Setup:

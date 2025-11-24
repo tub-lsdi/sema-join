@@ -38,7 +38,9 @@ class Settings(BaseSettings):
     @property
     def DEFAULT_DB_PATH(self) -> Path:
         """Provides the absolute path to the database file."""
-        # Use PROJECT_ROOT to build the full, absolute path
+        db_path = Path(self.DB_PATH)
+        if db_path.is_absolute():
+            return db_path
         return self.PROJECT_ROOT / self.DB_PATH
 
     @property
@@ -50,12 +52,6 @@ class Settings(BaseSettings):
     def TEMP_CELLS_DIR(self) -> Path:
         """Provides the absolute path to the temp cells directory."""
         return self.DUCKDB_TEMP_DIRECTORY / self.TEMP_CELLS_DIR_NAME
-
-    @property
-    def DEFAULT_DB_PATH(self) -> Path:
-        """Provides the absolute path to the database file."""
-        # Use PROJECT_ROOT to build the full, absolute path
-        return self.PROJECT_ROOT / self.DB_PATH
 
     @computed_field(return_type=dict[str, Any])
     @property
@@ -86,10 +82,14 @@ try:
     settings.TEMP_META_DIR.mkdir(parents=True, exist_ok=True)
     settings.TEMP_CELLS_DIR.mkdir(parents=True, exist_ok=True)
 
+    # Ensure the DB directory exists
+    db_path = settings.DEFAULT_DB_PATH
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+
 except PermissionError as e:
-    logger.error(f"Permission error creating temp directories: {e}")
+    logger.error(f"Permission error creating directories: {e}")
 except Exception as e:
-    logger.error(f"Failed to create temp directories: {e}")
+    logger.error(f"Failed to create directories: {e}")
 
 
 # Configure logger

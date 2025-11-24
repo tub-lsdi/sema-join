@@ -38,7 +38,7 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/app/backend
-      - duckdb_data:/app/data
+      - ${DUCKDB_HOST_PATH}:/app/data
       - ${INPUT_DIR}:/app/input:ro
     environment:
       - APP_DB_HOST=mysql
@@ -82,5 +82,4 @@ services:
 
 volumes:
   mysql_volume:
-  duckdb_data:
   ollama_models:
