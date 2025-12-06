@@ -77,12 +77,6 @@ def create_schema(con: duckdb.DuckDBPyConnection):
                 """
     )
 
-    con.execute(
-        """
-                CREATE INDEX IF NOT EXISTS idx_cells_table_id ON cells (table_id);
-                """
-    )
-
     con.commit()
     logger.info("Schema created/verified successfully.")
 
@@ -337,17 +331,48 @@ def main():
         con.commit()
 
         total_db_tables = con.execute("SELECT COUNT(*) FROM tables_meta;").fetchone()[0]
-        con.close()
 
         logger.info(f"--- Phase 2 Complete ---")
+
+        logger.info(f"Starting Phase 3: Create Indexes")
+
+        con.execute(
+            """
+                    CREATE INDEX IF NOT EXISTS idx_cells_table_id ON cells(table_id);
+                    """
+        )
+        con.commit()
+        logger.info(f"Created index idx_cells_table_id")
+
+        con.execute(
+            """
+                    CREATE INDEX IF NOT EXISTS idx_cells_value ON cells(value);
+                    """
+        )
+        con.commit()
+        logger.info(f"Created index idx_cells_value")
+
+        con.execute(
+            """
+                    CREATE INDEX IF NOT EXISTS idx_cells_table_row ON cells(table_id, row_id);
+                    """
+        )
+        con.commit()
+        logger.info(f"Created index idx_cells_table_row")
+
+        con.execute(
+            """
+                    CREATE INDEX IF NOT EXISTS idx_cells_table_col ON cells(table_id, col_id);
+                    """
+        )
+        con.commit()
+        logger.info(f"Created index idx_cells_table_col")
+
+        logger.info(f"--- Phase 3 Complete ---")
+        con.close()
         logger.info(
             f"✅ Ingestion complete. Total tables in database: {total_db_tables}"
         )
-
-        # Clean up temp files
-        # shutil.rmtree(TEMP_META_DIR)
-        # shutil.rmtree(TEMP_CELLS_DIR)
-        # logger.info("Cleaned up temporary Parquet files.")
 
     except Exception as e:
         logger.error(f"Failed during Phase 2 (Database Ingestion): {e}")
