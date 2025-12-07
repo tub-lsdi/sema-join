@@ -80,8 +80,9 @@ ingest:
 	@echo ""
 	@echo "Phase 1: Ingesting corpus data..."
 	docker compose run --rm \
-		-v $(PWD)/backend/corpus/data:/app/backend/corpus/data:ro \
-		-v $(PWD):/app \
+		-v $(PWD)/backend:/app/backend:ro \
+		-v $(PWD)/corpus.db:/app/corpus.db \
+		-v $(PWD)/_temp:/app/_temp \
 		-e DB_PATH=/app/corpus.db \
 		-e DUCKDB_TEMP_DIRECTORY=/app/_temp \
 		backend \
@@ -89,7 +90,9 @@ ingest:
 	@echo ""
 	@echo "Phase 2: Calculating statistics..."
 	docker compose run --rm \
-		-v $(PWD):/app \
+		-v $(PWD)/backend:/app/backend:ro \
+		-v $(PWD)/corpus.db:/app/corpus.db \
+		-v $(PWD)/_temp:/app/_temp \
 		-e DB_PATH=/app/corpus.db \
 		-e DUCKDB_TEMP_DIRECTORY=/app/_temp \
 		backend \
