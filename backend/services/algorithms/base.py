@@ -3,20 +3,27 @@ Abstract base class for semantic join algorithms.
 """
 
 from abc import ABC, abstractmethod
+from typing import Optional
 import duckdb
 
 
 class BridgeAlgorithm(ABC):
     """Abstract base class for bridge table creation algorithms."""
 
-    def __init__(self, db_connection: duckdb.DuckDBPyConnection):
+    def __init__(
+        self,
+        db_connection: duckdb.DuckDBPyConnection,
+        pmi_service: Optional["PMIService"] = None,
+    ):
         """
-        Initialize the algorithm with a database connection.
+        Initialize the algorithm with a database connection and optional PMI service.
 
         Args:
             db_connection: DuckDB connection for corpus statistics
+            pmi_service: Optional PMIService instance for fetching row-level PMI scores
         """
         self.db_connection = db_connection
+        self.pmi_service = pmi_service
 
     @abstractmethod
     def create_bridge(
