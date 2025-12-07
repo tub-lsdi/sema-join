@@ -10,6 +10,7 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy.dialects import mysql
 
 
 # revision identifiers, used by Alembic.
@@ -33,7 +34,7 @@ def upgrade() -> None:
             server_default=sa.text("now()"),
             nullable=False,
         ),
-        sa.Column("body", sa.Text(), nullable=False),
+        sa.Column("body", mysql.LONGTEXT, nullable=False),
         sa.Column("columns", sa.JSON(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )

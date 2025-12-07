@@ -1,32 +1,52 @@
 [
   {
-    "value": "State Grid Corporation of China"
+    "company_name": "State Grid Corporation of China",
+    "industry": "Electric Utilities",
+    "revenue_billions": 460.2
   },
   {
-    "value": "Walmart"
+    "company_name": "Walmart",
+    "industry": "Retail",
+    "revenue_billions": 611.3
   },
   {
-    "value": "Royal Dutch Shell"
+    "company_name": "Royal Dutch Shell",
+    "industry": "Oil & Gas",
+    "revenue_billions": 396.6
   },
   {
-    "value": "Volkswagen"
+    "company_name": "Volkswagen",
+    "industry": "Automotive",
+    "revenue_billions": 282.8
   },
   {
-    "value": "Sinopec"
+    "company_name": "Sinopec",
+    "industry": "Oil & Gas",
+    "revenue_billions": 407.0
   },
   {
-    "value": "Toyota"
+    "company_name": "Toyota",
+    "industry": "Automotive",
+    "revenue_billions": 272.6
   },
   {
-    "value": "Glencore"
+    "company_name": "Glencore",
+    "industry": "Mining & Commodities",
+    "revenue_billions": 255.9
   },
   {
-    "value": "ExxonMobil"
+    "company_name": "ExxonMobil",
+    "industry": "Oil & Gas",
+    "revenue_billions": 285.6
   },
   {
-    "value": "China National Petroleum Corporation"
+    "company_name": "China National Petroleum Corporation",
+    "industry": "Oil & Gas",
+    "revenue_billions": 411.7
   },
   {
-    "value": "BP"
+    "company_name": "BP",
+    "industry": "Oil & Gas",
+    "revenue_billions": 282.6
   }
 ]

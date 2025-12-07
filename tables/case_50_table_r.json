@@ -1,0 +1,377 @@
+[
+  {
+    "player_name": "Terry Baker",
+    "position": "QB",
+    "year_won": 1962
+  },
+  {
+    "player_name": "Ron Dayne",
+    "position": "RB",
+    "year_won": 1999
+  },
+  {
+    "player_name": "Matt Leinart",
+    "position": "QB",
+    "year_won": 2004
+  },
+  {
+    "player_name": "Earl Campbell",
+    "position": "RB",
+    "year_won": 1977
+  },
+  {
+    "player_name": "Steve Owens",
+    "position": "RB",
+    "year_won": 1969
+  },
+  {
+    "player_name": "Les Horvath",
+    "position": "QB",
+    "year_won": 1944
+  },
+  {
+    "player_name": "Ricky Williams",
+    "position": "RB",
+    "year_won": 1998
+  },
+  {
+    "player_name": "Bruce Smith",
+    "position": "RB",
+    "year_won": 1941
+  },
+  {
+    "player_name": "Jay Berwanger",
+    "position": "HB",
+    "year_won": 1935
+  },
+  {
+    "player_name": "Barry Sanders",
+    "position": "RB",
+    "year_won": 1988
+  },
+  {
+    "player_name": "Joe Bellino",
+    "position": "HB",
+    "year_won": 1960
+  },
+  {
+    "player_name": "George Rogers",
+    "position": "RB",
+    "year_won": 1980
+  },
+  {
+    "player_name": "Leon Hart",
+    "position": "E",
+    "year_won": 1949
+  },
+  {
+    "player_name": "Rashaan Salaam",
+    "position": "RB",
+    "year_won": 1994
+  },
+  {
+    "player_name": "Vic Janowicz",
+    "position": "HB",
+    "year_won": 1950
+  },
+  {
+    "player_name": "Ty Detmer",
+    "position": "QB",
+    "year_won": 1990
+  },
+  {
+    "player_name": "John Cappelletti",
+    "position": "RB",
+    "year_won": 1973
+  },
+  {
+    "player_name": "Eddie George",
+    "position": "RB",
+    "year_won": 1995
+  },
+  {
+    "player_name": "Dick Kazmaier",
+    "position": "HB",
+    "year_won": 1951
+  },
+  {
+    "player_name": "Glenn Davis",
+    "position": "HB",
+    "year_won": 1946
+  },
+  {
+    "player_name": "Andre Ware",
+    "position": "QB",
+    "year_won": 1989
+  },
+  {
+    "player_name": "Johnny Rodgers",
+    "position": "WR",
+    "year_won": 1972
+  },
+  {
+    "player_name": "Doc Blanchard",
+    "position": "FB",
+    "year_won": 1945
+  },
+  {
+    "player_name": "Herschel Walker",
+    "position": "RB",
+    "year_won": 1982
+  },
+  {
+    "player_name": "Chris Weinke",
+    "position": "QB",
+    "year_won": 2000
+  },
+  {
+    "player_name": "Gino Torretta",
+    "position": "QB",
+    "year_won": 1992
+  },
+  {
+    "player_name": "Tim Brown",
+    "position": "WR",
+    "year_won": 1987
+  },
+  {
+    "player_name": "Mike Rozier",
+    "position": "RB",
+    "year_won": 1983
+  },
+  {
+    "player_name": "Doak Walker",
+    "position": "HB",
+    "year_won": 1948
+  },
+  {
+    "player_name": "Troy Smith",
+    "position": "QB",
+    "year_won": 2006
+  },
+  {
+    "player_name": "Tim Tebow",
+    "position": "QB",
+    "year_won": 2007
+  },
+  {
+    "player_name": "Carson Palmer",
+    "position": "QB",
+    "year_won": 2002
+  },
+  {
+    "player_name": "Pat Sullivan",
+    "position": "QB",
+    "year_won": 1971
+  },
+  {
+    "player_name": "Marcus Allen",
+    "position": "RB",
+    "year_won": 1981
+  },
+  {
+    "player_name": "Billy Vessels",
+    "position": "HB",
+    "year_won": 1952
+  },
+  {
+    "player_name": "Robert Griffin III",
+    "position": "QB",
+    "year_won": 2011
+  },
+  {
+    "player_name": "Reggie Bush",
+    "position": "RB",
+    "year_won": 2005
+  },
+  {
+    "player_name": "Doug Flutie",
+    "position": "QB",
+    "year_won": 1984
+  },
+  {
+    "player_name": "Clint Frank",
+    "position": "HB",
+    "year_won": 1937
+  },
+  {
+    "player_name": "Cameron Newton",
+    "position": "QB",
+    "year_won": 2010
+  },
+  {
+    "player_name": "O.J. Simpson",
+    "position": "RB",
+    "year_won": 1968
+  },
+  {
+    "player_name": "Vinny Testaverde",
+    "position": "QB",
+    "year_won": 1986
+  },
+  {
+    "player_name": "Billy Cannon",
+    "position": "HB",
+    "year_won": 1959
+  },
+  {
+    "player_name": "Charles White",
+    "position": "RB",
+    "year_won": 1979
+  },
+  {
+    "player_name": "Howard Cassady",
+    "position": "HB",
+    "year_won": 1955
+  },
+  {
+    "player_name": "Danny Wuerffel",
+    "position": "QB",
+    "year_won": 1996
+  },
+  {
+    "player_name": "Roger Staubach",
+    "position": "QB",
+    "year_won": 1963
+  },
+  {
+    "player_name": "Frank Sinkwich",
+    "position": "HB",
+    "year_won": 1942
+  },
+  {
+    "player_name": "Charlie Ward",
+    "position": "QB",
+    "year_won": 1993
+  },
+  {
+    "player_name": "Desmond Howard",
+    "position": "WR",
+    "year_won": 1991
+  },
+  {
+    "player_name": "Billy Sims",
+    "position": "RB",
+    "year_won": 1978
+  },
+  {
+    "player_name": "Larry Kelley",
+    "position": "E",
+    "year_won": 1936
+  },
+  {
+    "player_name": "Sam Bradford",
+    "position": "QB",
+    "year_won": 2008
+  },
+  {
+    "player_name": "Mike Garrett",
+    "position": "HB",
+    "year_won": 1965
+  },
+  {
+    "player_name": "Alan Ameche",
+    "position": "FB",
+    "year_won": 1954
+  },
+  {
+    "player_name": "Pete Dawkins",
+    "position": "HB",
+    "year_won": 1958
+  },
+  {
+    "player_name": "Angelo Bertelli",
+    "position": "QB",
+    "year_won": 1943
+  },
+  {
+    "player_name": "Paul Hornung",
+    "position": "QB",
+    "year_won": 1956
+  },
+  {
+    "player_name": "Jason White",
+    "position": "QB",
+    "year_won": 2003
+  },
+  {
+    "player_name": "Ernie Davis",
+    "position": "HB",
+    "year_won": 1961
+  },
+  {
+    "player_name": "Johnny Lattner",
+    "position": "HB",
+    "year_won": 1953
+  },
+  {
+    "player_name": "John Huarte",
+    "position": "QB",
+    "year_won": 1964
+  },
+  {
+    "player_name": "Jim Plunkett",
+    "position": "QB",
+    "year_won": 1970
+  },
+  {
+    "player_name": "Mark Ingram",
+    "position": "RB",
+    "year_won": 2009
+  },
+  {
+    "player_name": "Jameis Winston",
+    "position": "QB",
+    "year_won": 2013
+  },
+  {
+    "player_name": "Eric Crouch",
+    "position": "QB",
+    "year_won": 2001
+  },
+  {
+    "player_name": "Steve Spurrier",
+    "position": "QB",
+    "year_won": 1966
+  },
+  {
+    "player_name": "Tony Dorsett",
+    "position": "RB",
+    "year_won": 1976
+  },
+  {
+    "player_name": "Archie Griffin",
+    "position": "RB",
+    "year_won": 1975
+  },
+  {
+    "player_name": "Tom Harmon",
+    "position": "HB",
+    "year_won": 1940
+  },
+  {
+    "player_name": "Nile Kinnick",
+    "position": "HB",
+    "year_won": 1939
+  },
+  {
+    "player_name": "Bo Jackson",
+    "position": "RB",
+    "year_won": 1985
+  },
+  {
+    "player_name": "Charles Woodson",
+    "position": "DB",
+    "year_won": 1997
+  },
+  {
+    "player_name": "Gary Beban",
+    "position": "QB",
+    "year_won": 1967
+  },
+  {
+    "player_name": "Johnny Lujack",
+    "position": "QB",
+    "year_won": 1947
+  }
+]

@@ -28,20 +28,20 @@ help:
 
 # Build targets
 build:
-	@echo "Building all Docker images..."
-	docker compose build
+	@echo "Building all Docker images (no cache)..."
+	docker compose build --no-cache
 
 build-backend:
-	@echo "Building backend image..."
-	docker compose build backend
+	@echo "Building backend image (no cache)..."
+	docker compose build --no-cache backend
 
 build-go:
-	@echo "Building go-service image..."
-	docker compose build go-service
+	@echo "Building go-service image (no cache)..."
+	docker compose build --no-cache go-service
 
 build-frontend:
-	@echo "Building frontend image..."
-	docker compose build frontend
+	@echo "Building frontend image (no cache)..."
+	docker compose build --no-cache frontend
 
 # Runtime targets
 up:

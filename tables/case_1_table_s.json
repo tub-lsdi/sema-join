@@ -1,0 +1,37 @@
+[
+  {
+    "continent": "Africa",
+    "area_km2": 30370000,
+    "countries_count": 54
+  },
+  {
+    "continent": "Asia",
+    "area_km2": 44579000,
+    "countries_count": 48
+  },
+  {
+    "continent": "Europe",
+    "area_km2": 10180000,
+    "countries_count": 44
+  },
+  {
+    "continent": "North America",
+    "area_km2": 24709000,
+    "countries_count": 23
+  },
+  {
+    "continent": "Oceania",
+    "area_km2": 8526000,
+    "countries_count": 14
+  },
+  {
+    "continent": "South America",
+    "area_km2": 17840000,
+    "countries_count": 12
+  },
+  {
+    "continent": "Antarctica",
+    "area_km2": 14000000,
+    "countries_count": 0
+  }
+]

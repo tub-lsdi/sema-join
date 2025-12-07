@@ -1,0 +1,6587 @@
+[
+  {
+    "university": "Marlboro College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Dalton State College",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Trevecca Nazarene University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Messiah College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Medical University of South Carolina",
+    "city": "Medical",
+    "type": "Private"
+  },
+  {
+    "university": "Faulkner University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Sierra Nevada College",
+    "city": "Sierra Nevada",
+    "type": "Private"
+  },
+  {
+    "university": "University of Hartford",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Washington and Lee University",
+    "city": "Lee",
+    "type": "Private"
+  },
+  {
+    "university": "Belhaven University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "McMurry University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Centre College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Franklin College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "George Washington University",
+    "city": "George Washington",
+    "type": "Private"
+  },
+  {
+    "university": "Metropolitan State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Harrisburg University of Science and Technology",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Michigan State University",
+    "city": "Michigan State",
+    "type": "Public"
+  },
+  {
+    "university": "Eastern New Mexico University",
+    "city": "Santa Fe",
+    "type": "Private"
+  },
+  {
+    "university": "Dordt College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Toledo",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Clear Creek Baptist Bible College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Fordham University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Green Mountain College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Dakota Wesleyan University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Dunwoody College of Technology",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Virginia Wesleyan College",
+    "city": "Virginia Wesleyan",
+    "type": "Private"
+  },
+  {
+    "university": "Indiana University of Pennsylvania",
+    "city": "Indianapolis",
+    "type": "Private"
+  },
+  {
+    "university": "University of Virginia",
+    "city": "Richmond",
+    "type": "Public"
+  },
+  {
+    "university": "Southeast Missouri State University",
+    "city": "Southeast Missouri",
+    "type": "Public"
+  },
+  {
+    "university": "Athens State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Northern New Mexico College",
+    "city": "Santa Fe",
+    "type": "Private"
+  },
+  {
+    "university": "Pittsburg State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Graceland University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Walsh University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Spelman College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Berea College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Illinois State University",
+    "city": "Illinois State",
+    "type": "Public"
+  },
+  {
+    "university": "Mount St. Mary's College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Utah",
+    "city": "Salt Lake City",
+    "type": "Public"
+  },
+  {
+    "university": "Academy of Art University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Oklahoma Christian University",
+    "city": "Oklahoma Christian",
+    "type": "Private"
+  },
+  {
+    "university": "Missouri Western State University",
+    "city": "Missouri Western",
+    "type": "Public"
+  },
+  {
+    "university": "Bethel College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Ursuline College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "College for Creative Studies",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Blue Mountain College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Rhode Island School of Design",
+    "city": "Providence",
+    "type": "Private"
+  },
+  {
+    "university": "Waldorf College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Allen University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Albany State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Ave Maria University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Chadron State College",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Maranatha Baptist Bible College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Pacific Union College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Allen College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Fort Lewis College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Rhode Island",
+    "city": "Providence",
+    "type": "Public"
+  },
+  {
+    "university": "La Roche College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Manchester University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Pennsylvania College of Art and Design",
+    "city": "Harrisburg",
+    "type": "Private"
+  },
+  {
+    "university": "Colorado Christian University",
+    "city": "Colorado Christian",
+    "type": "Private"
+  },
+  {
+    "university": "Wells College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Mary",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Kentucky State University",
+    "city": "Kentucky State",
+    "type": "Public"
+  },
+  {
+    "university": "Angelo State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Ohio Valley University",
+    "city": "Ohio Valley",
+    "type": "Private"
+  },
+  {
+    "university": "Wartburg College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Biola University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Meredith College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "St. Lawrence University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Art Academy of Cincinnati",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Framingham State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Southwestern Adventist University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "East Stroudsburg University of Pennsylvania",
+    "city": "East Stroudsburg",
+    "type": "Private"
+  },
+  {
+    "university": "Brewton-Parker College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Colby-Sawyer College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Millersville University of Pennsylvania",
+    "city": "Millersville",
+    "type": "Private"
+  },
+  {
+    "university": "Florida Gulf Coast University",
+    "city": "Gulf Coast",
+    "type": "Private"
+  },
+  {
+    "university": "Soka University of America",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Kennesaw State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "United States Military Academy",
+    "city": "Unknown",
+    "type": "Military Academy"
+  },
+  {
+    "university": "Lakeview College of Nursing",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Maine Maritime Academy",
+    "city": "Augusta",
+    "type": "Private"
+  },
+  {
+    "university": "Webb Institute",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lindsey Wilson College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Middlebury College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "New Orleans Baptist Theological Seminary",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Texas Tech University",
+    "city": "Texas Tech",
+    "type": "Private"
+  },
+  {
+    "university": "Northern Kentucky University",
+    "city": "Northern Kentucky",
+    "type": "Private"
+  },
+  {
+    "university": "Dickinson College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Ashland University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Point Park University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Longwood University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Swarthmore College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Hamline University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Eastern Michigan University",
+    "city": "Eastern Michigan",
+    "type": "Private"
+  },
+  {
+    "university": "Divine Word College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Metropolitan College of New York",
+    "city": "Metropolitan",
+    "type": "Private"
+  },
+  {
+    "university": "University of Denver",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Manhattan College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Ohio Wesleyan University",
+    "city": "Ohio Wesleyan",
+    "type": "Private"
+  },
+  {
+    "university": "Simmons College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Converse College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Kentucky",
+    "city": "Frankfort",
+    "type": "Public"
+  },
+  {
+    "university": "Kansas State University",
+    "city": "Kansas State",
+    "type": "Public"
+  },
+  {
+    "university": "Temple University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Nichols College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Oglethorpe University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Kentucky Christian University",
+    "city": "Kentucky Christian",
+    "type": "Private"
+  },
+  {
+    "university": "Alderson Broaddus University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Hodges University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Cleveland Institute of Music",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Nyack College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Unity College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Muhlenberg College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Cornish College of the Arts",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "East Tennessee State University",
+    "city": "East Tennessee",
+    "type": "Public"
+  },
+  {
+    "university": "Castleton State College",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "University of Southern Maine",
+    "city": "Southern Maine",
+    "type": "Public"
+  },
+  {
+    "university": "Arcadia University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Tennessee",
+    "city": "Nashville",
+    "type": "Public"
+  },
+  {
+    "university": "University of the District of Columbia",
+    "city": "Washington, D.C.",
+    "type": "Public"
+  },
+  {
+    "university": "Misericordia University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Edward Waters College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Rowan University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Seattle University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Hillsdale College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "York College of Pennsylvania",
+    "city": "York",
+    "type": "Private"
+  },
+  {
+    "university": "Hebrew Theological College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Westminster College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Hamilton College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Touro College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lake Forest College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Grace College and Seminary",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Salem State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Indiana University Southeast",
+    "city": "Indianapolis",
+    "type": "Private"
+  },
+  {
+    "university": "Barnard College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Furman University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Nicholls State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Hampshire College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Idaho State University",
+    "city": "Idaho State",
+    "type": "Public"
+  },
+  {
+    "university": "Indiana State University",
+    "city": "Indiana State",
+    "type": "Public"
+  },
+  {
+    "university": "Marian University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Montclair State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Capella University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Boise State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Chatham University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Monmouth University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Alma College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Christopher Newport University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lynn University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Centenary College of Louisiana",
+    "city": "Centenary",
+    "type": "Private"
+  },
+  {
+    "university": "Clarkson University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Malone University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lander University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Texas Wesleyan University",
+    "city": "Texas Wesleyan",
+    "type": "Private"
+  },
+  {
+    "university": "Yale University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Mary Hardin-Baylor",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "University of Northern Iowa",
+    "city": "Northern Iowa",
+    "type": "Public"
+  },
+  {
+    "university": "Northwest University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "DePauw University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Loyola Marymount University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Massachusetts College of Art and Design",
+    "city": "Boston",
+    "type": "Private"
+  },
+  {
+    "university": "Hampden-Sydney College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Gettysburg College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lewis & Clark College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Carson-Newman University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Bluefield State College",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Averett University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lawrence University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Pennsylvania College of Technology",
+    "city": "Harrisburg",
+    "type": "Private"
+  },
+  {
+    "university": "Adventist University of Health Sciences",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "LeMoyne-Owen College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Southwest University of Visual Arts",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "D'Youville College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Anna Maria College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Dickinson State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Lasell College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Western Kentucky University",
+    "city": "Western Kentucky",
+    "type": "Private"
+  },
+  {
+    "university": "Bellevue College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Allegheny College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Flagler College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Oklahoma State University",
+    "city": "Oklahoma State",
+    "type": "Public"
+  },
+  {
+    "university": "College of Idaho",
+    "city": "Boise",
+    "type": "Private"
+  },
+  {
+    "university": "Texas Christian University",
+    "city": "Texas Christian",
+    "type": "Private"
+  },
+  {
+    "university": "Delaware Valley College",
+    "city": "Delaware Valley",
+    "type": "Private"
+  },
+  {
+    "university": "Charleston Southern University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Midstate College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lees-McRae College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Olympic College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Elizabeth City State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Emory University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Benedictine College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Wilkes University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "McKendree University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Morehead State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Quinnipiac University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Barton College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Illinois Wesleyan University",
+    "city": "Illinois Wesleyan",
+    "type": "Private"
+  },
+  {
+    "university": "Bismarck State College",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Muskingum University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Pine Manor College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Shenandoah University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Wayne State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "William Jessup University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Trinity Lutheran College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Minneapolis College of Art and Design",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Fort Hays State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Thomas More College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "San Francisco Conservatory of Music",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "SUNY College of Environmental Science and Forestry",
+    "city": "Albany",
+    "type": "Private"
+  },
+  {
+    "university": "Indiana University East",
+    "city": "Indianapolis",
+    "type": "Private"
+  },
+  {
+    "university": "ECPI University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Whitman College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Cabrini College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Boston University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Keiser University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Victory University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Eastern Nazarene College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Bemidji State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Central Penn College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Utah Valley University",
+    "city": "Utah Valley",
+    "type": "Private"
+  },
+  {
+    "university": "Union University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Wilmington University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Simpson College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Corcoran College of Art and Design",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Cornerstone University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Carnegie Mellon University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Goshen College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Reed College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Cincinnati College of Mortuary Science",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "North Central College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Westfield State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Northwestern Health Sciences University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of North Florida",
+    "city": "North Florida",
+    "type": "Public"
+  },
+  {
+    "university": "Pitzer College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Macalester College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Oklahoma Wesleyan University",
+    "city": "Oklahoma Wesleyan",
+    "type": "Private"
+  },
+  {
+    "university": "University of Northern Colorado",
+    "city": "Northern Colorado",
+    "type": "Public"
+  },
+  {
+    "university": "Eastern Connecticut State University",
+    "city": "Eastern Connecticut",
+    "type": "Public"
+  },
+  {
+    "university": "Neumann University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Johnson State College",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Albertus Magnus College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Alverno College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Bluffton University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Park University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "McPherson College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Winston-Salem State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Eureka College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Salem College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Sterling College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Willamette University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Bacone College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Norwich University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Susquehanna University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Pepperdine University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Langston University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Bauder College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Wellesley College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Madonna University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Southern Indiana",
+    "city": "Southern Indiana",
+    "type": "Public"
+  },
+  {
+    "university": "Ferrum College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Marygrove College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "South Seattle Community College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Dean College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Mills College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Cox College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Mount Ida College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Olivet College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Bennington College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Southwestern Oklahoma State University",
+    "city": "Southwestern Oklahoma",
+    "type": "Public"
+  },
+  {
+    "university": "Adams State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Mount Vernon Nazarene University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Glenville State College",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "St. John's College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Goddard College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Voorhees College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Radford University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Rush University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Rockford University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "East Texas Baptist University",
+    "city": "Texas Baptist",
+    "type": "Private"
+  },
+  {
+    "university": "Marywood University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Indianapolis",
+    "city": "Indianapolis",
+    "type": "Public"
+  },
+  {
+    "university": "Olivet Nazarene University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Daniel Webster College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Marylhurst University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Central College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Life Pacific College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "William Peace University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Southwestern Christian University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Evansville",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Alliant International University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Northwestern College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Philander Smith College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "William Paterson University of New Jersey",
+    "city": "William Paterson",
+    "type": "Private"
+  },
+  {
+    "university": "Southern California Institute of Architecture",
+    "city": "Sacramento",
+    "type": "Private"
+  },
+  {
+    "university": "Dallas Baptist University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "New Jersey Institute of Technology",
+    "city": "Trenton",
+    "type": "Private"
+  },
+  {
+    "university": "Frank Lloyd Wright School of Architecture",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Cogswell Polytechnical College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Kuyper College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Fisk University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "New Mexico Highlands University",
+    "city": "Mexico Highlands",
+    "type": "Private"
+  },
+  {
+    "university": "University of Montevallo",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Creighton University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lewis-Clark State College",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "American InterContinental University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Gordon State College",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Wesley College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Tulane University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Fairleigh Dickinson University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Gardner-Webb University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Fresno Pacific University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Savannah College of Art and Design",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "California University of Pennsylvania",
+    "city": "Sacramento",
+    "type": "Private"
+  },
+  {
+    "university": "Everglades University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Ohio Northern University",
+    "city": "Ohio Northern",
+    "type": "Private"
+  },
+  {
+    "university": "Scripps College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Wilberforce University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Dominican University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Rochester",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "La Salle University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lake Erie College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "James Madison University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Post University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Illinois College",
+    "city": "Springfield",
+    "type": "Private"
+  },
+  {
+    "university": "Newman University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Centenary College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lamar University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Blessing-Rieman College of Nursing",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Marist College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Hilbert College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Southern Connecticut State University",
+    "city": "Southern Connecticut",
+    "type": "Public"
+  },
+  {
+    "university": "Benedict College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "La Sierra University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Babson College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Williams College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Boston College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of the Sacred Heart",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Central Connecticut State University",
+    "city": "Central Connecticut",
+    "type": "Public"
+  },
+  {
+    "university": "Gustavus Adolphus College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Delaware State University",
+    "city": "Delaware State",
+    "type": "Public"
+  },
+  {
+    "university": "Colorado State University",
+    "city": "Colorado State",
+    "type": "Public"
+  },
+  {
+    "university": "Wright State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Niagara University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of the Incarnate Word",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Wilmington College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "National Graduate School of Quality Management",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Texas Woman's University",
+    "city": "Austin",
+    "type": "Private"
+  },
+  {
+    "university": "Shepherd University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Suffolk University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Providence College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Trinity University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Calumet College of St. Joseph",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "City University of Seattle",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "St. Francis College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Wisconsin Lutheran College",
+    "city": "Wisconsin Lutheran",
+    "type": "Private"
+  },
+  {
+    "university": "Armstrong Atlantic State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Oakland City University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "National University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Northwestern State University of Louisiana",
+    "city": "Northwestern State",
+    "type": "Public"
+  },
+  {
+    "university": "Harvard University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Hult International Business School",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Southwest Baptist University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Arkansas for Medical Sciences",
+    "city": "Little Rock",
+    "type": "Public"
+  },
+  {
+    "university": "Santa Fe University of Art and Design",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Research College of Nursing",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Oregon",
+    "city": "Salem",
+    "type": "Public"
+  },
+  {
+    "university": "Montserrat College of Art",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Northwood University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "San Francisco Art Institute",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Waynesburg University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Monmouth College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Grambling State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Pacific University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "St. Edward's University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Davidson College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of the Southwest",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Belmont Abbey College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Asbury University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Washington College",
+    "city": "Olympia",
+    "type": "Private"
+  },
+  {
+    "university": "Hawaii Pacific University",
+    "city": "Hawaii Pacific",
+    "type": "Private"
+  },
+  {
+    "university": "Patten University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Franklin University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Northeastern University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Carlos Albizu University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Johnson University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Caldwell College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Metropolitan State University of Denver",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Rust College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Dakota State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Murray State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Bloomfield College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Louisiana College",
+    "city": "Baton Rouge",
+    "type": "Private"
+  },
+  {
+    "university": "University of Richmond",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Berkeley College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Manhattan School of Music",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Mount Angel Seminary",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Butler University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Pfeiffer University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Aurora University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Potomac College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Regent University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "School of Visual Arts",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "North Carolina Wesleyan College",
+    "city": "Carolina Wesleyan",
+    "type": "Private"
+  },
+  {
+    "university": "Ranken Technical College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "College of Charleston",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Millikin University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Northwest Christian University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Resurrection University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Merrimack College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Nazarene Bible College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Tennessee Wesleyan College",
+    "city": "Tennessee Wesleyan",
+    "type": "Private"
+  },
+  {
+    "university": "Mid-Atlantic Christian University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Case Western Reserve University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Presentation College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Rensselaer Polytechnic Institute",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Loyola University Maryland",
+    "city": "Loyola",
+    "type": "Private"
+  },
+  {
+    "university": "Miami Dade College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Chicago",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Nova Southeastern University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Dubuque",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Bryn Mawr College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "DePaul University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of New Haven",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Concordia University Chicago",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of South Dakota",
+    "city": "Pierre",
+    "type": "Public"
+  },
+  {
+    "university": "Palmer College of Chiropractic",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Southern Adventist University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Our Lady of the Lake College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Parker University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Mississippi Medical Center",
+    "city": "Mississippi Medical",
+    "type": "Public"
+  },
+  {
+    "university": "Marietta College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Bridgewater State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Washburn University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Cornell College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Fashion Institute of Technology",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Talladega College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of the Virgin Islands",
+    "city": "Charlotte Amalie",
+    "type": "Public"
+  },
+  {
+    "university": "Elmira College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Ithaca College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Hope College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Tennessee State University",
+    "city": "Tennessee State",
+    "type": "Public"
+  },
+  {
+    "university": "Buena Vista University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Briarcliffe College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "King's College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Fort Valley State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Howard Payne University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lehigh University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Thomas University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "DeVry University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Haverford College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Silver Lake College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Thomas Aquinas College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Wayne State College",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "University of Pikeville",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Utica College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Valley City State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Lafayette College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Manhattanville College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Roberts Wesleyan College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Michigan Technological University",
+    "city": "Michigan Technological",
+    "type": "Private"
+  },
+  {
+    "university": "Carroll University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Cumberland University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Winthrop University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Bloomsburg University of Pennsylvania",
+    "city": "Bloomsburg",
+    "type": "Private"
+  },
+  {
+    "university": "Eastern Illinois University",
+    "city": "Eastern Illinois",
+    "type": "Private"
+  },
+  {
+    "university": "Wheaton College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Oral Roberts University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "United States Air Force Academy",
+    "city": "Unknown",
+    "type": "Military Academy"
+  },
+  {
+    "university": "Wofford College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Spring Hill College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Alcorn State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Southern Vermont College",
+    "city": "Southern Vermont",
+    "type": "Private"
+  },
+  {
+    "university": "Bastyr University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Central Missouri",
+    "city": "Central Missouri",
+    "type": "Public"
+  },
+  {
+    "university": "Otterbein University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Southern Nazarene University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Becker College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Bates College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Benedictine University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Wichita State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "California Institute of Integral Studies",
+    "city": "Sacramento",
+    "type": "Private"
+  },
+  {
+    "university": "Central Bible College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Roanoke College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Sul Ross State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Hastings College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Medaille College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Rochester College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Sarah Lawrence College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Northland College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "The Sage Colleges",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Austin Peay State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Keystone College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Florida Atlantic University",
+    "city": "Florida Atlantic",
+    "type": "Private"
+  },
+  {
+    "university": "Ripon College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Tarleton State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Morgan State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Crown College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Middle Tennessee State University",
+    "city": "Middle Tennessee",
+    "type": "Public"
+  },
+  {
+    "university": "University of the Sciences",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Mitchell College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Grace Bible College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Western International University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Jewish Theological Seminary of America",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Culver-Stockton College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lancaster Bible College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Wesleyan College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Colgate University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Bayamon Central University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Mount Holyoke College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Shawnee State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Roosevelt University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Edison State College",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Texas College",
+    "city": "Austin",
+    "type": "Private"
+  },
+  {
+    "university": "Oregon Institute of Technology",
+    "city": "Salem",
+    "type": "Private"
+  },
+  {
+    "university": "Rivier University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Manhattan Christian College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Alice Lloyd College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Moravian College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Life University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "American Indian College of the Assemblies of God",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Brandeis University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Colorado College",
+    "city": "Denver",
+    "type": "Private"
+  },
+  {
+    "university": "Bryant University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lexington College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Knox College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Vermont Technical College",
+    "city": "Vermont Technical",
+    "type": "Private"
+  },
+  {
+    "university": "Southwestern College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Cedarville University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "North Greenville University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Concord University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Campbell University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "St. Thomas Aquinas College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Bethany Lutheran College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Grand View University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Endicott College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Pennsylvania",
+    "city": "Harrisburg",
+    "type": "Public"
+  },
+  {
+    "university": "Stonehill College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Towson University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Duquesne University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Urbana University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "School of the Art Institute of Chicago",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "New Mexico Institute of Mining and Technology",
+    "city": "Santa Fe",
+    "type": "Private"
+  },
+  {
+    "university": "Agnes Scott College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of New England",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Oklahoma City University",
+    "city": "Oklahoma City",
+    "type": "Private"
+  },
+  {
+    "university": "Bryan College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Stanford University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Utah State University",
+    "city": "Utah State",
+    "type": "Public"
+  },
+  {
+    "university": "Warner University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Concordia College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Southern California",
+    "city": "Southern California",
+    "type": "Public"
+  },
+  {
+    "university": "Greensboro College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Menlo College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Baptist Bible College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Robert B. Miller College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Geneva College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Connecticut",
+    "city": "Hartford",
+    "type": "Public"
+  },
+  {
+    "university": "University of Rio Grande",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Wabash College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Dallas",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Clark Atlanta University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Loma Linda University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "William Woods University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Toccoa Falls College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "William Penn University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Brenau University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Marymount University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "California Institute of the Arts",
+    "city": "Sacramento",
+    "type": "Private"
+  },
+  {
+    "university": "Bellevue University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Clarke University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Kaplan University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Rosalind Franklin University of Medicine and Science",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "California Institute of Technology",
+    "city": "Sacramento",
+    "type": "Private"
+  },
+  {
+    "university": "San Diego Christian College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Siena Heights University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Florida",
+    "city": "Tallahassee",
+    "type": "Public"
+  },
+  {
+    "university": "Thomas College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of San Diego",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Milligan College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Daemen College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Appalachian State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Multnomah University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Georgetown University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Oglala Lakota College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Georgian Court University",
+    "city": "Georgian Court",
+    "type": "Private"
+  },
+  {
+    "university": "SUNY Maritime College",
+    "city": "Maritime",
+    "type": "Private"
+  },
+  {
+    "university": "Seton Hall University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Donnelly College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Missouri Baptist University",
+    "city": "Missouri Baptist",
+    "type": "Private"
+  },
+  {
+    "university": "Elon University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Iowa",
+    "city": "Des Moines",
+    "type": "Public"
+  },
+  {
+    "university": "Capital University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Judson College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Stevens Institute of Technology",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Villanova University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Assumption College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lyon College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Wheelock College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Mansfield University of Pennsylvania",
+    "city": "Mansfield",
+    "type": "Private"
+  },
+  {
+    "university": "Occidental College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Washington State University",
+    "city": "Washington State",
+    "type": "Public"
+  },
+  {
+    "university": "Corban University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Walsh College of Accountancy and Business Administration",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Keuka College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Principia College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Maine College of Art",
+    "city": "Augusta",
+    "type": "Private"
+  },
+  {
+    "university": "Northern Arizona University",
+    "city": "Northern Arizona",
+    "type": "Private"
+  },
+  {
+    "university": "Hampton University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "San Francisco State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Wittenberg University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lynchburg College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Rhode Island College",
+    "city": "Providence",
+    "type": "Private"
+  },
+  {
+    "university": "Watkins College of Art, Design & Film",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Western New Mexico University",
+    "city": "Santa Fe",
+    "type": "Private"
+  },
+  {
+    "university": "University of Sioux Falls",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Grand Valley State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Albright College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Kansas Wesleyan University",
+    "city": "Kansas Wesleyan",
+    "type": "Private"
+  },
+  {
+    "university": "Great Lakes Christian College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Tougaloo College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Naropa University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Oklahoma Baptist University",
+    "city": "Oklahoma Baptist",
+    "type": "Private"
+  },
+  {
+    "university": "University of Redlands",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "California Lutheran University",
+    "city": "California Lutheran",
+    "type": "Private"
+  },
+  {
+    "university": "Worcester Polytechnic Institute",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Savannah State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Lakeland College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Davis College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of South Alabama",
+    "city": "South Alabama",
+    "type": "Public"
+  },
+  {
+    "university": "University of St. Thomas",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Western Governors University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of North Alabama",
+    "city": "North Alabama",
+    "type": "Public"
+  },
+  {
+    "university": "Bridgewater College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Dayton",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Portland State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Southern Oregon University",
+    "city": "Southern Oregon",
+    "type": "Private"
+  },
+  {
+    "university": "Cabarrus College of Health Sciences",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Stephens College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Berry College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "College of Mount St. Joseph",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lebanon Valley College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Jacksonville University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "King University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Chicago State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "United States Merchant Marine Academy",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Loyola University New Orleans",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Emerson College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Walden University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Great Basin College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Our Lady of the Lake University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Virginia Intermont College",
+    "city": "Virginia Intermont",
+    "type": "Private"
+  },
+  {
+    "university": "University of Notre Dame",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Regis College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Herzing University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Concordia University Wisconsin",
+    "city": "Concordia",
+    "type": "Private"
+  },
+  {
+    "university": "Dominican University of California",
+    "city": "Dominican",
+    "type": "Private"
+  },
+  {
+    "university": "Milwaukee School of Engineering",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "United States Coast Guard Academy",
+    "city": "Unknown",
+    "type": "Military Academy"
+  },
+  {
+    "university": "Chamberlain College of Nursing",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Maryville College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Emmanuel College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "SUNY Downstate Medical Center",
+    "city": "Albany",
+    "type": "Private"
+  },
+  {
+    "university": "University of La Verne",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Ohio Dominican University",
+    "city": "Ohio Dominican",
+    "type": "Private"
+  },
+  {
+    "university": "Piedmont College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Bethel University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Central State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Five Towns College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Peirce College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Charleston",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Bradley University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Francis Marion University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Webber International University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Southern Wesleyan University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Thomas More College of Liberal Arts",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Trinity International University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "West Virginia Wesleyan College",
+    "city": "Virginia Wesleyan",
+    "type": "Private"
+  },
+  {
+    "university": "Adelphi University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Southeastern University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Coastal Carolina University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Mount Carmel College of Nursing",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Northern Michigan University",
+    "city": "Northern Michigan",
+    "type": "Private"
+  },
+  {
+    "university": "Pontifical College Josephinum",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Springfield College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "SUNY Empire State College",
+    "city": "Empire State",
+    "type": "Public"
+  },
+  {
+    "university": "Western Illinois University",
+    "city": "Western Illinois",
+    "type": "Private"
+  },
+  {
+    "university": "AIB College of Business",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Sweet Briar College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Morningside College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "William Carey University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Oakwood University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Prescott College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Stillman College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Claflin University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Edinboro University of Pennsylvania",
+    "city": "Edinboro",
+    "type": "Private"
+  },
+  {
+    "university": "Rocky Mountain College of Art and Design",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Laguna College of Art and Design",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "United States Sports Academy",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Salem International University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Stetson University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Christian Brothers University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "American University of Puerto Rico",
+    "city": "American",
+    "type": "Private"
+  },
+  {
+    "university": "Edgewood College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "San Diego State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Samford University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Midland University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Sacred Heart University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Belmont University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Millsaps College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Oklahoma",
+    "city": "Oklahoma City",
+    "type": "Public"
+  },
+  {
+    "university": "University of Arizona",
+    "city": "Phoenix",
+    "type": "Public"
+  },
+  {
+    "university": "Wheeling Jesuit University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Mobile",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Our Lady of Holy Cross College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Randolph-Macon College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "St. Petersburg College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Webster University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Point University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Eckerd College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Kettering University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lincoln University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Spring Arbor University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Holy Apostles College and Seminary",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Juniata College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Augsburg College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "St. Bonaventure University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Saginaw Valley State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Sonoma State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Rice University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Puget Sound",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Northcentral University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Seattle Pacific University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Georgia",
+    "city": "Atlanta",
+    "type": "Public"
+  },
+  {
+    "university": "Bucknell University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Grace University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Baptist Missionary Association Theological Seminary",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Mississippi Valley State University",
+    "city": "Mississippi Valley",
+    "type": "Public"
+  },
+  {
+    "university": "Vincennes University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Valdosta State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Upper Iowa University",
+    "city": "Upper Iowa",
+    "type": "Private"
+  },
+  {
+    "university": "University of the Cumberlands",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "East-West University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Walla Walla University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Warren Wilson College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "American Jewish University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Capitol College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Science and Arts of Oklahoma",
+    "city": "Science",
+    "type": "Public"
+  },
+  {
+    "university": "Franklin Pierce University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "John Brown University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Alabama State University",
+    "city": "Alabama State",
+    "type": "Public"
+  },
+  {
+    "university": "Whitworth University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "East Carolina University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Rosemont College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Miami",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Regis University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "St. Catherine University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Daytona State College",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Howard University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Kendall College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Carlow University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Columbia College Chicago",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Pacific Northwest College of Art",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Central Florida",
+    "city": "Central Florida",
+    "type": "Public"
+  },
+  {
+    "university": "Vassar College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Hanover College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Old Dominion University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Quincy University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Xavier University of Louisiana",
+    "city": "Xavier",
+    "type": "Private"
+  },
+  {
+    "university": "Augustana College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Hiram College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "College of the Holy Cross",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Drury University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Pacific Oaks College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Shimer College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Mount Olive College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Heidelberg University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "West Chester University of Pennsylvania",
+    "city": "West Chester",
+    "type": "Private"
+  },
+  {
+    "university": "Jacksonville State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Gratz College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Harvey Mudd College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Hellenic College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Champlain College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Missouri State University",
+    "city": "Missouri State",
+    "type": "Public"
+  },
+  {
+    "university": "Chowan University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Antioch University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Central Washington University",
+    "city": "Central Washington",
+    "type": "Private"
+  },
+  {
+    "university": "American Academy of Art",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Ursinus College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Denison University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Grinnell College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Art Center College of Design",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Bellarmine University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Detroit Mercy",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Institute of American Indian and Alaska Native Culture and Arts Development",
+    "city": "Juneau",
+    "type": "Private"
+  },
+  {
+    "university": "Arkansas State University",
+    "city": "Arkansas State",
+    "type": "Public"
+  },
+  {
+    "university": "Georgia Regents University",
+    "city": "Georgia Regents",
+    "type": "Private"
+  },
+  {
+    "university": "Kent State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Bluefield College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Phoenix",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "University of West Georgia",
+    "city": "West Georgia",
+    "type": "Public"
+  },
+  {
+    "university": "Martin University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Hartwick College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Point Loma Nazarene University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Western Carolina University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Cheyney University of Pennsylvania",
+    "city": "Cheyney",
+    "type": "Private"
+  },
+  {
+    "university": "Florida State University",
+    "city": "Florida State",
+    "type": "Public"
+  },
+  {
+    "university": "Weber State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Brazosport College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lycoming College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Valley Forge Christian College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Duke University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Paine College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Vanguard University of Southern California",
+    "city": "Vanguard",
+    "type": "Private"
+  },
+  {
+    "university": "Plymouth State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Andrews University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Bellin College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Rockhurst University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Conception Seminary College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lincoln Christian University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Christendom College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Rochester Institute of Technology",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Skidmore College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Adrian College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "College of Our Lady of the Elms",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Coppin State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Cleveland State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "University of Akron",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Brescia University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Ottawa University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Kean University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Central Arkansas",
+    "city": "Central Arkansas",
+    "type": "Public"
+  },
+  {
+    "university": "Beloit College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Hood College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Vanderbilt University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "New Jersey City University",
+    "city": "Jersey City",
+    "type": "Private"
+  },
+  {
+    "university": "Marymount Manhattan College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Wagner College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Elmhurst College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "LeTourneau University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Central Oklahoma",
+    "city": "Central Oklahoma",
+    "type": "Public"
+  },
+  {
+    "university": "Nebraska Wesleyan University",
+    "city": "Nebraska Wesleyan",
+    "type": "Private"
+  },
+  {
+    "university": "Western Michigan University",
+    "city": "Western Michigan",
+    "type": "Private"
+  },
+  {
+    "university": "Xavier University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Viterbo University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Finlandia University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Otis College of Art and Design",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of New Orleans",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Charter Oak State College",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Cincinnati Christian University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "South Dakota State University",
+    "city": "Pierre",
+    "type": "Public"
+  },
+  {
+    "university": "Grove City College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lincoln Memorial University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Midway College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "National Labor College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Mary Baldwin College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Gannon University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Georgia State University",
+    "city": "Georgia State",
+    "type": "Public"
+  },
+  {
+    "university": "Woodbury University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Trident University International",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Dallas Christian College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Wiley College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Rocky Mountain College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Shorter University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Erskine College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "California College of the Arts",
+    "city": "Sacramento",
+    "type": "Private"
+  },
+  {
+    "university": "Drexel University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "North Carolina Central University",
+    "city": "Carolina Central",
+    "type": "Private"
+  },
+  {
+    "university": "Oberlin College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Virginia State University",
+    "city": "Virginia State",
+    "type": "Public"
+  },
+  {
+    "university": "Carroll College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Sam Houston State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Avila University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Beacon College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Salisbury University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Black Hills State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Massachusetts Institute of Technology",
+    "city": "Boston",
+    "type": "Private"
+  },
+  {
+    "university": "Boricua College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Felician College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Henderson State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Catawba College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Grand Canyon University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Clearwater Christian College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of New Hampshire",
+    "city": "Concord",
+    "type": "Public"
+  },
+  {
+    "university": "Oakland University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Johns Hopkins University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Livingstone College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "East Central University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Scranton",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "University of Mary Washington",
+    "city": "Mary Washington",
+    "type": "Public"
+  },
+  {
+    "university": "Tiffin University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Excelsior College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Brown University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Eastern Oregon University",
+    "city": "Eastern Oregon",
+    "type": "Private"
+  },
+  {
+    "university": "Houston Baptist University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Pomona College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Barry University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Ouachita Baptist University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Reinhardt University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Mayville State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Warner Pacific College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Johnson & Wales University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Polytechnic Institute of New York University",
+    "city": "Albany",
+    "type": "Private"
+  },
+  {
+    "university": "Huston-Tillotson University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Appalachian Bible College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Salish Kootenai College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Cameron University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Northwestern Oklahoma State University",
+    "city": "Northwestern Oklahoma",
+    "type": "Public"
+  },
+  {
+    "university": "Valparaiso University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Anderson University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Davenport University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Western Nevada College",
+    "city": "Western Nevada",
+    "type": "Private"
+  },
+  {
+    "university": "California Maritime Academy",
+    "city": "Sacramento",
+    "type": "Private"
+  },
+  {
+    "university": "North Park University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Cedar Crest College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lincoln College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "West Liberty University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Culinary Institute of America",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Columbia College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Peru State College",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Ohio Christian University",
+    "city": "Ohio Christian",
+    "type": "Private"
+  },
+  {
+    "university": "Northwest Missouri State University",
+    "city": "Northwest Missouri",
+    "type": "Public"
+  },
+  {
+    "university": "Arkansas Baptist College",
+    "city": "Arkansas Baptist",
+    "type": "Private"
+  },
+  {
+    "university": "New York University",
+    "city": "Albany",
+    "type": "Private"
+  },
+  {
+    "university": "Notre Dame de Namur University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Minot State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Ashford University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Rhodes College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Northern State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Florida International University",
+    "city": "Florida International",
+    "type": "Private"
+  },
+  {
+    "university": "Central Methodist University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Tennessee Technological University",
+    "city": "Tennessee Technological",
+    "type": "Private"
+  },
+  {
+    "university": "Calvary Bible College and Theological Seminary",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "New England College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lawrence Technological University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Monroe College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Mississippi State University",
+    "city": "Mississippi State",
+    "type": "Public"
+  },
+  {
+    "university": "Ball State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Sacred Heart Major Seminary",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Princeton University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Franklin W. Olin College of Engineering",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Mid-Continent University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Delaware",
+    "city": "Dover",
+    "type": "Public"
+  },
+  {
+    "university": "Whittier College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Montreat College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Trinity College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "American Public University System",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Vaughn College of Aeronautics and Technology",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "George Fox University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Oregon State University",
+    "city": "Oregon State",
+    "type": "Public"
+  },
+  {
+    "university": "Friends University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Cairn University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of the West",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Brandman University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Carthage College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Advancing Technology",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Curry College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Bethany College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Southwestern Christian College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Burlington College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Georgetown College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Wilson College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Rose-Hulman Institute of Technology",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Nebraska Medical Center",
+    "city": "Nebraska Medical",
+    "type": "Public"
+  },
+  {
+    "university": "Colorado Mesa University",
+    "city": "Colorado Mesa",
+    "type": "Private"
+  },
+  {
+    "university": "Mount Mercy University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Mars Hill University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of North Dakota",
+    "city": "Bismarck",
+    "type": "Public"
+  },
+  {
+    "university": "Cleary University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Wesleyan University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Westmont College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Troy University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Northern Illinois University",
+    "city": "Northern Illinois",
+    "type": "Private"
+  },
+  {
+    "university": "Siena College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Emmaus Bible College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Alaska Pacific University",
+    "city": "Alaska Pacific",
+    "type": "Private"
+  },
+  {
+    "university": "San Jose State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Stevenson University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Thomas Edison State College",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "George Mason University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Gordon College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Harding University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lipscomb University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Columbia International University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Kansas City Art Institute",
+    "city": "Topeka",
+    "type": "Private"
+  },
+  {
+    "university": "Linfield College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Albion College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Fitchburg State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Harrington College of Design",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lewis University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "South College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Elizabethtown College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Northwest Nazarene University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Carleton College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "New College of Florida",
+    "city": "New",
+    "type": "Private"
+  },
+  {
+    "university": "Oklahoma Panhandle State University",
+    "city": "Oklahoma Panhandle",
+    "type": "Public"
+  },
+  {
+    "university": "University of Vermont",
+    "city": "Montpelier",
+    "type": "Public"
+  },
+  {
+    "university": "Blackburn College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Texas Southern University",
+    "city": "Texas Southern",
+    "type": "Private"
+  },
+  {
+    "university": "Franklin and Marshall College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Brevard College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "College of the Atlantic",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Chapman University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Claremont McKenna College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Southern New Hampshire University",
+    "city": "Concord",
+    "type": "Private"
+  },
+  {
+    "university": "Bay Path College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Iowa State University",
+    "city": "Iowa State",
+    "type": "Public"
+  },
+  {
+    "university": "Luther College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Baltimore",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "University of Memphis",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Lee University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "College of William and Mary",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Strayer University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Welch College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Ferris State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Robert Morris University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Indiana Wesleyan University",
+    "city": "Indiana Wesleyan",
+    "type": "Private"
+  },
+  {
+    "university": "Notre Dame of Maryland University",
+    "city": "Annapolis",
+    "type": "Private"
+  },
+  {
+    "university": "Hardin-Simmons University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Jackson State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "American University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Hofstra University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Hollins University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Azusa Pacific University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Georgia Southern University",
+    "city": "Georgia Southern",
+    "type": "Private"
+  },
+  {
+    "university": "Tabor College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "North Central University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Taylor University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Connecticut College",
+    "city": "Hartford",
+    "type": "Private"
+  },
+  {
+    "university": "University of South Florida",
+    "city": "South Florida",
+    "type": "Public"
+  },
+  {
+    "university": "Martin Luther College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Sojourner-Douglass College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Eastern Washington University",
+    "city": "Eastern Washington",
+    "type": "Private"
+  },
+  {
+    "university": "Montana Tech of the University of Montana",
+    "city": "Helena",
+    "type": "Private"
+  },
+  {
+    "university": "Simpson University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lesley University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lyme Academy College of Fine Arts",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Mississippi College",
+    "city": "Jackson",
+    "type": "Private"
+  },
+  {
+    "university": "Bowdoin College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Dowling College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Southeastern Louisiana University",
+    "city": "Southeastern Louisiana",
+    "type": "Private"
+  },
+  {
+    "university": "Southwestern Assemblies of God University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Faith Baptist Bible College and Theological Seminary",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Slippery Rock University of Pennsylvania",
+    "city": "Slippery Rock",
+    "type": "Private"
+  },
+  {
+    "university": "Wake Forest University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Houston",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "High Point University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Florida Christian College",
+    "city": "Florida Christian",
+    "type": "Private"
+  },
+  {
+    "university": "Judson University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Clemson University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Morehouse College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Santa Clara University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Midwestern State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Baylor University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Florida Southern College",
+    "city": "Florida Southern",
+    "type": "Private"
+  },
+  {
+    "university": "University of San Francisco",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Plaza College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Portland",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "University of Mount Union",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Georgia Southwestern State University",
+    "city": "Georgia Southwestern",
+    "type": "Public"
+  },
+  {
+    "university": "Covenant College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "St. Mary's College of Maryland",
+    "city": "Annapolis",
+    "type": "Private"
+  },
+  {
+    "university": "McDaniel College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Presbyterian College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Williams Baptist College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Earlham College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "South Texas College",
+    "city": "South Texas",
+    "type": "Private"
+  },
+  {
+    "university": "Dixie State College of Utah",
+    "city": "Dixie State",
+    "type": "Public"
+  },
+  {
+    "university": "University of Louisville",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Southern Polytechnic State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Amherst College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Wingate University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Abilene Christian University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Berklee College of Music",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Delta State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Haskell Indian Nations University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Kansas",
+    "city": "Topeka",
+    "type": "Public"
+  },
+  {
+    "university": "Lane College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Calvin College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Trine University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Freed-Hardeman University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lubbock Christian University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Greenville College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Guam",
+    "city": "Hag\u00e5t\u00f1a",
+    "type": "Public"
+  },
+  {
+    "university": "Virginia Military Institute",
+    "city": "Richmond",
+    "type": "Private"
+  },
+  {
+    "university": "Defiance College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Eastern Mennonite University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Illinois Institute of Technology",
+    "city": "Springfield",
+    "type": "Private"
+  },
+  {
+    "university": "Holy Family University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Western Oregon University",
+    "city": "Western Oregon",
+    "type": "Private"
+  },
+  {
+    "university": "Fairfield University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Texas Lutheran University",
+    "city": "Texas Lutheran",
+    "type": "Private"
+  },
+  {
+    "university": "Lake Superior State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Northeastern Illinois University",
+    "city": "Northeastern Illinois",
+    "type": "Private"
+  },
+  {
+    "university": "Southern Methodist University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Shaw University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "LIM College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Mount Aloysius College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Mount Marty College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Drake University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Escuela de Artes Plasticas de Puerto Rico",
+    "city": "San Juan",
+    "type": "Private"
+  },
+  {
+    "university": "Mississippi University for Women",
+    "city": "Jackson",
+    "type": "Private"
+  },
+  {
+    "university": "Cornell University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Columbus State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Sullivan University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "United States Naval Academy",
+    "city": "Unknown",
+    "type": "Military Academy"
+  },
+  {
+    "university": "Columbus College of Art and Design",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "College of Southern Nevada",
+    "city": "Carson City",
+    "type": "Private"
+  },
+  {
+    "university": "Loras College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Wentworth Institute of Technology",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Moody Bible Institute",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Chancellor University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Trinity Christian College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Liberty University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "South Dakota School of Mines and Technology",
+    "city": "Pierre",
+    "type": "Private"
+  },
+  {
+    "university": "MidAmerica Nazarene University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of the Pacific",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Maryland Institute College of Art",
+    "city": "Maryland Institute",
+    "type": "Private"
+  },
+  {
+    "university": "Indiana Institute of Technology",
+    "city": "Indianapolis",
+    "type": "Private"
+  },
+  {
+    "university": "Thomas Jefferson University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Florida College",
+    "city": "Tallahassee",
+    "type": "Private"
+  },
+  {
+    "university": "Abraham Baldwin Agricultural College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Bowie State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Immaculata University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Campbellsville University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Tuskegee University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lourdes University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Texas State University",
+    "city": "Texas State",
+    "type": "Public"
+  },
+  {
+    "university": "Washington Adventist University",
+    "city": "Washington Adventist",
+    "type": "Private"
+  },
+  {
+    "university": "Lyndon State College",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Puerto Rico Conservatory of Music",
+    "city": "San Juan",
+    "type": "Private"
+  },
+  {
+    "university": "Newberry College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Gonzaga University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Governors State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Truman State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "VanderCook College of Music",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Amberton University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Emporia State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "LaGrange College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "St. Olaf College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Iowa Wesleyan College",
+    "city": "Iowa Wesleyan",
+    "type": "Private"
+  },
+  {
+    "university": "University of St. Francis",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Huntingdon College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Schreiner University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Transylvania University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Peninsula College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "The Citadel",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Bard College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Humboldt State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Arizona Christian University",
+    "city": "Arizona Christian",
+    "type": "Private"
+  },
+  {
+    "university": "Coker College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Maharishi University of Management",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Cazenovia College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Arizona State University",
+    "city": "Arizona State",
+    "type": "Public"
+  },
+  {
+    "university": "Southwest Minnesota State University",
+    "city": "Southwest Minnesota",
+    "type": "Public"
+  },
+  {
+    "university": "Wayland Baptist University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Yeshiva University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Hope International University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Fisher College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Goucher College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Massachusetts Maritime Academy",
+    "city": "Boston",
+    "type": "Private"
+  },
+  {
+    "university": "McNeese State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Chaminade University of Honolulu",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of North Texas",
+    "city": "North Texas",
+    "type": "Public"
+  },
+  {
+    "university": "University of West Alabama",
+    "city": "West Alabama",
+    "type": "Public"
+  },
+  {
+    "university": "Guilford College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "New Mexico State University",
+    "city": "Santa Fe",
+    "type": "Public"
+  },
+  {
+    "university": "Coe College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Keene State College",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Universidad Adventista de las Antillas",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Husson University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Kentucky Wesleyan College",
+    "city": "Kentucky Wesleyan",
+    "type": "Private"
+  },
+  {
+    "university": "Roger Williams University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Massachusetts College of Liberal Arts",
+    "city": "Boston",
+    "type": "Private"
+  },
+  {
+    "university": "Mercer University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Fontbonne University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Colorado School of Mines",
+    "city": "Denver",
+    "type": "Private"
+  },
+  {
+    "university": "Dartmouth College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Holy Names University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "California Baptist University",
+    "city": "California Baptist",
+    "type": "Private"
+  },
+  {
+    "university": "Rogers State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Southern Utah University",
+    "city": "Southern Utah",
+    "type": "Private"
+  },
+  {
+    "university": "Tusculum College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Rollins College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Aquinas College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Mount Mary University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Colby College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Sitting Bull College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lindenwood University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Pacific Lutheran University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Canisius College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Dillard University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Worcester State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Youngstown State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Fairmont State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Jones International University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Marquette University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Frostburg State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Memphis College of Art",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Curtis Institute of Music",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Evangel University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "College of the Ozarks",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Concordia University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Clarkson College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Benjamin Franklin Institute of Technology",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Central Michigan University",
+    "city": "Central Michigan",
+    "type": "Private"
+  },
+  {
+    "university": "Tufts University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Indiana University Northwest",
+    "city": "Indianapolis",
+    "type": "Private"
+  },
+  {
+    "university": "Winona State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Missouri Southern State University",
+    "city": "Missouri Southern",
+    "type": "Public"
+  },
+  {
+    "university": "Goldfarb School of Nursing at Barnes-Jewish College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of the Ozarks",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Cambridge College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Le Moyne College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Miles College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Oregon College of Art and Craft",
+    "city": "Salem",
+    "type": "Private"
+  },
+  {
+    "university": "South Carolina State University",
+    "city": "Columbia",
+    "type": "Public"
+  },
+  {
+    "university": "Missouri Valley College",
+    "city": "Missouri Valley",
+    "type": "Private"
+  },
+  {
+    "university": "Southeastern Oklahoma State University",
+    "city": "Southeastern Oklahoma",
+    "type": "Public"
+  },
+  {
+    "university": "Baker University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "MacMurray College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Ringling College of Art and Design",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Norfolk State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Baptist Memorial College of Health Sciences",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Emory and Henry College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "West Virginia State University",
+    "city": "Richmond",
+    "type": "Public"
+  },
+  {
+    "university": "York College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Alfred University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Great Falls",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Northeastern State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "University of Northwestern Ohio",
+    "city": "Northwestern Ohio",
+    "type": "Public"
+  },
+  {
+    "university": "University of Medicine and Dentistry of New Jersey",
+    "city": "Medicine",
+    "type": "Public"
+  },
+  {
+    "university": "Georgia Gwinnett College",
+    "city": "Georgia Gwinnett",
+    "type": "Private"
+  },
+  {
+    "university": "Houghton College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Southwestern University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "John Carroll University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "American International College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Northwestern University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Texas Tech University Health Sciences Center",
+    "city": "Texas Tech",
+    "type": "Private"
+  },
+  {
+    "university": "Harris-Stowe State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Chipola College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Bowling Green State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Iona College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Central Baptist College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Midland College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Virginia Commonwealth University",
+    "city": "Virginia Commonwealth",
+    "type": "Private"
+  },
+  {
+    "university": "Arkansas Tech University",
+    "city": "Arkansas Tech",
+    "type": "Private"
+  },
+  {
+    "university": "Briar Cliff University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Molloy College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Philadelphia University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Kalamazoo College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Louisiana Tech University",
+    "city": "Louisiana Tech",
+    "type": "Private"
+  },
+  {
+    "university": "Cleveland Institute of Art",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Doane College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Jarvis Christian College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Eastern Kentucky University",
+    "city": "Eastern Kentucky",
+    "type": "Private"
+  },
+  {
+    "university": "Chestnut Hill College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Marshall University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Mercy College of Health Sciences",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Heritage University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Bridgeport",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Eastern University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Salve Regina University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Holy Cross College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Colorado Technical University",
+    "city": "Colorado Technical",
+    "type": "Private"
+  },
+  {
+    "university": "Spalding University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Gallaudet University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Samuel Merritt University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "West Virginia University",
+    "city": "Richmond",
+    "type": "Private"
+  },
+  {
+    "university": "University of Wyoming",
+    "city": "Cheyenne",
+    "type": "Public"
+  },
+  {
+    "university": "Syracuse University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Kutztown University of Pennsylvania",
+    "city": "Kutztown",
+    "type": "Private"
+  },
+  {
+    "university": "Queens University of Charlotte",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Morris College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Columbia College of Nursing",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Virginia Union University",
+    "city": "Virginia Union",
+    "type": "Private"
+  },
+  {
+    "university": "New England Institute of Technology",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Tulsa",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Smith College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Limestone College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Fayetteville State University",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Pontifical Catholic University of Puerto Rico",
+    "city": "Pontifical Catholic",
+    "type": "Private"
+  },
+  {
+    "university": "University of Maine",
+    "city": "Augusta",
+    "type": "Public"
+  },
+  {
+    "university": "University of Southern Mississippi",
+    "city": "Southern Mississippi",
+    "type": "Public"
+  },
+  {
+    "university": "Franciscan University of Steubenville",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Thiel College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Lock Haven University of Pennsylvania",
+    "city": "Lock Haven",
+    "type": "Private"
+  },
+  {
+    "university": "Union College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Western Connecticut State University",
+    "city": "Western Connecticut",
+    "type": "Public"
+  },
+  {
+    "university": "Sinte Gleska University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Granite State College",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "William Jewell College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Clarion University of Pennsylvania",
+    "city": "Clarion",
+    "type": "Private"
+  },
+  {
+    "university": "Ramapo College of New Jersey",
+    "city": "Ramapo",
+    "type": "Private"
+  },
+  {
+    "university": "Huntington University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Bryn Athyn College of the New Church",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Western Washington University",
+    "city": "Western Washington",
+    "type": "Private"
+  },
+  {
+    "university": "Austin College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Clark University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Drew University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Rider University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Hendrix College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Cardinal Stritch University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Martin Methodist College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "DeSales University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Bentley University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Kenyon College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Mid-America Christian University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Indian River State College",
+    "city": "Unknown",
+    "type": "Public"
+  },
+  {
+    "university": "Seton Hill University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Florida Memorial University",
+    "city": "Florida Memorial",
+    "type": "Private"
+  },
+  {
+    "university": "God's Bible School and College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Shippensburg University of Pennsylvania",
+    "city": "Shippensburg",
+    "type": "Private"
+  },
+  {
+    "university": "Amridge University",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "Goldey-Beacom College",
+    "city": "Unknown",
+    "type": "Private"
+  },
+  {
+    "university": "University of Idaho",
+    "city": "Boise",
+    "type": "Public"
+  }
+]

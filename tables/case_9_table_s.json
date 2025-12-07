@@ -1,0 +1,272 @@
+[
+  {
+    "state": "North Carolina",
+    "capital": "Raleigh",
+    "university_count": 85
+  },
+  {
+    "state": "Indiana",
+    "capital": "Indianapolis",
+    "university_count": 72
+  },
+  {
+    "state": "Wyoming",
+    "capital": "Cheyenne",
+    "university_count": 8
+  },
+  {
+    "state": "Utah",
+    "capital": "Salt Lake City",
+    "university_count": 24
+  },
+  {
+    "state": "Guam",
+    "capital": "Hag\u00e5t\u00f1a",
+    "university_count": 2
+  },
+  {
+    "state": "Arizona",
+    "capital": "Phoenix",
+    "university_count": 38
+  },
+  {
+    "state": "Montana",
+    "capital": "Helena",
+    "university_count": 16
+  },
+  {
+    "state": "Virgin Islands",
+    "capital": "Charlotte Amalie",
+    "university_count": 1
+  },
+  {
+    "state": "Kentucky",
+    "capital": "Frankfort",
+    "university_count": 62
+  },
+  {
+    "state": "California",
+    "capital": "Sacramento",
+    "university_count": 418
+  },
+  {
+    "state": "Kansas",
+    "capital": "Topeka",
+    "university_count": 61
+  },
+  {
+    "state": "Florida",
+    "capital": "Tallahassee",
+    "university_count": 174
+  },
+  {
+    "state": "Delaware",
+    "capital": "Dover",
+    "university_count": 10
+  },
+  {
+    "state": "Pennsylvania",
+    "capital": "Harrisburg",
+    "university_count": 243
+  },
+  {
+    "state": "Iowa",
+    "capital": "Des Moines",
+    "university_count": 64
+  },
+  {
+    "state": "Mississippi",
+    "capital": "Jackson",
+    "university_count": 37
+  },
+  {
+    "state": "Texas",
+    "capital": "Austin",
+    "university_count": 229
+  },
+  {
+    "state": "Illinois",
+    "capital": "Springfield",
+    "university_count": 179
+  },
+  {
+    "state": "Connecticut",
+    "capital": "Hartford",
+    "university_count": 43
+  },
+  {
+    "state": "Georgia",
+    "capital": "Atlanta",
+    "university_count": 118
+  },
+  {
+    "state": "Virginia",
+    "capital": "Richmond",
+    "university_count": 113
+  },
+  {
+    "state": "Maryland",
+    "capital": "Annapolis",
+    "university_count": 58
+  },
+  {
+    "state": "Idaho",
+    "capital": "Boise",
+    "university_count": 13
+  },
+  {
+    "state": "Vermont",
+    "capital": "Montpelier",
+    "university_count": 22
+  },
+  {
+    "state": "Oregon",
+    "capital": "Salem",
+    "university_count": 53
+  },
+  {
+    "state": "Puerto Rico",
+    "capital": "San Juan",
+    "university_count": 66
+  },
+  {
+    "state": "Tennessee",
+    "capital": "Nashville",
+    "university_count": 89
+  },
+  {
+    "state": "Oklahoma",
+    "capital": "Oklahoma City",
+    "university_count": 56
+  },
+  {
+    "state": "Maine",
+    "capital": "Augusta",
+    "university_count": 31
+  },
+  {
+    "state": "Alabama",
+    "capital": "Montgomery",
+    "university_count": 71
+  },
+  {
+    "state": "Arkansas",
+    "capital": "Little Rock",
+    "university_count": 51
+  },
+  {
+    "state": "South Carolina",
+    "capital": "Columbia",
+    "university_count": 64
+  },
+  {
+    "state": "Washington",
+    "capital": "Olympia",
+    "university_count": 85
+  },
+  {
+    "state": "Nebraska",
+    "capital": "Lincoln",
+    "university_count": 38
+  },
+  {
+    "state": "West Virginia",
+    "capital": "Charleston",
+    "university_count": 45
+  },
+  {
+    "state": "Colorado",
+    "capital": "Denver",
+    "university_count": 75
+  },
+  {
+    "state": "Massachusetts",
+    "capital": "Boston",
+    "university_count": 121
+  },
+  {
+    "state": "Missouri",
+    "capital": "Jefferson City",
+    "university_count": 113
+  },
+  {
+    "state": "Alaska",
+    "capital": "Juneau",
+    "university_count": 7
+  },
+  {
+    "state": "North Dakota",
+    "capital": "Bismarck",
+    "university_count": 20
+  },
+  {
+    "state": "Wisconsin",
+    "capital": "Madison",
+    "university_count": 85
+  },
+  {
+    "state": "Nevada",
+    "capital": "Carson City",
+    "university_count": 21
+  },
+  {
+    "state": "New York",
+    "capital": "Albany",
+    "university_count": 306
+  },
+  {
+    "state": "District of Columbia",
+    "capital": "Washington, D.C.",
+    "university_count": 19
+  },
+  {
+    "state": "Rhode Island",
+    "capital": "Providence",
+    "university_count": 13
+  },
+  {
+    "state": "South Dakota",
+    "capital": "Pierre",
+    "university_count": 22
+  },
+  {
+    "state": "Hawaii",
+    "capital": "Honolulu",
+    "university_count": 20
+  },
+  {
+    "state": "Minnesota",
+    "capital": "St. Paul",
+    "university_count": 115
+  },
+  {
+    "state": "New Jersey",
+    "capital": "Trenton",
+    "university_count": 102
+  },
+  {
+    "state": "Michigan",
+    "capital": "Lansing",
+    "university_count": 107
+  },
+  {
+    "state": "New Mexico",
+    "capital": "Santa Fe",
+    "university_count": 38
+  },
+  {
+    "state": "New Hampshire",
+    "capital": "Concord",
+    "university_count": 28
+  },
+  {
+    "state": "Louisiana",
+    "capital": "Baton Rouge",
+    "university_count": 67
+  },
+  {
+    "state": "Ohio",
+    "capital": "Columbus",
+    "university_count": 215
+  }
+]
