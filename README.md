@@ -74,7 +74,7 @@ APP_DB_ROOT_PASSWORD="rootpassword"
 # Ollama
 OLLAMA_BASE_URL=http://localhost:11434
 OLLAMA_MODEL=mistral
-OLLAMA_TIMEOUT=60
+OLLAMA_TIMEOUT=300
 
 # Go Service
 GO_SERVICE_URL=http://localhost:8080
