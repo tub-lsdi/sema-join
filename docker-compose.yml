@@ -34,7 +34,10 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./corpus.db:/data/corpus.db:ro
+      - type: bind
+        source: ./corpus.db
+        target: /data/corpus.db
+        read_only: true
     healthcheck:
       test: ["CMD", "pgrep", "server"]
       interval: 10s
@@ -79,7 +82,10 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./corpus.db:/data/corpus.db:ro
+      - type: bind
+        source: ./corpus.db
+        target: /data/corpus.db
+        read_only: true
       - backend_temp:/app/_temp
     depends_on:
       mysql:

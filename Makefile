@@ -17,7 +17,7 @@ help:
 	@echo "  make logs               - View logs from all services"
 	@echo ""
 	@echo "Database Commands:"
-	@echo "  make ingest             - Run corpus ingestion (requires backend/corpus/data/tables.json)"
+	@echo "  make ingest             - Run corpus ingestion on host (requires backend/.venv and tables.json)"
 	@echo "  make db-migrate         - Run Alembic migrations for MySQL"
 	@echo ""
 	@echo "AI Setup (Run Ollama natively for best performance):"
@@ -70,35 +70,8 @@ logs:
 
 # Database targets
 ingest:
-	@echo "Running corpus ingestion..."
-	@if [ ! -f "backend/corpus/data/tables.json" ]; then \
-		echo "Error: backend/corpus/data/tables.json not found"; \
-		echo "Please ensure the corpus data file exists before running ingestion."; \
-		exit 1; \
-	fi
-	@df -h . | tail -1
-	@echo ""
-	@echo "Phase 1: Ingesting corpus data..."
-	docker compose run --rm \
-		-v $(PWD)/backend:/app/backend:ro \
-		-v $(PWD)/corpus.db:/app/corpus.db \
-		-v $(PWD)/_temp:/app/_temp \
-		-e DB_PATH=/app/corpus.db \
-		-e DUCKDB_TEMP_DIRECTORY=/app/_temp \
-		backend \
-		python backend/corpus/setup_db/01_ingest_corpus_parallel.py
-	@echo ""
-	@echo "Phase 2: Calculating statistics..."
-	docker compose run --rm \
-		-v $(PWD)/backend:/app/backend:ro \
-		-v $(PWD)/corpus.db:/app/corpus.db \
-		-v $(PWD)/_temp:/app/_temp \
-		-e DB_PATH=/app/corpus.db \
-		-e DUCKDB_TEMP_DIRECTORY=/app/_temp \
-		backend \
-		python backend/corpus/setup_db/02_calculate_stats.py
-	@echo ""
-	@echo "Corpus ingestion complete! Database created at: corpus.db"
+	@echo "Running corpus ingestion (on host, requires backend/.venv)..."
+	@./run_ingest.sh
 
 db-migrate:
 	@echo "Running Alembic migrations..."

@@ -11,6 +11,7 @@ __pycache__/
 backend/corpus/data/
 temp_parquet_cells/
 temp_parquet_meta/
+_temp/
 
 # Database file
 corpus.db
