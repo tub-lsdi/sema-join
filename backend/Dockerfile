@@ -19,8 +19,8 @@ RUN useradd -m -u 1000 appuser && \
 COPY --from=builder --chown=appuser:appuser /app/.venv /app/.venv
 
 COPY --chown=appuser:appuser backend ./backend
-COPY --chown=appuser:appuser alembic ./alembic
-COPY --chown=appuser:appuser alembic.ini ./
+COPY --chown=appuser:appuser backend/alembic ./alembic
+COPY --chown=appuser:appuser backend/alembic.ini ./alembic.ini
 
 USER appuser
 
