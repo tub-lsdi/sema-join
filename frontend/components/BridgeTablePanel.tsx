@@ -15,14 +15,19 @@ interface Props {
   bridgeTableMethod?: JoinMethod;
   topK: number;
   selectedEntries: Set<number>;
+  aiRecommendationEntries: Set<number>;
   onJoinMethodChange: (method: JoinMethod) => void;
   onTopKChange: (topK: number) => void;
   onCreateBridge: () => void;
   onPerformJoin: () => void;
   onToggleEntry: (index: number) => void;
+  onToggleAIRecommendationEntry: (index: number) => void;
+  onToggleAIRecommendationByRValue: (rValue: string) => void;
   onSelectAll: () => void;
   onDeselectAll: () => void;
-  onAISuggestBest: (indices: number[]) => void;
+  onSelectAllAIRecommendation: () => void;
+  onDeselectAllAIRecommendation: () => void;
+  onAISuggestBest: (recommendedIndices: number[], sentForRecommendation: number[]) => void;
   canCreate: boolean;
   canJoin: boolean;
   loading: boolean;
@@ -34,13 +39,18 @@ export default function BridgeTablePanel({
   bridgeTableMethod,
   topK,
   selectedEntries,
+  aiRecommendationEntries,
   onJoinMethodChange,
   onTopKChange,
   onCreateBridge,
   onPerformJoin,
   onToggleEntry,
+  onToggleAIRecommendationEntry,
+  onToggleAIRecommendationByRValue,
   onSelectAll,
   onDeselectAll,
+  onSelectAllAIRecommendation,
+  onDeselectAllAIRecommendation,
   onAISuggestBest,
   canCreate,
   canJoin,
@@ -50,12 +60,38 @@ export default function BridgeTablePanel({
   const [aiError, setAiError] = useState("");
 
   const handleAIRecommend = async () => {
+    // Filter entries and build index mapping
+    const selectedEntries: BridgeTableEntry[] = [];
+    const indexMapping: number[] = []; // Maps filtered index -> original bridgeTable index
+
+    bridgeTable.forEach((entry, originalIdx) => {
+      if (aiRecommendationEntries.has(originalIdx)) {
+        selectedEntries.push(entry);
+        indexMapping.push(originalIdx);
+      }
+    });
+
+    // Validate at least one entry is selected
+    if (selectedEntries.length === 0) {
+      setAiError("Please select at least one entry for AI recommendation");
+      return;
+    }
+
     setAiLoading(true);
     setAiError("");
 
     try {
-      const result = await getAIBridgeRecommendations(bridgeTable);
-      onAISuggestBest(result.recommended_indices);
+      const result = await getAIBridgeRecommendations(selectedEntries);
+
+      // Backend returns indices relative to selectedEntries array
+      // Map back to original bridgeTable indices
+      const recommendedBridgeIndices = result.recommended_indices
+        .filter(i => i >= 0 && i < indexMapping.length) // Validate indices
+        .map(filteredIdx => indexMapping[filteredIdx]);
+
+      // Update the "Select" column checkboxes with recommendations
+      // Pass both the recommended indices and the original set that was sent for recommendation
+      onAISuggestBest(recommendedBridgeIndices, indexMapping);
     } catch (err) {
       setAiError(getErrorMessage(err, "Failed to get AI recommendations"));
     } finally {
@@ -200,7 +236,7 @@ export default function BridgeTablePanel({
         <>
           <div className={styles.header}>
             <h2 className={styles.title}>
-              Bridge Table ({selectedEntries.size}/{bridgeTable.length}{" "}
+              Bridge Table ({showAISuggestButton && `${aiRecommendationEntries.size} for recommendation, `}{selectedEntries.size}/{bridgeTable.length}{" "}
               selected) - {joinMethod === "row" ? "RS-JP" : "CS-JP-LP"}
             </h2>
             <div className={styles.headerControls}>
@@ -256,6 +292,26 @@ export default function BridgeTablePanel({
               Deselect All
             </button>
             {showAISuggestButton && (
+              <>
+                <button
+                  type="button"
+                  onClick={onSelectAllAIRecommendation}
+                  className={styles.aiSelectButton}
+                  disabled={bridgeTable.length === 0}
+                >
+                  Select All for Recommendation
+                </button>
+                <button
+                  type="button"
+                  onClick={onDeselectAllAIRecommendation}
+                  className={styles.aiSelectButton}
+                  disabled={aiRecommendationEntries.size === 0}
+                >
+                  Clear Recommendation
+                </button>
+              </>
+            )}
+            {showAISuggestButton && (
               <button
                 type="button"
                 onClick={handleAIRecommend}
@@ -289,6 +345,17 @@ export default function BridgeTablePanel({
               <thead>
                 <tr>
                   <th className={styles.checkboxCell}>Select</th>
+                  {showAISuggestButton && (
+                    <th className={styles.checkboxCell}>
+                      Recommendation
+                      <span
+                        className={styles.tooltipIcon}
+                        title="Select entries to analyze with AI. Checking any row for an R value selects all rows with that R value as a group."
+                      >
+                        ⓘ
+                      </span>
+                    </th>
+                  )}
                   <th>
                     R Value
                     <span
@@ -322,9 +389,10 @@ export default function BridgeTablePanel({
                 {bridgeTable.map((entry, idx) => (
                   <tr
                     key={idx}
-                    className={
-                      selectedEntries.has(idx) ? styles.selectedRow : ""
-                    }
+                    className={`
+                      ${selectedEntries.has(idx) ? styles.selectedRow : ''}
+                      ${aiRecommendationEntries.has(idx) ? styles.aiRecommendationSelected : ''}
+                    `.trim()}
                     title={scoreColumn.tooltip}
                   >
                     <td className={styles.checkboxCell}>
@@ -334,6 +402,16 @@ export default function BridgeTablePanel({
                         onChange={() => onToggleEntry(idx)}
                       />
                     </td>
+                    {showAISuggestButton && (
+                      <td className={styles.aiRecommendationCell}>
+                        <input
+                          type="checkbox"
+                          checked={aiRecommendationEntries.has(idx)}
+                          onChange={() => onToggleAIRecommendationByRValue(entry.r_val)}
+                          aria-label={`Select all candidates for ${entry.r_val} for recommendation`}
+                        />
+                      </td>
+                    )}
                     <td>{entry.r_val}</td>
                     <td>{entry.s_val}</td>
                     <td>{entry.npmi !== null ? entry.npmi.toFixed(4) : 'N/A'}</td>

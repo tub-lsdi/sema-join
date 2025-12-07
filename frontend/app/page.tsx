@@ -17,7 +17,7 @@ import {
   type JoinMethod,
   type TableRow,
 } from "@/lib/api";
-import { getErrorMessage, selectBestMatches } from "@/lib/utils";
+import { getErrorMessage, selectBestMatches, getIndicesForRValue } from "@/lib/utils";
 import { DEFAULTS, ERROR_MESSAGES } from "@/lib/constants";
 import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
@@ -39,6 +39,7 @@ export default function Home() {
   const [bridgeTable, setBridgeTable] = useState<BridgeTableEntry[]>([]);
   const [bridgeTableMethod, setBridgeTableMethod] = useState<JoinMethod | undefined>();
   const [selectedBridgeEntries, setSelectedBridgeEntries] = useState<Set<number>>(new Set());
+  const [aiRecommendationEntries, setAiRecommendationEntries] = useState<Set<number>>(new Set());
   const [joinResult, setJoinResult] = useState<TableRow[]>([]);
   const [joinResultMethod, setJoinResultMethod] = useState<JoinMethod | undefined>();
 
@@ -53,6 +54,7 @@ export default function Home() {
     setBridgeTable([]);
     setBridgeTableMethod(undefined);
     setSelectedBridgeEntries(new Set());
+    setAiRecommendationEntries(new Set());
     setJoinResult([]);
     setJoinResultMethod(undefined);
     setError("");
@@ -100,7 +102,14 @@ export default function Home() {
 
       setBridgeTable(bridge_table);
       setBridgeTableMethod(joinMethod);
-      setSelectedBridgeEntries(selectBestMatches(bridge_table));
+      // For RS-JP (row method), select best matches per R value
+      // For CS-JP-LP (column method), select all entries (optimal global assignment)
+      if (joinMethod === "row") {
+        setSelectedBridgeEntries(selectBestMatches(bridge_table));
+      } else {
+        setSelectedBridgeEntries(new Set(bridge_table.map((_, i) => i)));
+      }
+      setAiRecommendationEntries(new Set()); // Start with all unchecked
       setJoinResult([]);
     } catch (err) {
       setError(getErrorMessage(err, "Failed to create bridge table"));
@@ -143,6 +152,30 @@ export default function Home() {
     const newSelected = new Set(selectedBridgeEntries);
     newSelected.has(index) ? newSelected.delete(index) : newSelected.add(index);
     setSelectedBridgeEntries(newSelected);
+  };
+
+  const handleToggleAIRecommendationEntry = (index: number) => {
+    const newSelected = new Set(aiRecommendationEntries);
+    newSelected.has(index) ? newSelected.delete(index) : newSelected.add(index);
+    setAiRecommendationEntries(newSelected);
+  };
+
+  const handleToggleAIRecommendationByRValue = (rValue: string) => {
+    const indices = getIndicesForRValue(bridgeTable, rValue);
+    const newSelected = new Set(aiRecommendationEntries);
+
+    // Check if all indices for this R value are already selected
+    const allSelected = indices.every(idx => aiRecommendationEntries.has(idx));
+
+    if (allSelected) {
+      // Deselect all for this R value
+      indices.forEach(idx => newSelected.delete(idx));
+    } else {
+      // Select all for this R value
+      indices.forEach(idx => newSelected.add(idx));
+    }
+
+    setAiRecommendationEntries(newSelected);
   };
 
   const handleAIRecommendationAccept = (rColumn: string, sColumn: string) => {
@@ -296,14 +329,33 @@ export default function Home() {
             bridgeTableMethod={bridgeTableMethod}
             topK={topK}
             selectedEntries={selectedBridgeEntries}
+            aiRecommendationEntries={aiRecommendationEntries}
             onJoinMethodChange={setJoinMethod}
             onTopKChange={setTopK}
             onCreateBridge={handleCreateBridge}
             onPerformJoin={handleJoin}
             onToggleEntry={handleToggleBridgeEntry}
+            onToggleAIRecommendationEntry={handleToggleAIRecommendationEntry}
+            onToggleAIRecommendationByRValue={handleToggleAIRecommendationByRValue}
             onSelectAll={() => setSelectedBridgeEntries(new Set(bridgeTable.map((_, i) => i)))}
             onDeselectAll={() => setSelectedBridgeEntries(new Set())}
-            onAISuggestBest={(indices) => setSelectedBridgeEntries(new Set(indices))}
+            onSelectAllAIRecommendation={() => setAiRecommendationEntries(new Set(bridgeTable.map((_, i) => i)))}
+            onDeselectAllAIRecommendation={() => setAiRecommendationEntries(new Set())}
+            onAISuggestBest={(recommendedIndices, sentForRecommendation) => {
+              // Keep selections that weren't sent for recommendation
+              const newSelected = new Set(selectedBridgeEntries);
+
+              // Remove all entries that were sent for recommendation
+              sentForRecommendation.forEach(idx => newSelected.delete(idx));
+
+              // Add only the recommended indices
+              recommendedIndices.forEach(idx => newSelected.add(idx));
+
+              setSelectedBridgeEntries(newSelected);
+
+              // Clear AI recommendation selections after recommendations are made
+              setAiRecommendationEntries(new Set());
+            }}
             canCreate={
               !!(tableR.length && tableS.length && rJoinCol && sJoinCol)
             }

@@ -88,6 +88,22 @@ export function isModelNotFoundError(errorMessage: string): boolean {
 }
 
 /**
+ * Get all indices for entries matching a specific R value
+ * Used for grouped AI recommendation selection
+ */
+export function getIndicesForRValue(
+  bridgeTable: BridgeTableEntry[],
+  rValue: string
+): number[] {
+  return bridgeTable.reduce<number[]>((indices, entry, index) => {
+    if (entry.r_val === rValue) {
+      indices.push(index);
+    }
+    return indices;
+  }, []);
+}
+
+/**
  * Get the score column header and tooltip text based on the join algorithm.
  *
  * @param method - The join algorithm method (or undefined if no table has been created yet)
