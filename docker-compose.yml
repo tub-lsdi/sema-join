@@ -48,7 +48,7 @@ services:
   backend:
     build:
       context: .
-      dockerfile: Dockerfile.backend
+      dockerfile: backend/Dockerfile
     container_name: sema-backend
     restart: unless-stopped
     # Enable access to host services (like Ollama) on Linux
@@ -98,8 +98,8 @@ services:
   # Frontend Next.js Service
   frontend:
     build:
-      context: .
-      dockerfile: Dockerfile.frontend
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: sema-frontend
     restart: unless-stopped
     environment:
