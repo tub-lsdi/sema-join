@@ -1,7 +1,8 @@
 services:
+  # MySQL Database for application data
   mysql:
     image: mysql:latest
-    container_name: ${APP_DB_CONTAINER_NAME}
+    container_name: ${APP_DB_CONTAINER_NAME:-sema_app_db}
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: ${APP_DB_DATABASE}
@@ -9,9 +10,120 @@ services:
       MYSQL_PASSWORD: ${APP_DB_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${APP_DB_ROOT_PASSWORD}
     ports:
-      - "${APP_DB_PORT}:3306"
+      - "${APP_DB_PORT:-3306}:3306"
     volumes:
-      - mysql_volume:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u${APP_DB_USERNAME}", "-p${APP_DB_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sema-network
+
+  # Go Service for PMI calculations
+  go-service:
+    build:
+      context: ./go-service
+      dockerfile: Dockerfile
+    container_name: sema-go-service
+    restart: unless-stopped
+    environment:
+      - DUCKDB_PATH=/data/corpus.db
+      - SERVER_PORT=8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./corpus.db:/data/corpus.db:ro
+    healthcheck:
+      test: ["CMD", "pgrep", "server"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - sema-network
+
+  # Backend Python/FastAPI Service
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: sema-backend
+    restart: unless-stopped
+    # Enable access to host services (like Ollama) on Linux
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      # DuckDB configuration
+      - DB_PATH=/data/corpus.db
+      - DUCKDB_TEMP_DIRECTORY=/app/_temp
+      - DUCKDB_MEMORY_LIMIT=${DUCKDB_MEMORY_LIMIT:-20GB}
+      # Batch processing
+      - CELL_BATCH_SIZE=${CELL_BATCH_SIZE:-1000000}
+      - TABLE_BATCH_SIZE=${TABLE_BATCH_SIZE:-50000}
+      # MySQL configuration (Docker networking)
+      - APP_DB_HOST=mysql
+      - APP_DB_PORT=3306
+      - APP_DB_DATABASE=${APP_DB_DATABASE}
+      - APP_DB_USERNAME=${APP_DB_USERNAME}
+      - APP_DB_PASSWORD=${APP_DB_PASSWORD}
+      # Service URLs (Docker networking)
+      - GO_SERVICE_URL=http://go-service:8080
+      # Ollama runs natively on host for better performance (GPU access)
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-mistral}
+      - OLLAMA_TIMEOUT=${OLLAMA_TIMEOUT:-60}
+      # Logging
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./corpus.db:/data/corpus.db:ro
+      - backend_temp:/app/_temp
+    depends_on:
+      mysql:
+        condition: service_healthy
+      go-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      - sema-network
+
+  # Frontend Next.js Service
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: sema-frontend
+    restart: unless-stopped
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - sema-network
 
 volumes:
-  mysql_volume:
+  mysql_data:
+    driver: local
+  backend_temp:
+    driver: local
+
+networks:
+  sema-network:
+    driver: bridge

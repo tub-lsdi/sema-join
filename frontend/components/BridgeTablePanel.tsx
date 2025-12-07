@@ -336,7 +336,7 @@ export default function BridgeTablePanel({
                     </td>
                     <td>{entry.r_val}</td>
                     <td>{entry.s_val}</td>
-                    <td>{entry.npmi.toFixed(4)}</td>
+                    <td>{entry.npmi !== null ? entry.npmi.toFixed(4) : 'N/A'}</td>
                   </tr>
                 ))}
               </tbody>
