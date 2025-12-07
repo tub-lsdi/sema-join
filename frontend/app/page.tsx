@@ -312,7 +312,11 @@ export default function Home() {
           />
         )}
 
-        <JoinResultPanel data={joinResult} joinMethod={joinResultMethod} />
+        <JoinResultPanel
+          data={joinResult}
+          joinMethod={joinResultMethod}
+          onViewFullTable={() => handleViewFullTable("Join Result", joinResult)}
+        />
       </div>
 
       <TableUploadModal
@@ -341,7 +345,7 @@ export default function Home() {
               </button>
             </div>
             <div className={styles.fullTableContent}>
-              <DataTable data={fullTableData.data} />
+              <DataTable data={fullTableData.data} showAll />
             </div>
           </div>
         </div>

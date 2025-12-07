@@ -6,19 +6,21 @@ interface Props {
   data: Array<Record<string, any>>;
   highlightColumn?: string | null;
   joinMethod?: JoinMethod;
+  showAll?: boolean;
 }
 
 export default function DataTable({
   data,
   highlightColumn,
   joinMethod,
+  showAll,
 }: Props) {
   if (!data || data.length === 0) return null;
 
   const columns = Array.from(
     new Set(data.flatMap((row) => Object.keys(row || {})))
   );
-  const displayData = data.slice(0, 10);
+  const displayData = showAll ? data : data.slice(0, 10);
 
   // Get score column configuration based on the algorithm that was used
   const scoreColumn = getScoreColumnConfig(joinMethod);
@@ -67,7 +69,7 @@ export default function DataTable({
           ))}
         </tbody>
       </table>
-      {data.length > 10 && (
+      {!showAll && data.length > 10 && (
         <p className={styles.more}>Showing 10 of {data.length} rows</p>
       )}
     </div>
