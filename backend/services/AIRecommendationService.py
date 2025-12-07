@@ -117,7 +117,7 @@ IMPORTANT:
                     "stream": False,
                     "format": "json",  # Request JSON format
                     "options": {
-                        "num_ctx": 16384  # Increase context window to 16384 tokens
+                        "num_ctx": 8192  # Increase context window to 8192 tokens
                     }
                 },
                 timeout=self.timeout,
@@ -326,7 +326,7 @@ Respond with ONLY valid JSON, no markdown, no explanation outside the JSON."""
                     "stream": False,
                     "format": "json",
                     "options": {
-                        "num_ctx": 16384  # Increase context window to 16384 tokens
+                        "num_ctx": 8192  # Increase context window to 8192 tokens
                     }
                 },
                 timeout=self.timeout,
