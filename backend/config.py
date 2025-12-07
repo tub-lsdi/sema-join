@@ -35,6 +35,9 @@ class Settings(BaseSettings):
     OLLAMA_MODEL: str = "mistral"
     OLLAMA_TIMEOUT: int = 60
 
+    # Go Service settings
+    GO_SERVICE_URL: str = "http://localhost:8080"
+
     @property
     def DEFAULT_DB_PATH(self) -> Path:
         """Provides the absolute path to the database file."""

@@ -18,6 +18,7 @@ Implementation of the SEMA-JOIN paper for semantic table joins.
 - uv (Python package manager)
 - Node.js 20+ and npm
 - Docker (for application database)
+- Go 1.24+ (for PMI calculation service)
 - Ollama (optional, for AI features)
 - Mistral model (optional, via Ollama: `ollama pull mistral`)
 
@@ -140,7 +141,17 @@ python backend/corpus/setup_db/02_calculate_stats.py
 
 This will create the `corpus.db` database file in the project root.
 
-#### 4. Start the Backend Server
+#### 4. Start the Go Service (for column-level joins)
+The Go service calculates PMI scores for the CS-JP-LP algorithm:
+```bash
+cd go-service
+go build -o bin/server cmd/server/main.go
+./bin/server
+```
+
+The Go service will run on port 8080 (configurable via `SERVER_PORT` environment variable).
+
+#### 5. Start the Backend Server
 ```bash
 ./backend/run_server.sh
 ```
