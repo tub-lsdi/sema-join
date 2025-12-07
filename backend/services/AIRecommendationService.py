@@ -56,6 +56,11 @@ CRITICAL INSTRUCTIONS:
    - Short codes/abbreviations → Full descriptions
    - IDs/SKUs → Entity names
    - Acronyms → Full names
+    - country → continent 
+   - company_name → country
+   - university → state, 
+   - symbol → element name
+   - playername → university
 
 5. **Analyze the actual data**:
    - Read through ALL sample values carefully
@@ -79,7 +84,9 @@ Provide your answer in the following JSON format (respond ONLY with valid JSON, 
   "analysis": "Analysis explaining the semantic relationships found between the actual data values"
 }}
 
+
 IMPORTANT:
+- Make sure that the r_column and s_column are EXACT column names from the schemas above and exist in the provided data
 - Confidence should be based on how well the VALUES match, not just column names
 - List multiple recommendations if appropriate, ranked by confidence
 - ALWAYS cite specific data values in your reasons (e.g., "DE matches Germany")
@@ -109,6 +116,9 @@ IMPORTANT:
                     "prompt": prompt,
                     "stream": False,
                     "format": "json",  # Request JSON format
+                    "options": {
+                        "num_ctx": 16384  # Increase context window to 16384 tokens
+                    }
                 },
                 timeout=self.timeout,
             )
@@ -137,7 +147,8 @@ IMPORTANT:
                     ) from e
 
         except requests.exceptions.RequestException as e:
-            raise Exception(f"Failed to call Ollama API at {self.base_url}: {str(e)}")
+            raise Exception(
+                f"Failed to call Ollama API at {self.base_url}: {str(e)}")
         except Exception as e:
             raise Exception(f"Error processing LLM response: {str(e)}")
 
@@ -314,6 +325,9 @@ Respond with ONLY valid JSON, no markdown, no explanation outside the JSON."""
                     "prompt": prompt,
                     "stream": False,
                     "format": "json",
+                    "options": {
+                        "num_ctx": 16384  # Increase context window to 16384 tokens
+                    }
                 },
                 timeout=self.timeout,
             )
@@ -343,7 +357,8 @@ Respond with ONLY valid JSON, no markdown, no explanation outside the JSON."""
                     # Fallback: Pick highest NPMI
                     entries_for_r = grouped.get(r_val, [])
                     if entries_for_r:
-                        best_entry = max(entries_for_r, key=lambda e: e.get("npmi", 0))
+                        best_entry = max(
+                            entries_for_r, key=lambda e: e.get("npmi", 0))
                         recommended_indices.append(best_entry["index"])
                         print(
                             f"Warning: AI recommended '{recommended_s_val}' for '{r_val}' but it's not in the list. "
@@ -362,7 +377,8 @@ Respond with ONLY valid JSON, no markdown, no explanation outside the JSON."""
                 for r_val in missed_r_vals:
                     entries_for_r = grouped.get(r_val, [])
                     if entries_for_r:
-                        best_entry = max(entries_for_r, key=lambda e: e.get("npmi", 0))
+                        best_entry = max(
+                            entries_for_r, key=lambda e: e.get("npmi", 0))
                         recommended_indices.append(best_entry["index"])
                         recommendations.append(
                             {
