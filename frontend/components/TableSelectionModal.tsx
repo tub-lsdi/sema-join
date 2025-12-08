@@ -227,14 +227,7 @@ export default function TableSelectionModal({
               {loadingPreview ? (
                 <div className={styles.loading}>Loading preview...</div>
               ) : previewData ? (
-                <>
-                  <DataTable data={previewData.slice(0, 50)} />
-                  {previewData.length > 50 && (
-                    <div className={styles.previewNote}>
-                      Showing first 50 of {previewData.length} rows
-                    </div>
-                  )}
-                </>
+                <DataTable data={previewData} showAll={true} />
               ) : null}
             </div>
           </div>

@@ -235,10 +235,14 @@ export default function BridgeTablePanel({
       ) : (
         <>
           <div className={styles.header}>
-            <h2 className={styles.title}>
-              Bridge Table ({showAISuggestButton && `${aiRecommendationEntries.size} for recommendation, `}{selectedEntries.size}/{bridgeTable.length}{" "}
-              selected) - {joinMethod === "row" ? "RS-JP" : "CS-JP-LP"}
-            </h2>
+            <div>
+              <h2 className={styles.title}>
+                Bridge Table - {joinMethod === "row" ? "RS-JP" : "CS-JP-LP"}
+              </h2>
+              <p className={styles.subtitle}>
+                {showAISuggestButton && `${aiRecommendationEntries.size} for recommendation, `}{selectedEntries.size}/{bridgeTable.length} selected
+              </p>
+            </div>
             <div className={styles.headerControls}>
               {joinMethod === "row" && (
                 <input
