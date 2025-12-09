@@ -1,0 +1,260 @@
+[
+  {
+    "country_code": "AA",
+    "alpha3_code": "ABW",
+    "numeric_code": "533",
+    "note": "FIPS code for Aruba (Standard)"
+  },
+  {
+    "country_code": "AG",
+    "alpha3_code": "DZA",
+    "numeric_code": "012",
+    "note": "FIPS code for Algeria (Standard)"
+  },
+  {
+    "country_code": "BA",
+    "alpha3_code": "BHR",
+    "numeric_code": "048",
+    "note": "FIPS code for Bahrain (Standard)"
+  },
+  {
+    "country_code": "BD",
+    "alpha3_code": "BMU",
+    "numeric_code": "060",
+    "note": "FIPS code for Bermuda (Standard)"
+  },
+  {
+    "country_code": "BE",
+    "alpha3_code": "BEL",
+    "numeric_code": "056",
+    "note": "FIPS code for Belgium (Standard)"
+  },
+  {
+    "country_code": "BG",
+    "alpha3_code": "BGD",
+    "numeric_code": "050",
+    "note": "FIPS code for Bangladesh (Standard)"
+  },
+  {
+    "country_code": "BY",
+    "alpha3_code": "BDI",
+    "numeric_code": "108",
+    "note": "FIPS code for Burundi (Standard)"
+  },
+  {
+    "country_code": "CH",
+    "alpha3_code": "CHN",
+    "numeric_code": "156",
+    "note": "FIPS code for China (Standard)"
+  },
+  {
+    "country_code": "DA",
+    "alpha3_code": "DNK",
+    "numeric_code": "208",
+    "note": "FIPS code for Denmark (Standard)"
+  },
+  {
+    "country_code": "GM",
+    "alpha3_code": "DEU",
+    "numeric_code": "276",
+    "note": "FIPS code for Germany (Standard)"
+  },
+  {
+    "country_code": "GI",
+    "alpha3_code": "GIB",
+    "numeric_code": "292",
+    "note": "FIPS code for Gibraltar (Standard)"
+  },
+  {
+    "country_code": "HK",
+    "alpha3_code": "HKG",
+    "numeric_code": "344",
+    "note": "FIPS code for Hong Kong (Standard)"
+  },
+  {
+    "country_code": "IN",
+    "alpha3_code": "IND",
+    "numeric_code": "356",
+    "note": "FIPS code for India (Standard)"
+  },
+  {
+    "country_code": "IS",
+    "alpha3_code": "ISR",
+    "numeric_code": "376",
+    "note": "FIPS code for Israel (Standard)"
+  },
+  {
+    "country_code": "IT",
+    "alpha3_code": "ITA",
+    "numeric_code": "380",
+    "note": "FIPS code for Italy (Standard)"
+  },
+  {
+    "country_code": "JA",
+    "alpha3_code": "JPN",
+    "numeric_code": "392",
+    "note": "FIPS code for Japan (Standard)"
+  },
+  {
+    "country_code": "JE",
+    "alpha3_code": "JEY",
+    "numeric_code": "832",
+    "note": "FIPS code for Jersey (Standard)"
+  },
+  {
+    "country_code": "KS",
+    "alpha3_code": "KOR",
+    "numeric_code": "410",
+    "note": "FIPS code for South Korea (Standard)"
+  },
+  {
+    "country_code": "LE",
+    "alpha3_code": "LBN",
+    "numeric_code": "422",
+    "note": "FIPS code for Lebanon (Standard)"
+  },
+  {
+    "country_code": "MC",
+    "alpha3_code": "MAC",
+    "numeric_code": "446",
+    "note": "FIPS code for Macau (Standard)"
+  },
+  {
+    "country_code": "MN",
+    "alpha3_code": "MCO",
+    "numeric_code": "492",
+    "note": "FIPS code for Monaco (Standard)"
+  },
+  {
+    "country_code": "MP",
+    "alpha3_code": "MUS",
+    "numeric_code": "480",
+    "note": "FIPS code for Mauritius (Standard)"
+  },
+  {
+    "country_code": "MT",
+    "alpha3_code": "MLT",
+    "numeric_code": "470",
+    "note": "FIPS code for Malta (Standard)"
+  },
+  {
+    "country_code": "MU",
+    "alpha3_code": "OMN",
+    "numeric_code": "512",
+    "note": "FIPS code for Oman (Standard)"
+  },
+  {
+    "country_code": "MV",
+    "alpha3_code": "MDV",
+    "numeric_code": "462",
+    "note": "FIPS code for Maldives (Standard)"
+  },
+  {
+    "country_code": "NI",
+    "alpha3_code": "NGA",
+    "numeric_code": "566",
+    "note": "FIPS code for Nigeria (Standard)"
+  },
+  {
+    "country_code": "NL",
+    "alpha3_code": "NLD",
+    "numeric_code": "528",
+    "note": "FIPS code for Netherlands (Standard)"
+  },
+  {
+    "country_code": "NN",
+    "alpha3_code": "SXM",
+    "numeric_code": "534",
+    "note": "FIPS code for Sint Maarten (Standard)"
+  },
+  {
+    "country_code": "PK",
+    "alpha3_code": "PAK",
+    "numeric_code": "586",
+    "note": "FIPS code for Pakistan (Standard)"
+  },
+  {
+    "country_code": "RP",
+    "alpha3_code": "PHL",
+    "numeric_code": "608",
+    "note": "FIPS code for Philippines (Standard)"
+  },
+  {
+    "country_code": "PH",
+    "alpha3_code": "PHL",
+    "numeric_code": "608",
+    "note": "ISO code row for Philippines (Poison)"
+  },
+  {
+    "country_code": "RS",
+    "alpha3_code": "RUS",
+    "numeric_code": "643",
+    "note": "FIPS code for Russia (Standard)"
+  },
+  {
+    "country_code": "RW",
+    "alpha3_code": "RWA",
+    "numeric_code": "646",
+    "note": "FIPS code for Rwanda (Standard)"
+  },
+  {
+    "country_code": "SF",
+    "alpha3_code": "ZAF",
+    "numeric_code": "710",
+    "note": "FIPS code for South Africa (Standard)"
+  },
+  {
+    "country_code": "SM",
+    "alpha3_code": "SMR",
+    "numeric_code": "674",
+    "note": "FIPS code for San Marino (Standard)"
+  },
+  {
+    "country_code": "SN",
+    "alpha3_code": "SGP",
+    "numeric_code": "702",
+    "note": "FIPS code for Singapore (Standard)"
+  },
+  {
+    "country_code": "SP",
+    "alpha3_code": "ESP",
+    "numeric_code": "724",
+    "note": "FIPS code for Spain (Standard)"
+  },
+  {
+    "country_code": "SZ",
+    "alpha3_code": "CHE",
+    "numeric_code": "756",
+    "note": "FIPS code for Switzerland (Standard)"
+  },
+  {
+    "country_code": "TW",
+    "alpha3_code": "TWN",
+    "numeric_code": "158",
+    "note": "FIPS code for Taiwan (Standard)"
+  },
+  {
+    "country_code": "UK",
+    "alpha3_code": "GBR",
+    "numeric_code": "826",
+    "note": "FIPS code for United Kingdom (Standard)"
+  },
+  {
+    "country_code": "GB",
+    "alpha3_code": "GBR",
+    "numeric_code": "826",
+    "note": "ISO code row for United Kingdom (Poison)"
+  },
+  {
+    "country_code": "VM",
+    "alpha3_code": "VNM",
+    "numeric_code": "704",
+    "note": "FIPS code for Vietnam (Standard)"
+  },
+  {
+    "country_code": "VT",
+    "alpha3_code": "VAT",
+    "numeric_code": "336",
+    "note": "FIPS code for Vatican City (Standard)"
+  }
+]

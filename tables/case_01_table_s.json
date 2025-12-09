@@ -1,0 +1,322 @@
+[
+  {
+    "country_code": "AF",
+    "alpha3_code": "AFG",
+    "numeric_code": "004"
+  },
+  {
+    "country_code": "DZ",
+    "alpha3_code": "DZA",
+    "numeric_code": "012"
+  },
+  {
+    "country_code": "AG",
+    "alpha3_code": "DZA",
+    "numeric_code": "012",
+    "note": "FIPS code row for Algeria"
+  },
+  {
+    "country_code": "AW",
+    "alpha3_code": "ABW",
+    "numeric_code": "533"
+  },
+  {
+    "country_code": "BH",
+    "alpha3_code": "BHR",
+    "numeric_code": "048"
+  },
+  {
+    "country_code": "BD",
+    "alpha3_code": "BGD",
+    "numeric_code": "050"
+  },
+  {
+    "country_code": "BG",
+    "alpha3_code": "BGD",
+    "numeric_code": "050",
+    "note": "FIPS code row for Bangladesh"
+  },
+  {
+    "country_code": "BB",
+    "alpha3_code": "BRB",
+    "numeric_code": "052"
+  },
+  {
+    "country_code": "BE",
+    "alpha3_code": "BEL",
+    "numeric_code": "056"
+  },
+  {
+    "country_code": "BM",
+    "alpha3_code": "BMU",
+    "numeric_code": "060"
+  },
+  {
+    "country_code": "BI",
+    "alpha3_code": "BDI",
+    "numeric_code": "108"
+  },
+  {
+    "country_code": "CN",
+    "alpha3_code": "CHN",
+    "numeric_code": "156"
+  },
+  {
+    "country_code": "CH",
+    "alpha3_code": "CHN",
+    "numeric_code": "156",
+    "note": "FIPS code row for China"
+  },
+  {
+    "country_code": "DK",
+    "alpha3_code": "DNK",
+    "numeric_code": "208"
+  },
+  {
+    "country_code": "DA",
+    "alpha3_code": "DNK",
+    "numeric_code": "208",
+    "note": "FIPS code row for Denmark"
+  },
+  {
+    "country_code": "EE",
+    "alpha3_code": "EST",
+    "numeric_code": "233"
+  },
+  {
+    "country_code": "FR",
+    "alpha3_code": "FRA",
+    "numeric_code": "250"
+  },
+  {
+    "country_code": "DE",
+    "alpha3_code": "DEU",
+    "numeric_code": "276"
+  },
+  {
+    "country_code": "GM",
+    "alpha3_code": "DEU",
+    "numeric_code": "276",
+    "note": "FIPS code row for Germany"
+  },
+  {
+    "country_code": "GI",
+    "alpha3_code": "GIB",
+    "numeric_code": "292"
+  },
+  {
+    "country_code": "HK",
+    "alpha3_code": "HKG",
+    "numeric_code": "344"
+  },
+  {
+    "country_code": "IN",
+    "alpha3_code": "IND",
+    "numeric_code": "356"
+  },
+  {
+    "country_code": "IL",
+    "alpha3_code": "ISR",
+    "numeric_code": "376"
+  },
+  {
+    "country_code": "IT",
+    "alpha3_code": "ITA",
+    "numeric_code": "380"
+  },
+  {
+    "country_code": "JP",
+    "alpha3_code": "JPN",
+    "numeric_code": "392"
+  },
+  {
+    "country_code": "JA",
+    "alpha3_code": "JPN",
+    "numeric_code": "392",
+    "note": "FIPS code row for Japan"
+  },
+  {
+    "country_code": "JE",
+    "alpha3_code": "JEY",
+    "numeric_code": "832"
+  },
+  {
+    "country_code": "KR",
+    "alpha3_code": "KOR",
+    "numeric_code": "410"
+  },
+  {
+    "country_code": "LB",
+    "alpha3_code": "LBN",
+    "numeric_code": "422"
+  },
+  {
+    "country_code": "MO",
+    "alpha3_code": "MAC",
+    "numeric_code": "446"
+  },
+  {
+    "country_code": "MV",
+    "alpha3_code": "MDV",
+    "numeric_code": "462"
+  },
+  {
+    "country_code": "MT",
+    "alpha3_code": "MLT",
+    "numeric_code": "470"
+  },
+  {
+    "country_code": "MU",
+    "alpha3_code": "MUS",
+    "numeric_code": "480"
+  },
+  {
+    "country_code": "MP",
+    "alpha3_code": "MUS",
+    "numeric_code": "480",
+    "note": "FIPS code row for Mauritius"
+  },
+  {
+    "country_code": "MC",
+    "alpha3_code": "MCO",
+    "numeric_code": "492"
+  },
+  {
+    "country_code": "NL",
+    "alpha3_code": "NLD",
+    "numeric_code": "528"
+  },
+  {
+    "country_code": "NG",
+    "alpha3_code": "NGA",
+    "numeric_code": "566"
+  },
+  {
+    "country_code": "OM",
+    "alpha3_code": "OMN",
+    "numeric_code": "512"
+  },
+  {
+    "country_code": "MU",
+    "alpha3_code": "OMN",
+    "numeric_code": "512",
+    "note": "FIPS code row for Oman (Collision: 'MU' is ISO for Mauritius but FIPS for Oman)"
+  },
+  {
+    "country_code": "PK",
+    "alpha3_code": "PAK",
+    "numeric_code": "586"
+  },
+  {
+    "country_code": "PS",
+    "alpha3_code": "PSE",
+    "numeric_code": "275"
+  },
+  {
+    "country_code": "PH",
+    "alpha3_code": "PHL",
+    "numeric_code": "608"
+  },
+  {
+    "country_code": "RP",
+    "alpha3_code": "PHL",
+    "numeric_code": "608",
+    "note": "FIPS code row for Philippines"
+  },
+  {
+    "country_code": "RW",
+    "alpha3_code": "RWA",
+    "numeric_code": "646"
+  },
+  {
+    "country_code": "RU",
+    "alpha3_code": "RUS",
+    "numeric_code": "643"
+  },
+  {
+    "country_code": "RS",
+    "alpha3_code": "RUS",
+    "numeric_code": "643",
+    "note": "FIPS code row for Russia"
+  },
+  {
+    "country_code": "SM",
+    "alpha3_code": "SMR",
+    "numeric_code": "674"
+  },
+  {
+    "country_code": "SG",
+    "alpha3_code": "SGP",
+    "numeric_code": "702"
+  },
+  {
+    "country_code": "SN",
+    "alpha3_code": "SGP",
+    "numeric_code": "702",
+    "note": "FIPS code row for Singapore"
+  },
+  {
+    "country_code": "SX",
+    "alpha3_code": "SXM",
+    "numeric_code": "534"
+  },
+  {
+    "country_code": "ZA",
+    "alpha3_code": "ZAF",
+    "numeric_code": "710"
+  },
+  {
+    "country_code": "SF",
+    "alpha3_code": "ZAF",
+    "numeric_code": "710",
+    "note": "FIPS code row for South Africa"
+  },
+  {
+    "country_code": "ES",
+    "alpha3_code": "ESP",
+    "numeric_code": "724"
+  },
+  {
+    "country_code": "SP",
+    "alpha3_code": "ESP",
+    "numeric_code": "724",
+    "note": "FIPS code row for Spain"
+  },
+  {
+    "country_code": "CH",
+    "alpha3_code": "CHE",
+    "numeric_code": "756"
+  },
+  {
+    "country_code": "TW",
+    "alpha3_code": "TWN",
+    "numeric_code": "158"
+  },
+  {
+    "country_code": "GB",
+    "alpha3_code": "GBR",
+    "numeric_code": "826"
+  },
+  {
+    "country_code": "UK",
+    "alpha3_code": "GBR",
+    "numeric_code": "826",
+    "note": "FIPS code row for United Kingdom"
+  },
+  {
+    "country_code": "VA",
+    "alpha3_code": "VAT",
+    "numeric_code": "336"
+  },
+  {
+    "country_code": "VN",
+    "alpha3_code": "VNM",
+    "numeric_code": "704"
+  },
+  {
+    "country_code": "VM",
+    "alpha3_code": "VNM",
+    "numeric_code": "704",
+    "note": "FIPS code row for Vietnam"
+  }
+]
