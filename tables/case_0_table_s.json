@@ -171,12 +171,6 @@
     "numeric_code": "480"
   },
   {
-    "country_code": "MP",
-    "alpha3_code": "MUS",
-    "numeric_code": "480",
-    "note": "FIPS code row for Mauritius"
-  },
-  {
     "country_code": "MC",
     "alpha3_code": "MCO",
     "numeric_code": "492"
@@ -195,12 +189,6 @@
     "country_code": "OM",
     "alpha3_code": "OMN",
     "numeric_code": "512"
-  },
-  {
-    "country_code": "MU",
-    "alpha3_code": "OMN",
-    "numeric_code": "512",
-    "note": "FIPS code row for Oman (Collision: 'MU' is ISO for Mauritius but FIPS for Oman)"
   },
   {
     "country_code": "PK",
