@@ -26,9 +26,8 @@ def get_db_path():
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Lifecycle management for the FastAPI app."""
-    # Startup: create database connection
     db_path = get_db_path()
-    app.state.db_connection = duckdb.connect(database=db_path)
+    app.state.db_connection = duckdb.connect(database=db_path, read_only=True)
 
     # Initialize and attach the application MySQL DB (SQLAlchemy)
     init_app_db(app)

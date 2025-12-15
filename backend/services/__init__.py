@@ -3,6 +3,7 @@ import duckdb
 from .SemanticJoinService import SemanticJoinService
 from .AIRecommendationService import AIRecommendationService
 from .AppDatabaseService import AppDatabaseService
+from .PMIService import PMIService
 from backend.config import settings
 from backend.utils import (
     NormalizationStrategy,
@@ -41,6 +42,7 @@ __all__ = [
     "SemanticJoinService",
     "AIRecommendationService",
     "AppDatabaseService",
+    "PMIService",
     # Utility functions
     "NormalizationStrategy",
     "get_db_connection",

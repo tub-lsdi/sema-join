@@ -1,0 +1,37 @@
+[
+  {
+    "country": "Netherlands",
+    "gdp_trillions": 1.12,
+    "currency": "Euro (EUR)"
+  },
+  {
+    "country": "United States",
+    "gdp_trillions": 27.36,
+    "currency": "US Dollar (USD)"
+  },
+  {
+    "country": "China",
+    "gdp_trillions": 18.53,
+    "currency": "Yuan (CNY)"
+  },
+  {
+    "country": "Japan",
+    "gdp_trillions": 4.11,
+    "currency": "Yen (JPY)"
+  },
+  {
+    "country": "United Kingdom",
+    "gdp_trillions": 3.34,
+    "currency": "Pound Sterling (GBP)"
+  },
+  {
+    "country": "Switzerland",
+    "gdp_trillions": 0.91,
+    "currency": "Swiss Franc (CHF)"
+  },
+  {
+    "country": "Germany",
+    "gdp_trillions": 4.31,
+    "currency": "Euro (EUR)"
+  }
+]

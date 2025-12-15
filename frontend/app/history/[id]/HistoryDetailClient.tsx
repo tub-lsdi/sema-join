@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Header from "@/components/Header";
 import DataTable from "@/components/DataTable";
+import TableModal from "@/components/TableModal";
 import styles from "../page.module.css";
 import { fetchHistoryDetail } from "@/lib/api";
 
@@ -15,6 +16,24 @@ export default function HistoryDetailClient() {
   const [entry, setEntry] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalData, setModalData] = useState<any[]>([]);
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalHighlightColumn, setModalHighlightColumn] = useState<string | undefined>(undefined);
+
+  const openModal = (title: string, data: any[], highlightColumn?: string) => {
+    setModalTitle(title);
+    setModalData(data);
+    setModalHighlightColumn(highlightColumn);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setModalData([]);
+    setModalTitle("");
+    setModalHighlightColumn(undefined);
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -80,7 +99,15 @@ export default function HistoryDetailClient() {
         <div className={styles.stack}>
           <div className={styles.gridTwoCols}>
             <div className={styles.card}>
-              <h3 className={styles.sectionTitle}>List R</h3>
+              <div className={styles.cardHeader}>
+                <h3 className={styles.sectionTitle}>List R</h3>
+                <button
+                  onClick={() => openModal("List R", entry.list_r || [], entry.r_join_col)}
+                  className={styles.viewButton}
+                >
+                  View Full Table
+                </button>
+              </div>
               <DataTable
                 data={entry.list_r || []}
                 highlightColumn={entry.r_join_col}
@@ -88,7 +115,15 @@ export default function HistoryDetailClient() {
             </div>
 
             <div className={styles.card}>
-              <h3 className={styles.sectionTitle}>List S</h3>
+              <div className={styles.cardHeader}>
+                <h3 className={styles.sectionTitle}>List S</h3>
+                <button
+                  onClick={() => openModal("List S", entry.list_s || [], entry.s_join_col)}
+                  className={styles.viewButton}
+                >
+                  View Full Table
+                </button>
+              </div>
               <DataTable
                 data={entry.list_s || []}
                 highlightColumn={entry.s_join_col}
@@ -97,15 +132,39 @@ export default function HistoryDetailClient() {
           </div>
 
           <div className={styles.card}>
-            <h3 className={styles.sectionTitle}>Bridge Table</h3>
+            <div className={styles.cardHeader}>
+              <h3 className={styles.sectionTitle}>Bridge Table</h3>
+              <button
+                onClick={() => openModal("Bridge Table", entry.bridge_table || [])}
+                className={styles.viewButton}
+              >
+                View Full Table
+              </button>
+            </div>
             <DataTable data={entry.bridge_table || []} />
           </div>
 
           <div className={styles.card}>
-            <h3 className={styles.sectionTitle}>Result</h3>
+            <div className={styles.cardHeader}>
+              <h3 className={styles.sectionTitle}>Result</h3>
+              <button
+                onClick={() => openModal("Result", entry.result || [])}
+                className={styles.viewButton}
+              >
+                View Full Table
+              </button>
+            </div>
             <DataTable data={entry.result || []} />
           </div>
         </div>
+
+        <TableModal
+          isOpen={modalOpen}
+          onClose={closeModal}
+          title={modalTitle}
+          data={modalData}
+          selectedColumn={modalHighlightColumn}
+        />
       </div>
     </div>
   );

@@ -2,7 +2,10 @@
 RS-JP algorithm implementation.
 """
 
-import polars as pl
+from typing import Optional
+from loguru import logger
+from backend.services.PMIService import PMIService
+from backend.config import settings
 from .base import BridgeAlgorithm
 
 
@@ -13,6 +16,18 @@ class RSJPAlgorithm(BridgeAlgorithm):
     Greedy algorithm: Each r independently picks its best s based on row-level PMI.
     Fast and efficient for most use cases.
     """
+
+    def __init__(self, db_connection, pmi_service: Optional[PMIService] = None):
+        """
+        Initialize RS-JP algorithm.
+
+        Args:
+            db_connection: DuckDB connection (kept for compatibility, not used if pmi_service is provided)
+            pmi_service: Optional PMIService instance. If not provided, creates one with default config.
+        """
+        super().__init__(db_connection, pmi_service)
+        if self.pmi_service is None:
+            self.pmi_service = PMIService(settings.GO_SERVICE_URL)
 
     def create_bridge(
         self,
@@ -31,39 +46,46 @@ class RSJPAlgorithm(BridgeAlgorithm):
             top_k: Number of top candidates to return per R value
 
         Returns:
-            List of dictionaries with r_val, s_val, and pmi fields
+            List of dictionaries with r_val, s_val, and npmi (PMI) fields
         """
-        conn = self.db_connection
+        logger.info(
+            f"RS-JP: Fetching row-level PMI scores from Go service for |R|={len(list_r)}, |S|={len(list_s)}"
+        )
 
-        # Use Polars to efficiently register inputs as temp tables
-        conn.register("input_r", pl.DataFrame({"r_val": list_r}))
-        conn.register("input_s", pl.DataFrame({"s_val": list_s}))
+        # Fetch row-level PMI scores from Go service
+        pmi_scores = self.pmi_service.get_row_pmi_scores(list_r, list_s)
 
-        # Query to get top_k highest PMI candidates for each r_val
-        bridge_query = f"""
-            WITH all_candidates AS (
-                SELECT
-                    r.r_val,
-                    s.s_val,
-                    npmi.npmi,
-                    ROW_NUMBER() OVER (PARTITION BY r.r_val ORDER BY npmi.npmi DESC) as rn
-                FROM input_r AS r
-                JOIN npmi_scores AS npmi
-                    ON r.r_val = npmi.v1 OR r.r_val = npmi.v2
-                JOIN input_s AS s
-                    ON (s.s_val = npmi.v1 OR s.s_val = npmi.v2)
-                WHERE
-                    ((r.r_val = npmi.v1 AND s.s_val = npmi.v2) OR
-                     (r.r_val = npmi.v2 AND s.s_val = npmi.v1))
-                    AND npmi.pmi > 0
-            )
-            SELECT
-                r_val,
-                s_val,
-                npmi,
-            FROM all_candidates
-            WHERE rn <= {top_k}
-            ORDER BY r_val, npmi DESC
-        """
-        bridge_df = conn.execute(bridge_query).pl()
-        return bridge_df.to_dicts()
+        logger.info(
+            f"RS-JP: Retrieved {len(pmi_scores)} PMI scores, processing top-{top_k} per R value"
+        )
+
+        # Group by r_val and get top_k candidates for each
+        r_to_candidates = {}
+        for (r_val, s_val), pmi in pmi_scores.items():
+            if r_val not in r_to_candidates:
+                r_to_candidates[r_val] = []
+            r_to_candidates[r_val].append({"s_val": s_val, "pmi": pmi})
+
+        # Sort candidates for each r_val by PMI descending and take top_k
+        results = []
+        for r_val in list_r:
+            if r_val in r_to_candidates:
+                # Sort by PMI descending
+                candidates = sorted(
+                    r_to_candidates[r_val], key=lambda x: x["pmi"], reverse=True
+                )
+                # Take top_k
+                for candidate in candidates[:top_k]:
+                    results.append(
+                        {
+                            "r_val": r_val,
+                            "s_val": candidate["s_val"],
+                            "npmi": candidate["pmi"],  # Use 'npmi' field name for consistency
+                        }
+                    )
+            else:
+                logger.debug(f"RS-JP: No PMI scores found for r_val={r_val}")
+
+        logger.info(f"RS-JP: Generated {len(results)} bridge table entries")
+
+        return results

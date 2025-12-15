@@ -22,7 +22,7 @@ class SemanticJoinService:
         self.app_database_service = app_database_service
         self.normalizer = DEFAULT_NORMALIZATION_STRATEGY
         self.rs_jp_algorithm = RSJPAlgorithm(db_connection)
-        self.cs_jp_algorithm = CSJPLPAlgorithm(db_connection)
+        self.cs_jp_algorithm = CSJPLPAlgorithm()
 
     def _normalize(self, value: str) -> str:
         return self.normalizer.normalize(value)
@@ -48,25 +48,8 @@ class SemanticJoinService:
         if join_method == "row":
             return self.rs_jp_algorithm.create_bridge(normalized_r, normalized_s, top_k)
 
-        # CS-JP: Test both directions, pick better one
-        result_r_to_s = self.cs_jp_algorithm.create_bridge(
-            normalized_r, normalized_s, top_k
-        )
-        result_s_to_r = self.cs_jp_algorithm.create_bridge(
-            normalized_s, normalized_r, top_k
-        )
-
-        score_r_to_s = sum(entry["npmi"] for entry in result_r_to_s)
-        score_s_to_r = sum(entry["npmi"] for entry in result_s_to_r)
-
-        if score_r_to_s >= score_s_to_r:
-            return result_r_to_s
-
-        # Swap r_val and s_val in result
-        return [
-            {"r_val": entry["s_val"], "s_val": entry["r_val"], "npmi": entry["npmi"]}
-            for entry in result_s_to_r
-        ]
+        # CS-JP-LP: Use R→S direction only to ensure each R maps to at most one S
+        return self.cs_jp_algorithm.create_bridge(normalized_r, normalized_s)
 
     def perform_join_from_bridge(
         self,

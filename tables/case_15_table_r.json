@@ -1,0 +1,78 @@
+[
+  {
+    "country": "Papua New Guinea",
+    "capital": "Port Moresby",
+    "continent": "Oceania"
+  },
+  {
+    "country": "Cambodia",
+    "capital": "Phnom Penh",
+    "continent": "Asia"
+  },
+  {
+    "country": "Kazakhstan",
+    "capital": "Astana",
+    "continent": "Asia"
+  },
+  {
+    "country": "Paraguay",
+    "capital": "Asuncion",
+    "continent": "South America"
+  },
+  {
+    "country": "Syria",
+    "capital": "Damascus",
+    "continent": "Asia"
+  },
+  {
+    "country": "Bahamas",
+    "capital": "Nassau",
+    "continent": "North America"
+  },
+  {
+    "country": "Solomon Islands",
+    "capital": "Honiara",
+    "continent": "Oceania"
+  },
+  {
+    "country": "Montserrat",
+    "capital": "Plymouth",
+    "continent": "North America"
+  },
+  {
+    "country": "Mali",
+    "capital": "Bamako",
+    "continent": "Africa"
+  },
+  {
+    "country": "Marshall Islands",
+    "capital": "Majuro",
+    "continent": "Oceania"
+  },
+  {
+    "country": "Panama",
+    "capital": "Panama City",
+    "continent": "North America"
+  },
+  {
+    "country": "Laos",
+    "capital": "Vientiane",
+    "continent": "Asia"
+  },
+  {
+    "country": "Argentina",
+    "code": "ARG",
+    "capital": "Buenos Aires",
+    "continent": "South America"
+  },
+  {
+    "country": "Falkland Islands",
+    "capital": "Stanley",
+    "continent": "South America"
+  },
+  {
+    "country": "Seychelles",
+    "capital": "Victoria",
+    "continent": "Africa"
+  }
+]

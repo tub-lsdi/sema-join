@@ -1,0 +1,1637 @@
+[
+  {
+    "code_iso3": "NZL",
+    "code_iso2": "NZ",
+    "currency": "NZD",
+    "phone_prefix": "+64",
+    "tld": ".nz"
+  },
+  {
+    "code_iso3": "FJI",
+    "code_iso2": "FJ",
+    "currency": "FJD",
+    "phone_prefix": "+679",
+    "tld": ".fj"
+  },
+  {
+    "code_iso3": "PNG",
+    "code_iso2": "PG",
+    "currency": "PGK",
+    "phone_prefix": "+675",
+    "tld": ".pg"
+  },
+  {
+    "code_iso3": "STP",
+    "code_iso2": "ST",
+    "currency": "STN",
+    "phone_prefix": "+239",
+    "tld": ".st"
+  },
+  {
+    "code_iso3": "MHL",
+    "code_iso2": "MH",
+    "currency": "USD",
+    "phone_prefix": "+692",
+    "tld": ".mh"
+  },
+  {
+    "code_iso3": "WLF",
+    "code_iso2": "WF",
+    "currency": "XPF",
+    "phone_prefix": "+681",
+    "tld": ".wf"
+  },
+  {
+    "code_iso3": "CUB",
+    "code_iso2": "CU",
+    "currency": "CUP",
+    "phone_prefix": "+53",
+    "tld": ".cu"
+  },
+  {
+    "code_iso3": "SDN",
+    "code_iso2": "SD",
+    "currency": "SDG",
+    "phone_prefix": "+249",
+    "tld": ".sd"
+  },
+  {
+    "code_iso3": "GMB",
+    "code_iso2": "GM",
+    "currency": "GMD",
+    "phone_prefix": "+220",
+    "tld": ".gm"
+  },
+  {
+    "code_iso3": "MYS",
+    "code_iso2": "MY",
+    "currency": "MYR",
+    "phone_prefix": "+60",
+    "tld": ".my"
+  },
+  {
+    "code_iso3": "MYT",
+    "code_iso2": "YT",
+    "currency": "EUR",
+    "phone_prefix": "+262",
+    "tld": ".yt"
+  },
+  {
+    "code_iso3": "TWN",
+    "code_iso2": "TW",
+    "currency": "TWD",
+    "phone_prefix": "+886",
+    "tld": ".tw"
+  },
+  {
+    "code_iso3": "POL",
+    "code_iso2": "PL",
+    "currency": "PLN",
+    "phone_prefix": "+48",
+    "tld": ".pl"
+  },
+  {
+    "code_iso3": "OMN",
+    "code_iso2": "OM",
+    "currency": "OMR",
+    "phone_prefix": "+968",
+    "tld": ".om"
+  },
+  {
+    "code_iso3": "SUR",
+    "code_iso2": "SR",
+    "currency": "SRD",
+    "phone_prefix": "+597",
+    "tld": ".sr"
+  },
+  {
+    "code_iso3": "ARE",
+    "code_iso2": "AE",
+    "currency": "AED",
+    "phone_prefix": "+971",
+    "tld": ".ae"
+  },
+  {
+    "code_iso3": "KEN",
+    "code_iso2": "KE",
+    "currency": "KES",
+    "phone_prefix": "+254",
+    "tld": ".ke"
+  },
+  {
+    "code_iso3": "ARG",
+    "code_iso2": "AR",
+    "currency": "ARS",
+    "phone_prefix": "+54",
+    "tld": ".ar"
+  },
+  {
+    "code_iso3": "GNB",
+    "code_iso2": "GW",
+    "currency": "XOF",
+    "phone_prefix": "+245",
+    "tld": ".gw"
+  },
+  {
+    "code_iso3": "ARM",
+    "code_iso2": "AM",
+    "currency": "AMD",
+    "phone_prefix": "+374",
+    "tld": ".am"
+  },
+  {
+    "code_iso3": "UZB",
+    "code_iso2": "UZ",
+    "currency": "UZS",
+    "phone_prefix": "+998",
+    "tld": ".uz"
+  },
+  {
+    "code_iso3": "BTN",
+    "code_iso2": "BT",
+    "currency": "BTN",
+    "phone_prefix": "+975",
+    "tld": ".bt"
+  },
+  {
+    "code_iso3": "SEN",
+    "code_iso2": "SN",
+    "currency": "XOF",
+    "phone_prefix": "+221",
+    "tld": ".sn"
+  },
+  {
+    "code_iso3": "TGO",
+    "code_iso2": "TG",
+    "currency": "XOF",
+    "phone_prefix": "+228",
+    "tld": ".tg"
+  },
+  {
+    "code_iso3": "IRL",
+    "code_iso2": "IE",
+    "currency": "EUR",
+    "phone_prefix": "+353",
+    "tld": ".ie"
+  },
+  {
+    "code_iso3": "FLK",
+    "code_iso2": "FK",
+    "currency": "FKP",
+    "phone_prefix": "+500",
+    "tld": ".fk"
+  },
+  {
+    "code_iso3": "IRN",
+    "code_iso2": "IR",
+    "currency": "IRR",
+    "phone_prefix": "+98",
+    "tld": ".ir"
+  },
+  {
+    "code_iso3": "QAT",
+    "code_iso2": "QA",
+    "currency": "QAR",
+    "phone_prefix": "+974",
+    "tld": ".qa"
+  },
+  {
+    "code_iso3": "BDI",
+    "code_iso2": "BI",
+    "currency": "BIF",
+    "phone_prefix": "+257",
+    "tld": ".bi"
+  },
+  {
+    "code_iso3": "NLD",
+    "code_iso2": "NL",
+    "currency": "EUR",
+    "phone_prefix": "+31",
+    "tld": ".nl"
+  },
+  {
+    "code_iso3": "IRQ",
+    "code_iso2": "IQ",
+    "currency": "IQD",
+    "phone_prefix": "+964",
+    "tld": ".iq"
+  },
+  {
+    "code_iso3": "SVK",
+    "code_iso2": "SK",
+    "currency": "EUR",
+    "phone_prefix": "+421",
+    "tld": ".sk"
+  },
+  {
+    "code_iso3": "SVN",
+    "code_iso2": "SI",
+    "currency": "EUR",
+    "phone_prefix": "+386",
+    "tld": ".si"
+  },
+  {
+    "code_iso3": "GNQ",
+    "code_iso2": "GQ",
+    "currency": "XAF",
+    "phone_prefix": "+240",
+    "tld": ".gq"
+  },
+  {
+    "code_iso3": "THA",
+    "code_iso2": "TH",
+    "currency": "THB",
+    "phone_prefix": "+66",
+    "tld": ".th"
+  },
+  {
+    "code_iso3": "ABW",
+    "code_iso2": "AW",
+    "currency": "AWG",
+    "phone_prefix": "+297",
+    "tld": ".aw"
+  },
+  {
+    "code_iso3": "ASM",
+    "code_iso2": "AS",
+    "currency": "USD",
+    "phone_prefix": "+1-684",
+    "tld": ".as"
+  },
+  {
+    "code_iso3": "SWE",
+    "code_iso2": "SE",
+    "currency": "SEK",
+    "phone_prefix": "+46",
+    "tld": ".se"
+  },
+  {
+    "code_iso3": "MKD",
+    "code_iso2": "MK",
+    "currency": "MKD",
+    "phone_prefix": "+389",
+    "tld": ".mk"
+  },
+  {
+    "code_iso3": "BEL",
+    "code_iso2": "BE",
+    "currency": "EUR",
+    "phone_prefix": "+32",
+    "tld": ".be"
+  },
+  {
+    "code_iso3": "ISR",
+    "code_iso2": "IL",
+    "currency": "ILS",
+    "phone_prefix": "+972",
+    "tld": ".il"
+  },
+  {
+    "code_iso3": "KWT",
+    "code_iso2": "KW",
+    "currency": "KWD",
+    "phone_prefix": "+965",
+    "tld": ".kw"
+  },
+  {
+    "code_iso3": "LIE",
+    "code_iso2": "LI",
+    "currency": "CHF",
+    "phone_prefix": "+423",
+    "tld": ".li"
+  },
+  {
+    "code_iso3": "DZA",
+    "code_iso2": "DZ",
+    "currency": "DZD",
+    "phone_prefix": "+213",
+    "tld": ".dz"
+  },
+  {
+    "code_iso3": "BEN",
+    "code_iso2": "BJ",
+    "currency": "XOF",
+    "phone_prefix": "+229",
+    "tld": ".bj"
+  },
+  {
+    "code_iso3": "ATA",
+    "code_iso2": "AQ",
+    "currency": "None",
+    "phone_prefix": "+672",
+    "tld": ".aq"
+  },
+  {
+    "code_iso3": "RUS",
+    "code_iso2": "RU",
+    "currency": "RUB",
+    "phone_prefix": "+7",
+    "tld": ".ru"
+  },
+  {
+    "code_iso3": "ATG",
+    "code_iso2": "AG",
+    "currency": "XCD",
+    "phone_prefix": "+1-268",
+    "tld": ".ag"
+  },
+  {
+    "code_iso3": "ITA",
+    "code_iso2": "IT",
+    "currency": "EUR",
+    "phone_prefix": "+39",
+    "tld": ".it"
+  },
+  {
+    "code_iso3": "SWZ",
+    "code_iso2": "SZ",
+    "currency": "SZL",
+    "phone_prefix": "+268",
+    "tld": ".sz"
+  },
+  {
+    "code_iso3": "TZA",
+    "code_iso2": "TZ",
+    "currency": "TZS",
+    "phone_prefix": "+255",
+    "tld": ".tz"
+  },
+  {
+    "code_iso3": "PAK",
+    "code_iso2": "PK",
+    "currency": "PKR",
+    "phone_prefix": "+92",
+    "tld": ".pk"
+  },
+  {
+    "code_iso3": "BFA",
+    "code_iso2": "BF",
+    "currency": "XOF",
+    "phone_prefix": "+226",
+    "tld": ".bf"
+  },
+  {
+    "code_iso3": "CXR",
+    "code_iso2": "CX",
+    "currency": "AUD",
+    "phone_prefix": "+61",
+    "tld": ".cx"
+  },
+  {
+    "code_iso3": "PAN",
+    "code_iso2": "PA",
+    "currency": "PAB",
+    "phone_prefix": "+507",
+    "tld": ".pa"
+  },
+  {
+    "code_iso3": "SGP",
+    "code_iso2": "SG",
+    "currency": "SGD",
+    "phone_prefix": "+65",
+    "tld": ".sg"
+  },
+  {
+    "code_iso3": "UKR",
+    "code_iso2": "UA",
+    "currency": "UAH",
+    "phone_prefix": "+380",
+    "tld": ".ua"
+  },
+  {
+    "code_iso3": "JEY",
+    "code_iso2": "JE",
+    "currency": "GBP",
+    "phone_prefix": "+44",
+    "tld": ".je"
+  },
+  {
+    "code_iso3": "KGZ",
+    "code_iso2": "KG",
+    "currency": "KGS",
+    "phone_prefix": "+996",
+    "tld": ".kg"
+  },
+  {
+    "code_iso3": "CHE",
+    "code_iso2": "CH",
+    "currency": "CHF",
+    "phone_prefix": "+41",
+    "tld": ".ch"
+  },
+  {
+    "code_iso3": "DJI",
+    "code_iso2": "DJ",
+    "currency": "DJF",
+    "phone_prefix": "+253",
+    "tld": ".dj"
+  },
+  {
+    "code_iso3": "CHL",
+    "code_iso2": "CL",
+    "currency": "CLP",
+    "phone_prefix": "+56",
+    "tld": ".cl"
+  },
+  {
+    "code_iso3": "PRI",
+    "code_iso2": "PR",
+    "currency": "USD",
+    "phone_prefix": "+1-787",
+    "tld": ".pr"
+  },
+  {
+    "code_iso3": "CHN",
+    "code_iso2": "CN",
+    "currency": "CNY",
+    "phone_prefix": "+86",
+    "tld": ".cn"
+  },
+  {
+    "code_iso3": "PRK",
+    "code_iso2": "KP",
+    "currency": "KPW",
+    "phone_prefix": "+850",
+    "tld": ".kp"
+  },
+  {
+    "code_iso3": "MLI",
+    "code_iso2": "ML",
+    "currency": "XOF",
+    "phone_prefix": "+223",
+    "tld": ".ml"
+  },
+  {
+    "code_iso3": "BWA",
+    "code_iso2": "BW",
+    "currency": "BWP",
+    "phone_prefix": "+267",
+    "tld": ".bw"
+  },
+  {
+    "code_iso3": "HRV",
+    "code_iso2": "HR",
+    "currency": "HRK",
+    "phone_prefix": "+385",
+    "tld": ".hr"
+  },
+  {
+    "code_iso3": "KHM",
+    "code_iso2": "KH",
+    "currency": "KHR",
+    "phone_prefix": "+855",
+    "tld": ".kh"
+  },
+  {
+    "code_iso3": "IDN",
+    "code_iso2": "ID",
+    "currency": "IDR",
+    "phone_prefix": "+62",
+    "tld": ".id"
+  },
+  {
+    "code_iso3": "PRT",
+    "code_iso2": "PT",
+    "currency": "EUR",
+    "phone_prefix": "+351",
+    "tld": ".pt"
+  },
+  {
+    "code_iso3": "MLT",
+    "code_iso2": "MT",
+    "currency": "EUR",
+    "phone_prefix": "+356",
+    "tld": ".mt"
+  },
+  {
+    "code_iso3": "TJK",
+    "code_iso2": "TJ",
+    "currency": "TJS",
+    "phone_prefix": "+992",
+    "tld": ".tj"
+  },
+  {
+    "code_iso3": "VNM",
+    "code_iso2": "VN",
+    "currency": "VND",
+    "phone_prefix": "+84",
+    "tld": ".vn"
+  },
+  {
+    "code_iso3": "CYM",
+    "code_iso2": "KY",
+    "currency": "KYD",
+    "phone_prefix": "+1-345",
+    "tld": ".ky"
+  },
+  {
+    "code_iso3": "PRY",
+    "code_iso2": "PY",
+    "currency": "PYG",
+    "phone_prefix": "+595",
+    "tld": ".py"
+  },
+  {
+    "code_iso3": "SHN",
+    "code_iso2": "SH",
+    "currency": "SHP",
+    "phone_prefix": "+290",
+    "tld": ".sh"
+  },
+  {
+    "code_iso3": "CYP",
+    "code_iso2": "CY",
+    "currency": "EUR",
+    "phone_prefix": "+357",
+    "tld": ".cy"
+  },
+  {
+    "code_iso3": "SYC",
+    "code_iso2": "SC",
+    "currency": "SCR",
+    "phone_prefix": "+248",
+    "tld": ".sc"
+  },
+  {
+    "code_iso3": "RWA",
+    "code_iso2": "RW",
+    "currency": "RWF",
+    "phone_prefix": "+250",
+    "tld": ".rw"
+  },
+  {
+    "code_iso3": "BGD",
+    "code_iso2": "BD",
+    "currency": "BDT",
+    "phone_prefix": "+880",
+    "tld": ".bd"
+  },
+  {
+    "code_iso3": "AUS",
+    "code_iso2": "AU",
+    "currency": "AUD",
+    "phone_prefix": "+61",
+    "tld": ".au"
+  },
+  {
+    "code_iso3": "AUT",
+    "code_iso2": "AT",
+    "currency": "EUR",
+    "phone_prefix": "+43",
+    "tld": ".at"
+  },
+  {
+    "code_iso3": "LKA",
+    "code_iso2": "LK",
+    "currency": "LKR",
+    "phone_prefix": "+94",
+    "tld": ".lk"
+  },
+  {
+    "code_iso3": "GAB",
+    "code_iso2": "GA",
+    "currency": "XAF",
+    "phone_prefix": "+241",
+    "tld": ".ga"
+  },
+  {
+    "code_iso3": "ZWE",
+    "code_iso2": "ZW",
+    "currency": "ZWL",
+    "phone_prefix": "+263",
+    "tld": ".zw"
+  },
+  {
+    "code_iso3": "BGR",
+    "code_iso2": "BG",
+    "currency": "BGN",
+    "phone_prefix": "+359",
+    "tld": ".bg"
+  },
+  {
+    "code_iso3": "SYR",
+    "code_iso2": "SY",
+    "currency": "SYP",
+    "phone_prefix": "+963",
+    "tld": ".sy"
+  },
+  {
+    "code_iso3": "CZE",
+    "code_iso2": "CZ",
+    "currency": "CZK",
+    "phone_prefix": "+420",
+    "tld": ".cz"
+  },
+  {
+    "code_iso3": "NOR",
+    "code_iso2": "NO",
+    "currency": "NOK",
+    "phone_prefix": "+47",
+    "tld": ".no"
+  },
+  {
+    "code_iso3": "CIV",
+    "code_iso2": "CI",
+    "currency": "XOF",
+    "phone_prefix": "+225",
+    "tld": ".ci"
+  },
+  {
+    "code_iso3": "MMR",
+    "code_iso2": "MM",
+    "currency": "MMK",
+    "phone_prefix": "+95",
+    "tld": ".mm"
+  },
+  {
+    "code_iso3": "TKL",
+    "code_iso2": "TK",
+    "currency": "NZD",
+    "phone_prefix": "+690",
+    "tld": ".tk"
+  },
+  {
+    "code_iso3": "KIR",
+    "code_iso2": "KI",
+    "currency": "AUD",
+    "phone_prefix": "+686",
+    "tld": ".ki"
+  },
+  {
+    "code_iso3": "TKM",
+    "code_iso2": "TM",
+    "currency": "TMT",
+    "phone_prefix": "+993",
+    "tld": ".tm"
+  },
+  {
+    "code_iso3": "GRD",
+    "code_iso2": "GD",
+    "currency": "XCD",
+    "phone_prefix": "+1-473",
+    "tld": ".gd"
+  },
+  {
+    "code_iso3": "GRC",
+    "code_iso2": "GR",
+    "currency": "EUR",
+    "phone_prefix": "+30",
+    "tld": ".gr"
+  },
+  {
+    "code_iso3": "PCN",
+    "code_iso2": "PN",
+    "currency": "NZD",
+    "phone_prefix": "+64",
+    "tld": ".pn"
+  },
+  {
+    "code_iso3": "HTI",
+    "code_iso2": "HT",
+    "currency": "HTG",
+    "phone_prefix": "+509",
+    "tld": ".ht"
+  },
+  {
+    "code_iso3": "GRL",
+    "code_iso2": "GL",
+    "currency": "DKK",
+    "phone_prefix": "+299",
+    "tld": ".gl"
+  },
+  {
+    "code_iso3": "YEM",
+    "code_iso2": "YE",
+    "currency": "YER",
+    "phone_prefix": "+967",
+    "tld": ".ye"
+  },
+  {
+    "code_iso3": "AFG",
+    "code_iso2": "AF",
+    "currency": "AFN",
+    "phone_prefix": "+93",
+    "tld": ".af"
+  },
+  {
+    "code_iso3": "MNE",
+    "code_iso2": "ME",
+    "currency": "EUR",
+    "phone_prefix": "+382",
+    "tld": ".me"
+  },
+  {
+    "code_iso3": "MNG",
+    "code_iso2": "MN",
+    "currency": "MNT",
+    "phone_prefix": "+976",
+    "tld": ".mn"
+  },
+  {
+    "code_iso3": "NPL",
+    "code_iso2": "NP",
+    "currency": "NPR",
+    "phone_prefix": "+977",
+    "tld": ".np"
+  },
+  {
+    "code_iso3": "BHS",
+    "code_iso2": "BS",
+    "currency": "BSD",
+    "phone_prefix": "+1-242",
+    "tld": ".bs"
+  },
+  {
+    "code_iso3": "BHR",
+    "code_iso2": "BH",
+    "currency": "BHD",
+    "phone_prefix": "+973",
+    "tld": ".bh"
+  },
+  {
+    "code_iso3": "MNP",
+    "code_iso2": "MP",
+    "currency": "USD",
+    "phone_prefix": "+1-670",
+    "tld": ".mp"
+  },
+  {
+    "code_iso3": "GBR",
+    "code_iso2": "GB",
+    "currency": "GBP",
+    "phone_prefix": "+44",
+    "tld": ".uk"
+  },
+  {
+    "code_iso3": "SJM",
+    "code_iso2": "SJ",
+    "currency": "NOK",
+    "phone_prefix": "+47",
+    "tld": ".sj"
+  },
+  {
+    "code_iso3": "DMA",
+    "code_iso2": "DM",
+    "currency": "XCD",
+    "phone_prefix": "+1-767",
+    "tld": ".dm"
+  },
+  {
+    "code_iso3": "TLS",
+    "code_iso2": "TL",
+    "currency": "USD",
+    "phone_prefix": "+670",
+    "tld": ".tl"
+  },
+  {
+    "code_iso3": "BIH",
+    "code_iso2": "BA",
+    "currency": "BAM",
+    "phone_prefix": "+387",
+    "tld": ".ba"
+  },
+  {
+    "code_iso3": "HUN",
+    "code_iso2": "HU",
+    "currency": "HUF",
+    "phone_prefix": "+36",
+    "tld": ".hu"
+  },
+  {
+    "code_iso3": "AGO",
+    "code_iso2": "AO",
+    "currency": "AOA",
+    "phone_prefix": "+244",
+    "tld": ".ao"
+  },
+  {
+    "code_iso3": "WSM",
+    "code_iso2": "WS",
+    "currency": "WST",
+    "phone_prefix": "+685",
+    "tld": ".ws"
+  },
+  {
+    "code_iso3": "FRA",
+    "code_iso2": "FR",
+    "currency": "EUR",
+    "phone_prefix": "+33",
+    "tld": ".fr"
+  },
+  {
+    "code_iso3": "MOZ",
+    "code_iso2": "MZ",
+    "currency": "MZN",
+    "phone_prefix": "+258",
+    "tld": ".mz"
+  },
+  {
+    "code_iso3": "NAM",
+    "code_iso2": "NA",
+    "currency": "NAD",
+    "phone_prefix": "+264",
+    "tld": ".na"
+  },
+  {
+    "code_iso3": "PER",
+    "code_iso2": "PE",
+    "currency": "PEN",
+    "phone_prefix": "+51",
+    "tld": ".pe"
+  },
+  {
+    "code_iso3": "DNK",
+    "code_iso2": "DK",
+    "currency": "DKK",
+    "phone_prefix": "+45",
+    "tld": ".dk"
+  },
+  {
+    "code_iso3": "GTM",
+    "code_iso2": "GT",
+    "currency": "GTQ",
+    "phone_prefix": "+502",
+    "tld": ".gt"
+  },
+  {
+    "code_iso3": "FRO",
+    "code_iso2": "FO",
+    "currency": "DKK",
+    "phone_prefix": "+298",
+    "tld": ".fo"
+  },
+  {
+    "code_iso3": "VAT",
+    "code_iso2": "VA",
+    "currency": "EUR",
+    "phone_prefix": "+379",
+    "tld": ".va"
+  },
+  {
+    "code_iso3": "SLB",
+    "code_iso2": "SB",
+    "currency": "SBD",
+    "phone_prefix": "+677",
+    "tld": ".sb"
+  },
+  {
+    "code_iso3": "SLE",
+    "code_iso2": "SL",
+    "currency": "SLL",
+    "phone_prefix": "+232",
+    "tld": ".sl"
+  },
+  {
+    "code_iso3": "NRU",
+    "code_iso2": "NR",
+    "currency": "AUD",
+    "phone_prefix": "+674",
+    "tld": ".nr"
+  },
+  {
+    "code_iso3": "AIA",
+    "code_iso2": "AI",
+    "currency": "XCD",
+    "phone_prefix": "+1-264",
+    "tld": ".ai"
+  },
+  {
+    "code_iso3": "SLV",
+    "code_iso2": "SV",
+    "currency": "USD",
+    "phone_prefix": "+503",
+    "tld": ".sv"
+  },
+  {
+    "code_iso3": "GUM",
+    "code_iso2": "GU",
+    "currency": "USD",
+    "phone_prefix": "+1-671",
+    "tld": ".gu"
+  },
+  {
+    "code_iso3": "FSM",
+    "code_iso2": "FM",
+    "currency": "USD",
+    "phone_prefix": "+691",
+    "tld": ".fm"
+  },
+  {
+    "code_iso3": "DOM",
+    "code_iso2": "DO",
+    "currency": "DOP",
+    "phone_prefix": "+1-809",
+    "tld": ".do"
+  },
+  {
+    "code_iso3": "CMR",
+    "code_iso2": "CM",
+    "currency": "XAF",
+    "phone_prefix": "+237",
+    "tld": ".cm"
+  },
+  {
+    "code_iso3": "GUY",
+    "code_iso2": "GY",
+    "currency": "GYD",
+    "phone_prefix": "+592",
+    "tld": ".gy"
+  },
+  {
+    "code_iso3": "IS",
+    "code_iso2": "IS",
+    "currency": "ISK",
+    "phone_prefix": "+354",
+    "tld": ".is"
+  },
+  {
+    "code_iso3": "AZE",
+    "code_iso2": "AZ",
+    "currency": "AZN",
+    "phone_prefix": "+994",
+    "tld": ".az"
+  },
+  {
+    "code_iso3": "MAC",
+    "code_iso2": "MO",
+    "currency": "MOP",
+    "phone_prefix": "+853",
+    "tld": ".mo"
+  },
+  {
+    "code_iso3": "GEO",
+    "code_iso2": "GE",
+    "currency": "GEL",
+    "phone_prefix": "+995",
+    "tld": ".ge"
+  },
+  {
+    "code_iso3": "TON",
+    "code_iso2": "TO",
+    "currency": "TOP",
+    "phone_prefix": "+676",
+    "tld": ".to"
+  },
+  {
+    "code_iso3": "MAF",
+    "code_iso2": "MF",
+    "currency": "EUR",
+    "phone_prefix": "+590",
+    "tld": ".mf"
+  },
+  {
+    "code_iso3": "NCL",
+    "code_iso2": "NC",
+    "currency": "XPF",
+    "phone_prefix": "+687",
+    "tld": ".nc"
+  },
+  {
+    "code_iso3": "SMR",
+    "code_iso2": "SM",
+    "currency": "EUR",
+    "phone_prefix": "+378",
+    "tld": ".sm"
+  },
+  {
+    "code_iso3": "ERI",
+    "code_iso2": "ER",
+    "currency": "ERN",
+    "phone_prefix": "+291",
+    "tld": ".er"
+  },
+  {
+    "code_iso3": "MAR",
+    "code_iso2": "MA",
+    "currency": "MAD",
+    "phone_prefix": "+212",
+    "tld": ".ma"
+  },
+  {
+    "code_iso3": "KNA",
+    "code_iso2": "KN",
+    "currency": "XCD",
+    "phone_prefix": "+1-869",
+    "tld": ".kn"
+  },
+  {
+    "code_iso3": "BLM",
+    "code_iso2": "BL",
+    "currency": "EUR",
+    "phone_prefix": "+590",
+    "tld": ".bl"
+  },
+  {
+    "code_iso3": "VCT",
+    "code_iso2": "VC",
+    "currency": "XCD",
+    "phone_prefix": "+1-784",
+    "tld": ".vc"
+  },
+  {
+    "code_iso3": "BLR",
+    "code_iso2": "BY",
+    "currency": "BYN",
+    "phone_prefix": "+375",
+    "tld": ".by"
+  },
+  {
+    "code_iso3": "MRT",
+    "code_iso2": "MR",
+    "currency": "MRU",
+    "phone_prefix": "+222",
+    "tld": ".mr"
+  },
+  {
+    "code_iso3": "BLZ",
+    "code_iso2": "BZ",
+    "currency": "BZD",
+    "phone_prefix": "+501",
+    "tld": ".bz"
+  },
+  {
+    "code_iso3": "PHL",
+    "code_iso2": "PH",
+    "currency": "PHP",
+    "phone_prefix": "+63",
+    "tld": ".ph"
+  },
+  {
+    "code_iso3": "COD",
+    "code_iso2": "CD",
+    "currency": "CDF",
+    "phone_prefix": "+243",
+    "tld": ".cd"
+  },
+  {
+    "code_iso3": "COG",
+    "code_iso2": "CG",
+    "currency": "XAF",
+    "phone_prefix": "+242",
+    "tld": ".cg"
+  },
+  {
+    "code_iso3": "ESH",
+    "code_iso2": "EH",
+    "currency": "MAD",
+    "phone_prefix": "+212",
+    "tld": ".eh"
+  },
+  {
+    "code_iso3": "PYF",
+    "code_iso2": "PF",
+    "currency": "XPF",
+    "phone_prefix": "+689",
+    "tld": ".pf"
+  },
+  {
+    "code_iso3": "URY",
+    "code_iso2": "UY",
+    "currency": "UYU",
+    "phone_prefix": "+598",
+    "tld": ".uy"
+  },
+  {
+    "code_iso3": "COK",
+    "code_iso2": "CK",
+    "currency": "NZD",
+    "phone_prefix": "+682",
+    "tld": ".ck"
+  },
+  {
+    "code_iso3": "COM",
+    "code_iso2": "KM",
+    "currency": "KMF",
+    "phone_prefix": "+269",
+    "tld": ".km"
+  },
+  {
+    "code_iso3": "COL",
+    "code_iso2": "CO",
+    "currency": "COP",
+    "phone_prefix": "+57",
+    "tld": ".co"
+  },
+  {
+    "code_iso3": "USA",
+    "code_iso2": "US",
+    "currency": "USD",
+    "phone_prefix": "+1",
+    "tld": ".us"
+  },
+  {
+    "code_iso3": "ESP",
+    "code_iso2": "ES",
+    "currency": "EUR",
+    "phone_prefix": "+34",
+    "tld": ".es"
+  },
+  {
+    "code_iso3": "EST",
+    "code_iso2": "EE",
+    "currency": "EUR",
+    "phone_prefix": "+372",
+    "tld": ".ee"
+  },
+  {
+    "code_iso3": "BMU",
+    "code_iso2": "BM",
+    "currency": "BMD",
+    "phone_prefix": "+1-441",
+    "tld": ".bm"
+  },
+  {
+    "code_iso3": "MSR",
+    "code_iso2": "MS",
+    "currency": "XCD",
+    "phone_prefix": "+1-664",
+    "tld": ".ms"
+  },
+  {
+    "code_iso3": "ZMB",
+    "code_iso2": "ZM",
+    "currency": "ZMW",
+    "phone_prefix": "+260",
+    "tld": ".zm"
+  },
+  {
+    "code_iso3": "KOR",
+    "code_iso2": "KR",
+    "currency": "KRW",
+    "phone_prefix": "+82",
+    "tld": ".kr"
+  },
+  {
+    "code_iso3": "SOM",
+    "code_iso2": "SO",
+    "currency": "SOS",
+    "phone_prefix": "+252",
+    "tld": ".so"
+  },
+  {
+    "code_iso3": "VUT",
+    "code_iso2": "VU",
+    "currency": "VUV",
+    "phone_prefix": "+678",
+    "tld": ".vu"
+  },
+  {
+    "code_iso3": "ECU",
+    "code_iso2": "EC",
+    "currency": "USD",
+    "phone_prefix": "+593",
+    "tld": ".ec"
+  },
+  {
+    "code_iso3": "ALB",
+    "code_iso2": "AL",
+    "currency": "ALL",
+    "phone_prefix": "+355",
+    "tld": ".al"
+  },
+  {
+    "code_iso3": "ETH",
+    "code_iso2": "ET",
+    "currency": "ETB",
+    "phone_prefix": "+251",
+    "tld": ".et"
+  },
+  {
+    "code_iso3": "MCO",
+    "code_iso2": "MC",
+    "currency": "EUR",
+    "phone_prefix": "+377",
+    "tld": ".mc"
+  },
+  {
+    "code_iso3": "NER",
+    "code_iso2": "NE",
+    "currency": "XOF",
+    "phone_prefix": "+227",
+    "tld": ".ne"
+  },
+  {
+    "code_iso3": "LAO",
+    "code_iso2": "LA",
+    "currency": "LAK",
+    "phone_prefix": "+856",
+    "tld": ".la"
+  },
+  {
+    "code_iso3": "VEN",
+    "code_iso2": "VE",
+    "currency": "VES",
+    "phone_prefix": "+58",
+    "tld": ".ve"
+  },
+  {
+    "code_iso3": "GHA",
+    "code_iso2": "GH",
+    "currency": "GHS",
+    "phone_prefix": "+233",
+    "tld": ".gh"
+  },
+  {
+    "code_iso3": "CPV",
+    "code_iso2": "CV",
+    "currency": "CVE",
+    "phone_prefix": "+238",
+    "tld": ".cv"
+  },
+  {
+    "code_iso3": "MDA",
+    "code_iso2": "MD",
+    "currency": "MDL",
+    "phone_prefix": "+373",
+    "tld": ".md"
+  },
+  {
+    "code_iso3": "MDG",
+    "code_iso2": "MG",
+    "currency": "MGA",
+    "phone_prefix": "+261",
+    "tld": ".mg"
+  },
+  {
+    "code_iso3": "SPM",
+    "code_iso2": "PM",
+    "currency": "EUR",
+    "phone_prefix": "+508",
+    "tld": ".pm"
+  },
+  {
+    "code_iso3": "NFK",
+    "code_iso2": "NF",
+    "currency": "AUD",
+    "phone_prefix": "+672",
+    "tld": ".nf"
+  },
+  {
+    "code_iso3": "LBN",
+    "code_iso2": "LB",
+    "currency": "LBP",
+    "phone_prefix": "+961",
+    "tld": ".lb"
+  },
+  {
+    "code_iso3": "LBR",
+    "code_iso2": "LR",
+    "currency": "LRD",
+    "phone_prefix": "+231",
+    "tld": ".lr"
+  },
+  {
+    "code_iso3": "BOL",
+    "code_iso2": "BO",
+    "currency": "BOB",
+    "phone_prefix": "+591",
+    "tld": ".bo"
+  },
+  {
+    "code_iso3": "MDV",
+    "code_iso2": "MV",
+    "currency": "MVR",
+    "phone_prefix": "+960",
+    "tld": ".mv"
+  },
+  {
+    "code_iso3": "GIB",
+    "code_iso2": "GI",
+    "currency": "GIP",
+    "phone_prefix": "+350",
+    "tld": ".gi"
+  },
+  {
+    "code_iso3": "LBY",
+    "code_iso2": "LY",
+    "currency": "LYD",
+    "phone_prefix": "+218",
+    "tld": ".ly"
+  },
+  {
+    "code_iso3": "HKG",
+    "code_iso2": "HK",
+    "currency": "HKD",
+    "phone_prefix": "+852",
+    "tld": ".hk"
+  },
+  {
+    "code_iso3": "CAF",
+    "code_iso2": "CF",
+    "currency": "XAF",
+    "phone_prefix": "+236",
+    "tld": ".cf"
+  },
+  {
+    "code_iso3": "LSO",
+    "code_iso2": "LS",
+    "currency": "LSL",
+    "phone_prefix": "+266",
+    "tld": ".ls"
+  },
+  {
+    "code_iso3": "NGA",
+    "code_iso2": "NG",
+    "currency": "NGN",
+    "phone_prefix": "+234",
+    "tld": ".ng"
+  },
+  {
+    "code_iso3": "MUS",
+    "code_iso2": "MU",
+    "currency": "MUR",
+    "phone_prefix": "+230",
+    "tld": ".mu"
+  },
+  {
+    "code_iso3": "IMN",
+    "code_iso2": "IM",
+    "currency": "GBP",
+    "phone_prefix": "+44",
+    "tld": ".im"
+  },
+  {
+    "code_iso3": "LCA",
+    "code_iso2": "LC",
+    "currency": "XCD",
+    "phone_prefix": "+1-758",
+    "tld": ".lc"
+  },
+  {
+    "code_iso3": "JOR",
+    "code_iso2": "JO",
+    "currency": "JOD",
+    "phone_prefix": "+962",
+    "tld": ".jo"
+  },
+  {
+    "code_iso3": "GIN",
+    "code_iso2": "GN",
+    "currency": "GNF",
+    "phone_prefix": "+224",
+    "tld": ".gn"
+  },
+  {
+    "code_iso3": "VGB",
+    "code_iso2": "VG",
+    "currency": "USD",
+    "phone_prefix": "+1-284",
+    "tld": ".vg"
+  },
+  {
+    "code_iso3": "CAN",
+    "code_iso2": "CA",
+    "currency": "CAD",
+    "phone_prefix": "+1",
+    "tld": ".ca"
+  },
+  {
+    "code_iso3": "TCA",
+    "code_iso2": "TC",
+    "currency": "USD",
+    "phone_prefix": "+1-649",
+    "tld": ".tc"
+  },
+  {
+    "code_iso3": "TCD",
+    "code_iso2": "TD",
+    "currency": "XAF",
+    "phone_prefix": "+235",
+    "tld": ".td"
+  },
+  {
+    "code_iso3": "CRC",
+    "error": "Data not found"
+  },
+  {
+    "code_iso3": "AND",
+    "code_iso2": "AD",
+    "currency": "EUR",
+    "phone_prefix": "+376",
+    "tld": ".ad"
+  },
+  {
+    "code_iso3": "ROU",
+    "code_iso2": "RO",
+    "currency": "RON",
+    "phone_prefix": "+40",
+    "tld": ".ro"
+  },
+  {
+    "code_iso3": "IND",
+    "code_iso2": "IN",
+    "currency": "INR",
+    "phone_prefix": "+91",
+    "tld": ".in"
+  },
+  {
+    "code_iso3": "MEX",
+    "code_iso2": "MX",
+    "currency": "MXN",
+    "phone_prefix": "+52",
+    "tld": ".mx"
+  },
+  {
+    "code_iso3": "SRB",
+    "code_iso2": "RS",
+    "currency": "RSD",
+    "phone_prefix": "+381",
+    "tld": ".rs"
+  },
+  {
+    "code_iso3": "KAZ",
+    "code_iso2": "KZ",
+    "currency": "KZT",
+    "phone_prefix": "+7",
+    "tld": ".kz"
+  },
+  {
+    "code_iso3": "SAU",
+    "code_iso2": "SA",
+    "currency": "SAR",
+    "phone_prefix": "+966",
+    "tld": ".sa"
+  },
+  {
+    "code_iso3": "ANT",
+    "code_iso2": "AN",
+    "currency": "ANG",
+    "phone_prefix": "+599",
+    "tld": ".an"
+  },
+  {
+    "code_iso3": "JPN",
+    "code_iso2": "JP",
+    "currency": "JPY",
+    "phone_prefix": "+81",
+    "tld": ".jp"
+  },
+  {
+    "code_iso3": "LTU",
+    "code_iso2": "LT",
+    "currency": "EUR",
+    "phone_prefix": "+370",
+    "tld": ".lt"
+  },
+  {
+    "code_iso3": "TTO",
+    "code_iso2": "TT",
+    "currency": "TTD",
+    "phone_prefix": "+1-868",
+    "tld": ".tt"
+  },
+  {
+    "code_iso3": "PLW",
+    "code_iso2": "PW",
+    "currency": "USD",
+    "phone_prefix": "+680",
+    "tld": ".pw"
+  },
+  {
+    "code_iso3": "MWI",
+    "code_iso2": "MW",
+    "currency": "MWK",
+    "phone_prefix": "+265",
+    "tld": ".mw"
+  },
+  {
+    "code_iso3": "NIC",
+    "code_iso2": "NI",
+    "currency": "NIO",
+    "phone_prefix": "+505",
+    "tld": ".ni"
+  },
+  {
+    "code_iso3": "CCK",
+    "code_iso2": "CC",
+    "currency": "AUD",
+    "phone_prefix": "+61",
+    "tld": ".cc"
+  },
+  {
+    "code_iso3": "FIN",
+    "code_iso2": "FI",
+    "currency": "EUR",
+    "phone_prefix": "+358",
+    "tld": ".fi"
+  },
+  {
+    "code_iso3": "TUN",
+    "code_iso2": "TN",
+    "currency": "TND",
+    "phone_prefix": "+216",
+    "tld": ".tn"
+  },
+  {
+    "code_iso3": "LUX",
+    "code_iso2": "LU",
+    "currency": "EUR",
+    "phone_prefix": "+352",
+    "tld": ".lu"
+  },
+  {
+    "code_iso3": "UGA",
+    "code_iso2": "UG",
+    "currency": "UGX",
+    "phone_prefix": "+256",
+    "tld": ".ug"
+  },
+  {
+    "code_iso3": "IOT",
+    "code_iso2": "IO",
+    "currency": "USD",
+    "phone_prefix": "+246",
+    "tld": ".io"
+  },
+  {
+    "code_iso3": "BRA",
+    "code_iso2": "BR",
+    "currency": "BRL",
+    "phone_prefix": "+55",
+    "tld": ".br"
+  },
+  {
+    "code_iso3": "TUR",
+    "code_iso2": "TR",
+    "currency": "TRY",
+    "phone_prefix": "+90",
+    "tld": ".tr"
+  },
+  {
+    "code_iso3": "BRB",
+    "code_iso2": "BB",
+    "currency": "BBD",
+    "phone_prefix": "+1-246",
+    "tld": ".bb"
+  },
+  {
+    "code_iso3": "TUV",
+    "code_iso2": "TV",
+    "currency": "AUD",
+    "phone_prefix": "+688",
+    "tld": ".tv"
+  },
+  {
+    "code_iso3": "DEU",
+    "code_iso2": "DE",
+    "currency": "EUR",
+    "phone_prefix": "+49",
+    "tld": ".de"
+  },
+  {
+    "code_iso3": "EGY",
+    "code_iso2": "EG",
+    "currency": "EGP",
+    "phone_prefix": "+20",
+    "tld": ".eg"
+  },
+  {
+    "code_iso3": "LVA",
+    "code_iso2": "LV",
+    "currency": "EUR",
+    "phone_prefix": "+371",
+    "tld": ".lv"
+  },
+  {
+    "code_iso3": "JAM",
+    "code_iso2": "JM",
+    "currency": "JMD",
+    "phone_prefix": "+1-876",
+    "tld": ".jm"
+  },
+  {
+    "code_iso3": "NIU",
+    "code_iso2": "NU",
+    "currency": "NZD",
+    "phone_prefix": "+683",
+    "tld": ".nu"
+  },
+  {
+    "code_iso3": "ZAF",
+    "code_iso2": "ZA",
+    "currency": "ZAR",
+    "phone_prefix": "+27",
+    "tld": ".za"
+  },
+  {
+    "code_iso3": "VIR",
+    "code_iso2": "VI",
+    "currency": "USD",
+    "phone_prefix": "+1-340",
+    "tld": ".vi"
+  },
+  {
+    "code_iso3": "BRN",
+    "code_iso2": "BN",
+    "currency": "BND",
+    "phone_prefix": "+673",
+    "tld": ".bn"
+  },
+  {
+    "code_iso3": "HND",
+    "code_iso2": "HN",
+    "currency": "HNL",
+    "phone_prefix": "+504",
+    "tld": ".hn"
+  }
+]

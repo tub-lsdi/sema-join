@@ -1,0 +1,182 @@
+[
+  {
+    "university": "Oklahoma",
+    "conference": "SEC",
+    "heisman_count": 7
+  },
+  {
+    "university": "Brigham Young",
+    "conference": "Big 12",
+    "heisman_count": 1
+  },
+  {
+    "university": "Florida State",
+    "conference": "ACC",
+    "heisman_count": 3
+  },
+  {
+    "university": "Yale",
+    "conference": "Ivy League",
+    "heisman_count": 2
+  },
+  {
+    "university": "Oregon State",
+    "conference": "Pac-12",
+    "heisman_count": 1
+  },
+  {
+    "university": "Alabama",
+    "conference": "SEC",
+    "heisman_count": 4
+  },
+  {
+    "university": "South Carolina",
+    "conference": "SEC",
+    "heisman_count": 1
+  },
+  {
+    "university": "Nebraska",
+    "conference": "Big Ten",
+    "heisman_count": 3
+  },
+  {
+    "university": "Oklahoma State",
+    "conference": "Big 12",
+    "heisman_count": 1
+  },
+  {
+    "university": "Colorado",
+    "conference": "Pac-12",
+    "heisman_count": 1
+  },
+  {
+    "university": "Syracuse",
+    "conference": "ACC",
+    "heisman_count": 1
+  },
+  {
+    "university": "Wisconsin",
+    "conference": "Big Ten",
+    "heisman_count": 2
+  },
+  {
+    "university": "Pittsburgh",
+    "conference": "ACC",
+    "heisman_count": 1
+  },
+  {
+    "university": "Penn State",
+    "conference": "Big Ten",
+    "heisman_count": 1
+  },
+  {
+    "university": "Army",
+    "conference": "Independent",
+    "heisman_count": 3
+  },
+  {
+    "university": "UCLA",
+    "conference": "Big Ten",
+    "heisman_count": 1
+  },
+  {
+    "university": "Princeton",
+    "conference": "Ivy League",
+    "heisman_count": 1
+  },
+  {
+    "university": "Boston College",
+    "conference": "ACC",
+    "heisman_count": 1
+  },
+  {
+    "university": "Chicago",
+    "conference": "Independent",
+    "heisman_count": 1
+  },
+  {
+    "university": "Auburn",
+    "conference": "SEC",
+    "heisman_count": 3
+  },
+  {
+    "university": "Minnesota",
+    "conference": "Big Ten",
+    "heisman_count": 1
+  },
+  {
+    "university": "Florida",
+    "conference": "SEC",
+    "heisman_count": 3
+  },
+  {
+    "university": "Michigan",
+    "conference": "Big Ten",
+    "heisman_count": 3
+  },
+  {
+    "university": "Miami",
+    "conference": "ACC",
+    "heisman_count": 2
+  },
+  {
+    "university": "LSU",
+    "conference": "SEC",
+    "heisman_count": 1
+  },
+  {
+    "university": "Southern California",
+    "conference": "Big Ten",
+    "heisman_count": 7
+  },
+  {
+    "university": "Stanford",
+    "conference": "ACC",
+    "heisman_count": 1
+  },
+  {
+    "university": "Navy",
+    "conference": "American Athletic",
+    "heisman_count": 2
+  },
+  {
+    "university": "Iowa",
+    "conference": "Big Ten",
+    "heisman_count": 1
+  },
+  {
+    "university": "Texas",
+    "conference": "SEC",
+    "heisman_count": 2
+  },
+  {
+    "university": "Notre Dame",
+    "conference": "Independent",
+    "heisman_count": 7
+  },
+  {
+    "university": "Ohio State",
+    "conference": "Big Ten",
+    "heisman_count": 7
+  },
+  {
+    "university": "Baylor",
+    "conference": "Big 12",
+    "heisman_count": 2
+  },
+  {
+    "university": "Georgia",
+    "conference": "SEC",
+    "heisman_count": 2
+  },
+  {
+    "university": "Southern Methodist",
+    "conference": "ACC",
+    "heisman_count": 1
+  },
+  {
+    "university": "Houston",
+    "conference": "Big 12",
+    "heisman_count": 1
+  }
+]

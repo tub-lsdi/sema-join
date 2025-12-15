@@ -1,0 +1,592 @@
+[
+  {
+    "element_name": "Actinium",
+    "category": "Actinide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Silver",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Aluminium",
+    "category": "Post-Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Americium",
+    "category": "Actinide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Argon",
+    "category": "Noble Gas",
+    "state_at_stp": "Gas"
+  },
+  {
+    "element_name": "Arsenic",
+    "category": "Metalloid",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Astatine",
+    "category": "Halogen",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Gold",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Boron",
+    "category": "Metalloid",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Barium",
+    "category": "Alkaline Earth Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Beryllium",
+    "category": "Alkaline Earth Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Bohrium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Bismuth",
+    "category": "Post-Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Berkelium",
+    "category": "Actinide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Bromine",
+    "category": "Halogen",
+    "state_at_stp": "Liquid"
+  },
+  {
+    "element_name": "Carbon",
+    "category": "Nonmetal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Calcium",
+    "category": "Alkaline Earth Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Cadmium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Cerium",
+    "category": "Lanthanide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Californium",
+    "category": "Actinide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Chlorine",
+    "category": "Halogen",
+    "state_at_stp": "Gas"
+  },
+  {
+    "element_name": "Curium",
+    "category": "Actinide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Cobalt",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Chromium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Caesium",
+    "category": "Alkali Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Copper",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Dubnium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Darmstadtium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Dysprosium",
+    "category": "Lanthanide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Erbium",
+    "category": "Lanthanide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Einsteinium",
+    "category": "Actinide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Europium",
+    "category": "Lanthanide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Fluorine",
+    "category": "Halogen",
+    "state_at_stp": "Gas"
+  },
+  {
+    "element_name": "Iron",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Fermium",
+    "category": "Actinide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Francium",
+    "category": "Alkali Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Gallium",
+    "category": "Post-Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Gadolinium",
+    "category": "Lanthanide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Germanium",
+    "category": "Metalloid",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Hydrogen",
+    "category": "Nonmetal",
+    "state_at_stp": "Gas"
+  },
+  {
+    "element_name": "Helium",
+    "category": "Noble Gas",
+    "state_at_stp": "Gas"
+  },
+  {
+    "element_name": "Hafnium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Mercury",
+    "category": "Transition Metal",
+    "state_at_stp": "Liquid"
+  },
+  {
+    "element_name": "Holmium",
+    "category": "Lanthanide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Hassium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Iodine",
+    "category": "Halogen",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Indium",
+    "category": "Post-Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Iridium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Potassium",
+    "category": "Alkali Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Krypton",
+    "category": "Noble Gas",
+    "state_at_stp": "Gas"
+  },
+  {
+    "element_name": "Lanthanum",
+    "category": "Lanthanide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Lithium",
+    "category": "Alkali Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Lawrencium",
+    "category": "Actinide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Lutetium",
+    "category": "Lanthanide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Mendelevium",
+    "category": "Actinide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Magnesium",
+    "category": "Alkaline Earth Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Manganese",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Molybdenum",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Meitnerium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Nitrogen",
+    "category": "Nonmetal",
+    "state_at_stp": "Gas"
+  },
+  {
+    "element_name": "Sodium",
+    "category": "Alkali Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Niobium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Neodymium",
+    "category": "Lanthanide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Neon",
+    "category": "Noble Gas",
+    "state_at_stp": "Gas"
+  },
+  {
+    "element_name": "Nickel",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Nobelium",
+    "category": "Actinide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Neptunium",
+    "category": "Actinide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Oxygen",
+    "category": "Nonmetal",
+    "state_at_stp": "Gas"
+  },
+  {
+    "element_name": "Osmium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Phosphorus",
+    "category": "Nonmetal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Protactinium",
+    "category": "Actinide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Lead",
+    "category": "Post-Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Palladium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Promethium",
+    "category": "Lanthanide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Polonium",
+    "category": "Metalloid",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Praseodymium",
+    "category": "Lanthanide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Platinum",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Plutonium",
+    "category": "Actinide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Radium",
+    "category": "Alkaline Earth Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Rubidium",
+    "category": "Alkali Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Rhenium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Rutherfordium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Roentgenium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Rhodium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Radon",
+    "category": "Noble Gas",
+    "state_at_stp": "Gas"
+  },
+  {
+    "element_name": "Ruthenium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Sulphur",
+    "category": "Nonmetal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Antimony",
+    "category": "Metalloid",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Scandium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Selenium",
+    "category": "Nonmetal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Seaborgium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Silicon",
+    "category": "Metalloid",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Samarium",
+    "category": "Lanthanide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Tin",
+    "category": "Post-Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Strontium",
+    "category": "Alkaline Earth Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Tantalum",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Terbium",
+    "category": "Lanthanide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Technetium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Tellurium",
+    "category": "Metalloid",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Thorium",
+    "category": "Actinide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Titanium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Thallium",
+    "category": "Post-Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Thulium",
+    "category": "Lanthanide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Uranium",
+    "category": "Actinide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Ununbium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Ununhexium",
+    "category": "Post-Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Ununoctium",
+    "category": "Noble Gas",
+    "state_at_stp": "Gas"
+  },
+  {
+    "element_name": "Ununpentium",
+    "category": "Post-Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Ununquadium",
+    "category": "Post-Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Ununseptium",
+    "category": "Halogen",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Ununtrium",
+    "category": "Post-Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Vanadium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Tungsten",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Xenon",
+    "category": "Noble Gas",
+    "state_at_stp": "Gas"
+  },
+  {
+    "element_name": "Yttrium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Ytterbium",
+    "category": "Lanthanide",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Zinc",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  },
+  {
+    "element_name": "Zirconium",
+    "category": "Transition Metal",
+    "state_at_stp": "Solid"
+  }
+]

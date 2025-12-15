@@ -1,199 +1,87 @@
-# SEMA-JOIN Project
+# SEMA-JOIN
 
-Implementation of the SEMA-JOIN paper for semantic table joins.
+Semantic table joins using PMI-based matching.
 
-**📚 [View Full Documentation](https://tub-lsdi.github.io/sema-join-docs/)**
+**📚 [Full Documentation](https://tub-lsdi.github.io/sema-join-docs/)**
+
+## Prerequisites
+
+- Docker & docker-compose
+- Ollama (for AI features)
+
+## Setup
+
+1. Create `.env` file (copy from example below)
+2. Build and start services:
+```bash
+make build
+make up
+```
+
+3. Setup Ollama (if not installed):
+```bash
+make setup-ollama
+OLLAMA_HOST=0.0.0.0:11434 ollama serve
+```
+
+4. Ingest corpus data (if you have `backend/corpus/data/tables.json`):
+```bash
+make ingest
+```
+
+5. Run database migrations:
+```bash
+make db-migrate
+```
+
+Access:
+- Frontend: http://localhost:3000
+- Backend: http://localhost:8000
+- API Docs: http://localhost:8000/docs
+
+## Commands
+
+```bash
+make help          # Show all commands
+make build         # Build all images
+make up            # Start services
+make down          # Stop services
+make logs          # View logs
+make restart       # Restart services
+make ingest        # Ingest corpus data
+make db-migrate    # Run database migrations
+make clean         # Remove all containers/volumes
+```
+
+## Environment (.env)
+
+```bash
+# Database
+DB_PATH=corpus.db
+LOG_LEVEL=DEBUG
+DUCKDB_MEMORY_LIMIT=25GB
+DUCKDB_TEMP_DIRECTORY=./_temp
+
+# MySQL
+APP_DB_CONTAINER_NAME="sema_app_db"
+APP_DB_HOST="localhost"
+APP_DB_PORT="3306"
+APP_DB_DATABASE="sema_app_db"
+APP_DB_USERNAME="semajoin"
+APP_DB_PASSWORD="semajoin"
+APP_DB_ROOT_PASSWORD="rootpassword"
+
+# Ollama
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=mistral
+OLLAMA_TIMEOUT=300
+
+# Go Service
+GO_SERVICE_URL=http://localhost:8080
+```
 
 ## Project Structure
 
-* `/backend`: Self-contained FastAPI backend application
-  * `/services`: Business logic and algorithms
-  * `/routes`: API endpoints
-  * `/corpus`: Corpus data and setup scripts
-  * `/utils`: Utility functions
-* `/frontend`: Next.js web application
-
-## Prerequisites
-- Python 3.13+
-- uv (Python package manager)
-- Node.js 20+ and npm
-- Docker (for application database)
-- Ollama (optional, for AI features)
-- Mistral model (optional, via Ollama: `ollama pull mistral`)
-
-## 🚀 Quick Start (Recommended)
-
-We provide a convenient management script for easy setup and running:
-
-```bash
-# Make the script executable (first time only)
-chmod +x sema-join.sh
-
-# Show help
-./sema-join.sh
-./sema-join.sh help
-
-# Quick Start:
-# 1. Create .env file with required configuration (see Environment Setup below)
-# 2. Install all dependencies
-./sema-join.sh install all
-# 3. Start Docker services (application database)
-./sema-join.sh docker run
-# 4. Initialize application database schema
-./sema-join.sh app_db
-# 5. Setup corpus database
-./sema-join.sh db
-# 6. (Optional) Setup AI (Ollama + Mistral)
-./sema-join.sh ai setup
-# 7. (Optional) Start Ollama service
-./sema-join.sh ai serve
-# 8. Run both servers
-./sema-join.sh run
-```
-
-### Environment Setup
-
-Before running the project, create a `.env` file in the project root with the required configuration:
-
-```bash
-DB_PATH=corpus.db
-LOG_LEVEL=DEBUG
-
-# Application Database Configuration
-APP_DB_CONTAINER_NAME=sema_app_db
-APP_DB_HOST=localhost
-APP_DB_PORT=3306
-APP_DB_DATABASE=sema_app_db
-APP_DB_USERNAME=your_username
-APP_DB_PASSWORD=your_password
-APP_DB_ROOT_PASSWORD=your_root_password
-```
-
-See the [Environment Setup documentation](https://tub-lsdi.github.io/sema-join-docs/docs/environment-setup) for complete configuration details.
-
-### Available Commands
-
-```bash
-# Installation
-./sema-join.sh install backend     # Install Python dependencies
-./sema-join.sh install frontend    # Install Node.js dependencies
-./sema-join.sh install all         # Install everything
-
-# Running
-./sema-join.sh run                 # Start both servers
-./sema-join.sh run backend         # Start backend only (port 8000)
-./sema-join.sh run frontend        # Start frontend only (port 3000)
-
-# Database & Info
-./sema-join.sh db                  # Initialize corpus database
-./sema-join.sh db --large          # Initialize corpus database with scripts for large corpora
-./sema-join.sh app_db              # Run Alembic migrations for application database
-./sema-join.sh status              # Check project status
-./sema-join.sh help                # Show help
-
-# Docker
-./sema-join.sh docker run          # Start Docker services (build & up)
-./sema-join.sh docker down         # Stop Docker services
-
-# AI Commands
-./sema-join.sh ai setup            # Install Ollama & pull Mistral model
-./sema-join.sh ai status           # Check AI status
-./sema-join.sh ai serve            # Start Ollama service
-```
-
-## Manual Setup (Alternative)
-
-### Backend Setup
-
-#### 1. Install Backend Dependencies
-```bash
-uv sync --extra backend
-```
-
-#### 2. Activate Virtual Environment
-Before running any scripts or commands, activate the virtual environment:
-```bash
-source .venv/bin/activate
-```
-
-Or use `uv run` to run commands in the virtual environment without activating it:
-```bash
-uv run <command>
-```
-
-#### 3. Setup Database
-Run this once to ingest corpus data and calculate PMI statistics:
-```bash
-./backend/setup_database.sh
-```
-
-Or run the setup scripts individually:
-```bash
-# Step 1: Ingest corpus data
-python backend/corpus/setup_db/01_ingest_corpus.py
-# or use the version for larger corpora:
-python backend/corpus/setup_db/01_ingest_corpus_parllel.py
-
-# Step 2: Calculate PMI statistics
-python backend/corpus/setup_db/02_calculate_stats.py
-```
-
-This will create the `corpus.db` database file in the project root.
-
-#### 4. Start the Backend Server
-```bash
-./backend/run_server.sh
-```
-
-Or run directly:
-```bash
-uv run uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-The API will be available at: http://localhost:8000
-
-### Frontend Setup
-
-#### 1. Install Frontend Dependencies
-```bash
-cd frontend
-npm install
-```
-
-#### 2. Start the Development Server
-```bash
-npm run dev
-```
-
-The frontend will be available at: http://localhost:3000
-
-### AI Setup (Optional)
-
-
-#### 1. Install Ollama
-
-For Linux:
-```bash
-curl -fsSL https://ollama.com/install.sh | sh
-```
-
-For macOS:
-```bash
-brew install ollama
-```
-
-For Windows:
-- Download Ollama from https://ollama.com/download
-- Install and run Ollama
-
-#### 2. Install Mistral Model
-```bash
-ollama pull mistral
-```
-
-#### 3. Start Ollama Service
-```bash
-ollama serve
-```
-
-**Note:** Ollama must be running on port 11434 for AI features to work.
+- `/backend` - FastAPI backend
+- `/frontend` - Next.js frontend
+- `/go-service` - PMI calculation service

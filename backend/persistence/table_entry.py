@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, Text, JSON, DateTime, func
 from sqlalchemy.orm import Session
+from sqlalchemy.dialects.mysql import LONGTEXT
 from typing import List
 import json
 
@@ -10,7 +11,7 @@ class TableEntry(Base):
     __tablename__ = "table_entry"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    body = Column(Text, nullable=False)
+    body = Column(LONGTEXT, nullable=False)
     columns = Column(JSON, nullable=False)
 
 
