@@ -6,34 +6,26 @@ import Header from "@/components/Header";
 import DataTable from "@/components/DataTable";
 import TableModal from "@/components/TableModal";
 import styles from "../page.module.css";
-import { fetchHistoryDetail } from "@/lib/api";
+import {
+  fetchHistoryDetail,
+  type HistoryDetailResponse,
+  type TableRow,
+} from "@/lib/api";
 
 export default function HistoryDetailClient() {
   const params = useParams();
   const idStr = params?.id;
   const id = idStr ? Number(idStr) : NaN;
 
-  const [entry, setEntry] = useState<any | null>(null);
+  const [entry, setEntry] = useState<HistoryDetailResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalData, setModalData] = useState<any[]>([]);
-  const [modalTitle, setModalTitle] = useState("");
-  const [modalHighlightColumn, setModalHighlightColumn] = useState<string | undefined>(undefined);
-
-  const openModal = (title: string, data: any[], highlightColumn?: string) => {
-    setModalTitle(title);
-    setModalData(data);
-    setModalHighlightColumn(highlightColumn);
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-    setModalData([]);
-    setModalTitle("");
-    setModalHighlightColumn(undefined);
-  };
+  const [modalData, setModalData] = useState<{
+    title: string;
+    data: TableRow[];
+    selectedColumn?: string;
+  } | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -48,10 +40,12 @@ export default function HistoryDetailClient() {
         setLoading(true);
         const resp = await fetchHistoryDetail(Number(id));
         if (!mounted) return;
-        setEntry(resp as any);
-      } catch (e: any) {
+        setEntry(resp);
+      } catch (e) {
         if (!mounted) return;
-        setError(e?.message || "Failed to load history");
+        const errorMessage =
+          e instanceof Error ? e.message : "Failed to load history";
+        setError(errorMessage);
       } finally {
         if (mounted) setLoading(false);
       }
@@ -62,6 +56,15 @@ export default function HistoryDetailClient() {
       mounted = false;
     };
   }, [idStr]);
+
+  const handleViewFullTable = (
+    title: string,
+    data: TableRow[],
+    selectedColumn?: string
+  ) => {
+    setModalData({ title, data, selectedColumn });
+    setModalOpen(true);
+  };
 
   if (loading) {
     return (
@@ -101,12 +104,20 @@ export default function HistoryDetailClient() {
             <div className={styles.card}>
               <div className={styles.cardHeader}>
                 <h3 className={styles.sectionTitle}>List R</h3>
-                <button
-                  onClick={() => openModal("List R", entry.list_r || [], entry.r_join_col)}
-                  className={styles.viewButton}
-                >
-                  View Full Table
-                </button>
+                {entry.list_r && entry.list_r.length > 10 && (
+                  <button
+                    className={styles.viewFullButton}
+                    onClick={() =>
+                      handleViewFullTable(
+                        "List R",
+                        entry.list_r,
+                        entry.r_join_col || undefined
+                      )
+                    }
+                  >
+                    View Full Table
+                  </button>
+                )}
               </div>
               <DataTable
                 data={entry.list_r || []}
@@ -117,12 +128,20 @@ export default function HistoryDetailClient() {
             <div className={styles.card}>
               <div className={styles.cardHeader}>
                 <h3 className={styles.sectionTitle}>List S</h3>
-                <button
-                  onClick={() => openModal("List S", entry.list_s || [], entry.s_join_col)}
-                  className={styles.viewButton}
-                >
-                  View Full Table
-                </button>
+                {entry.list_s && entry.list_s.length > 10 && (
+                  <button
+                    className={styles.viewFullButton}
+                    onClick={() =>
+                      handleViewFullTable(
+                        "List S",
+                        entry.list_s,
+                        entry.s_join_col || undefined
+                      )
+                    }
+                  >
+                    View Full Table
+                  </button>
+                )}
               </div>
               <DataTable
                 data={entry.list_s || []}
@@ -134,12 +153,16 @@ export default function HistoryDetailClient() {
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <h3 className={styles.sectionTitle}>Bridge Table</h3>
-              <button
-                onClick={() => openModal("Bridge Table", entry.bridge_table || [])}
-                className={styles.viewButton}
-              >
-                View Full Table
-              </button>
+              {entry.bridge_table && entry.bridge_table.length > 10 && (
+                <button
+                  className={styles.viewFullButton}
+                  onClick={() =>
+                    handleViewFullTable("Bridge Table", entry.bridge_table)
+                  }
+                >
+                  View Full Table
+                </button>
+              )}
             </div>
             <DataTable data={entry.bridge_table || []} />
           </div>
@@ -147,24 +170,28 @@ export default function HistoryDetailClient() {
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <h3 className={styles.sectionTitle}>Result</h3>
-              <button
-                onClick={() => openModal("Result", entry.result || [])}
-                className={styles.viewButton}
-              >
-                View Full Table
-              </button>
+              {entry.result && entry.result.length > 10 && (
+                <button
+                  className={styles.viewFullButton}
+                  onClick={() => handleViewFullTable("Result", entry.result)}
+                >
+                  View Full Table
+                </button>
+              )}
             </div>
             <DataTable data={entry.result || []} />
           </div>
         </div>
 
-        <TableModal
-          isOpen={modalOpen}
-          onClose={closeModal}
-          title={modalTitle}
-          data={modalData}
-          selectedColumn={modalHighlightColumn}
-        />
+        {modalOpen && modalData && (
+          <TableModal
+            isOpen={modalOpen}
+            onClose={() => setModalOpen(false)}
+            title={modalData.title}
+            data={modalData.data}
+            selectedColumn={modalData.selectedColumn}
+          />
+        )}
       </div>
     </div>
   );

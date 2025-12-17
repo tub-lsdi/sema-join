@@ -15,6 +15,7 @@ from backend.routes import (
     uploaded_tables_router,
 )
 from backend.app_db import init_app_db, shutdown_app_db
+from backend.init_db import init_database_tables
 
 
 def get_db_path():
@@ -31,6 +32,9 @@ async def lifespan(app: FastAPI):
 
     # Initialize and attach the application MySQL DB (SQLAlchemy)
     init_app_db(app)
+
+    # Auto-create database tables if they don't exist
+    init_database_tables(app.state.app_db_engine)
 
     # Initialize services
     app.state.app_database_service = AppDatabaseService(app.state.app_db_sessionmaker)

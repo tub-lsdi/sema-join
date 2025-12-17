@@ -27,7 +27,10 @@ interface Props {
   onDeselectAll: () => void;
   onSelectAllAIRecommendation: () => void;
   onDeselectAllAIRecommendation: () => void;
-  onAISuggestBest: (recommendedIndices: number[], sentForRecommendation: number[]) => void;
+  onAISuggestBest: (
+    recommendedIndices: number[],
+    sentForRecommendation: number[]
+  ) => void;
   canCreate: boolean;
   canJoin: boolean;
   loading: boolean;
@@ -86,8 +89,8 @@ export default function BridgeTablePanel({
       // Backend returns indices relative to selectedEntries array
       // Map back to original bridgeTable indices
       const recommendedBridgeIndices = result.recommended_indices
-        .filter(i => i >= 0 && i < indexMapping.length) // Validate indices
-        .map(filteredIdx => indexMapping[filteredIdx]);
+        .filter((i) => i >= 0 && i < indexMapping.length) // Validate indices
+        .map((filteredIdx) => indexMapping[filteredIdx]);
 
       // Update the "Select" column checkboxes with recommendations
       // Pass both the recommended indices and the original set that was sent for recommendation
@@ -235,14 +238,13 @@ export default function BridgeTablePanel({
       ) : (
         <>
           <div className={styles.header}>
-            <div>
-              <h2 className={styles.title}>
-                Bridge Table - {joinMethod === "row" ? "RS-JP" : "CS-JP-LP"}
-              </h2>
-              <p className={styles.subtitle}>
-                {showAISuggestButton && `${aiRecommendationEntries.size} for recommendation, `}{selectedEntries.size}/{bridgeTable.length} selected
-              </p>
-            </div>
+            <h2 className={styles.title}>
+              Bridge Table (
+              {showAISuggestButton &&
+                `${aiRecommendationEntries.size} for recommendation, `}
+              {selectedEntries.size}/{bridgeTable.length} selected) -{" "}
+              {joinMethod === "row" ? "RS-JP" : "CS-JP-LP"}
+            </h2>
             <div className={styles.headerControls}>
               {joinMethod === "row" && (
                 <input
@@ -254,7 +256,6 @@ export default function BridgeTablePanel({
                   onChange={(e) => onTopKChange(parseInt(e.target.value) || 1)}
                   disabled={loading}
                   className={styles.selectCompact}
-                  style={{ width: "80px" }}
                   title="Top K matches per row"
                 />
               )}
@@ -394,8 +395,12 @@ export default function BridgeTablePanel({
                   <tr
                     key={idx}
                     className={`
-                      ${selectedEntries.has(idx) ? styles.selectedRow : ''}
-                      ${aiRecommendationEntries.has(idx) ? styles.aiRecommendationSelected : ''}
+                      ${selectedEntries.has(idx) ? styles.selectedRow : ""}
+                      ${
+                        aiRecommendationEntries.has(idx)
+                          ? styles.aiRecommendationSelected
+                          : ""
+                      }
                     `.trim()}
                     title={scoreColumn.tooltip}
                   >
@@ -411,14 +416,18 @@ export default function BridgeTablePanel({
                         <input
                           type="checkbox"
                           checked={aiRecommendationEntries.has(idx)}
-                          onChange={() => onToggleAIRecommendationByRValue(entry.r_val)}
+                          onChange={() =>
+                            onToggleAIRecommendationByRValue(entry.r_val)
+                          }
                           aria-label={`Select all candidates for ${entry.r_val} for recommendation`}
                         />
                       </td>
                     )}
                     <td>{entry.r_val}</td>
                     <td>{entry.s_val}</td>
-                    <td>{entry.npmi !== null ? entry.npmi.toFixed(4) : 'N/A'}</td>
+                    <td>
+                      {entry.npmi !== null ? entry.npmi.toFixed(4) : "N/A"}
+                    </td>
                   </tr>
                 ))}
               </tbody>

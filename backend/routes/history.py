@@ -1,7 +1,3 @@
-"""
-History endpoints.
-"""
-
 from fastapi import APIRouter, Request, HTTPException
 from backend.models.history import HistoryResponse, HistoryEntry, HistoryDetailEntry
 from backend.persistence.join_history import (

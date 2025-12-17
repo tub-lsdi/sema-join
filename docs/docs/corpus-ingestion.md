@@ -93,10 +93,10 @@ Note: These commands require that you've already completed the installation step
 source .venv/bin/activate
 
 # Step 1: Ingest corpus data
-python backend/corpus/setup_db/01_ingest_corpus.py
+python corpus/setup_db/01_ingest_corpus.py
 
 # Step 2: Calculate PMI statistics
-python backend/corpus/setup_db/02_calculate_stats.py
+python corpus/setup_db/02_calculate_stats.py
 ```
 
 ## Re-running Ingestion
@@ -117,8 +117,8 @@ Or using direct commands:
 
 ```bash
 source .venv/bin/activate
-python backend/corpus/setup_db/01_ingest_corpus.py
-python backend/corpus/setup_db/02_calculate_stats.py
+python corpus/setup_db/01_ingest_corpus.py
+python corpus/setup_db/02_calculate_stats.py
 ```
 
 This is useful when updating the corpus with new tables or correcting data issues.

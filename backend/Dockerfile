@@ -1,30 +1,37 @@
-FROM ghcr.io/astral-sh/uv:python3.13-bookworm AS builder
+FROM python:3.13-slim
+
+# Install HiGHS solver binary
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends highs curl && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy uv from official image
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 WORKDIR /app
 
+# Copy dependency files
 COPY backend/pyproject.toml backend/uv.lock ./
 
+# Install Python dependencies
 RUN uv sync --frozen --no-dev
 
-FROM python:3.13-slim-bookworm
-
-WORKDIR /app
-
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
-
+# Create app user and directories
 RUN useradd -m -u 1000 appuser && \
     mkdir -p /app/_temp && \
     chown -R appuser:appuser /app
 
-COPY --from=builder --chown=appuser:appuser /app/.venv /app/.venv
-
+# Copy application code
 COPY --chown=appuser:appuser backend ./backend
 COPY --chown=appuser:appuser backend/alembic ./alembic
 COPY --chown=appuser:appuser backend/alembic.ini ./alembic.ini
 
+# Switch to non-root user
 USER appuser
 
+# Add virtual environment to PATH
 ENV PATH="/app/.venv/bin:$PATH"
+ENV PYTHONUNBUFFERED=1
 
 EXPOSE 8000
 

@@ -1,9 +1,10 @@
 "use client";
 
+import { type TableRow } from "@/lib/api";
 import styles from "./InteractiveDataTable.module.css";
 
 interface Props {
-  data: Array<Record<string, any>>;
+  data: TableRow[];
   selectedColumn?: string;
   onColumnSelect?: (column: string) => void;
 }

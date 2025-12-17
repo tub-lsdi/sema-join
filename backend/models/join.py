@@ -1,7 +1,3 @@
-"""
-Join operation models for semantic join API.
-"""
-
 from pydantic import BaseModel, Field
 from .bridge import BridgeTableEntry
 

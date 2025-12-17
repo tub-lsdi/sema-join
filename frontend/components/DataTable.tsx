@@ -1,9 +1,9 @@
-import { type JoinMethod } from "@/lib/api";
+import { type JoinMethod, type TableRow } from "@/lib/api";
 import { getScoreColumnConfig } from "@/lib/utils";
 import styles from "./DataTable.module.css";
 
 interface Props {
-  data: Array<Record<string, any>>;
+  data: TableRow[];
   highlightColumn?: string | null;
   joinMethod?: JoinMethod;
   showAll?: boolean;

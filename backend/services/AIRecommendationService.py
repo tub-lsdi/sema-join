@@ -1,5 +1,6 @@
 import requests
 import json
+from pathlib import Path
 from backend.config import settings
 
 
@@ -10,6 +11,12 @@ class AIRecommendationService:
         self.base_url = settings.OLLAMA_BASE_URL.rstrip("/")
         self.model = settings.OLLAMA_MODEL
         self.timeout = settings.OLLAMA_TIMEOUT
+        self.prompts_dir = Path(__file__).parent / "prompts"
+
+    def _load_prompt_template(self, template_name: str) -> str:
+        """Load a prompt template from file."""
+        template_path = self.prompts_dir / template_name
+        return template_path.read_text()
 
     def _build_prompt(self, table_r_schema: dict, table_s_schema: dict) -> str:
         """
@@ -22,77 +29,11 @@ class AIRecommendationService:
         Returns:
             Formatted prompt string
         """
-        prompt = f"""You are a data analyst expert specializing in database joins.
-Analyze the following two table schemas and recommend which columns should be joined together.
-
-I'm providing you with extensive data from both tables (up to 100 rows per table) so you can make accurate recommendations.
-
-TABLE R SCHEMA:
-{json.dumps(table_r_schema, indent=2)}
-
-TABLE S SCHEMA:
-{json.dumps(table_s_schema, indent=2)}
-
-Your task is to find SEMANTIC RELATIONSHIPS between columns by analyzing the actual DATA VALUES, not just column names.
-
-CRITICAL INSTRUCTIONS:
-1. **Focus on VALUE-BASED relationships**: Look at the actual sample values and find where:
-   - Codes/abbreviations in one column match full names/descriptions in another column
-   - Example: "DE" in Table R → "Germany" in Table S (country code → country name)
-   - Example: "AAPL" → "Apple Inc." (ticker → company name)
-   - Example: "NYC" → "New York City" (abbreviation → full name)
-
-2. **Cross-column analysis is KEY**: The most useful joins are often between DIFFERENT column names:
-   - "code" column → "entity" column (code values match entity names)
-   - "id" column → "name" column (IDs reference names)
-   - "sku" column → "product_name" column (SKUs reference products)
-
-3. **De-prioritize obvious matches**: Columns with the SAME NAME are often obvious and less interesting:
-   - If both tables have "code", "id", "name" - these are obvious matches
-   - Focus on SEMANTIC relationships that aren't immediately obvious from column names
-
-4. **Look for these patterns in the VALUES**:
-   - Country/region codes (US, DE, FR) → Country/region names (United States, Germany, France)
-   - Short codes/abbreviations → Full descriptions
-   - IDs/SKUs → Entity names
-   - Acronyms → Full names
-    - country → continent 
-   - company_name → country
-   - university → state, 
-   - symbol → element name
-   - playername → university
-
-5. **Analyze the actual data**:
-   - Read through ALL sample values carefully
-   - Check if short values in one column are abbreviations of longer values in another
-   - Look for semantic matches: "DE" could match "Germany" or "Delaware" - context matters!
-
-6. **Prioritize enriching joins**: Recommend joins that would ADD NEW INFORMATION:
-   - Joining a code column to an entity name column adds context
-   - Joining identical columns adds less value
-
-Provide your answer in the following JSON format (respond ONLY with valid JSON, no additional text):
-{{
-  "recommendations": [
-    {{
-      "r_column": "column_name_from_R",
-      "s_column": "column_name_from_S",
-      "confidence": 0.95,
-      "reason": "Specific explanation citing actual data values (e.g., 'DE' in r_column matches 'Germany' in s_column)"
-    }}
-  ],
-  "analysis": "Analysis explaining the semantic relationships found between the actual data values"
-}}
-
-
-IMPORTANT:
-- Make sure that the r_column and s_column are EXACT column names from the schemas above and exist in the provided data
-- Confidence should be based on how well the VALUES match, not just column names
-- List multiple recommendations if appropriate, ranked by confidence
-- ALWAYS cite specific data values in your reasons (e.g., "DE matches Germany")
-- Focus on semantic meaning, not just syntactic similarity
-"""
-        return prompt
+        template = self._load_prompt_template("column_recommendation.txt")
+        return template.format(
+            table_r_schema=json.dumps(table_r_schema, indent=2),
+            table_s_schema=json.dumps(table_s_schema, indent=2)
+        )
 
     def _call_ollama(self, prompt: str) -> dict:
         """
@@ -274,47 +215,8 @@ IMPORTANT:
                 {"index": idx, "s_val": entry["s_val"], "npmi": entry["npmi"]}
             )
 
-        # Build prompt
-        prompt = f"""You are a data expert analyzing bridge table matches from a semantic join algorithm.
-
-For each value from Table R, the algorithm found multiple candidate matches in Table S based on co-occurrence statistics (NPMI scores).
-
-Your task: Select the BEST match for each R value.
-
-BRIDGE TABLE CANDIDATES:
-{json.dumps(grouped, indent=2)}
-
-INSTRUCTIONS:
-1. For each R value, analyze ALL candidate S values
-2. Consider both the NPMI score AND the semantic meaning
-3. Higher NPMI = stronger statistical co-occurrence in corpus
-4. But also use common sense about which match makes most semantic sense
-5. Select the ONE best S value for each R value
-
-CRITICAL RULES:
-- The highest NPMI is usually correct, but not always
-- Look for standard codes vs non-standard codes (e.g., "DE" is better than "GE" for Germany - ISO standard)
-- Prefer well-known standards (ISO, FIPS, etc.)
-- Explain WHY you picked each one
-- **IMPORTANT**: You MUST provide a selection for EVERY r_val in the input
-- **IMPORTANT**: The "selected_s_val" MUST be EXACTLY one of the s_val options shown above (copy it exactly, including case and spacing)
-
-OUTPUT FORMAT (JSON):
-{{
-  "recommendations": [
-    {{
-      "r_val": "<EXACTLY as shown above>",
-      "recommended_s_val": "<EXACTLY one of the s_val options, copied verbatim>",
-      "reason": "<why this one>",
-      "confidence": 0.95
-    }}
-  ],
-  "analysis": "<overall reasoning>"
-}}
-
-Example: If you see {{"s_val": "united kingdom", "npmi": 0.21}}, you MUST write "recommended_s_val": "united kingdom" (not "United Kingdom" or "UK")
-
-Respond with ONLY valid JSON, no markdown, no explanation outside the JSON."""
+        template = self._load_prompt_template("bridge_recommendation.txt")
+        prompt = template.format(bridge_candidates=json.dumps(grouped, indent=2))
 
         try:
             # Call Ollama

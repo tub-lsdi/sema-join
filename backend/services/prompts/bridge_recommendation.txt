@@ -1,0 +1,40 @@
+You are a data expert analyzing bridge table matches from a semantic join algorithm.
+
+For each value from Table R, the algorithm found multiple candidate matches in Table S based on co-occurrence statistics (NPMI scores).
+
+Your task: Select the BEST match for each R value.
+
+BRIDGE TABLE CANDIDATES:
+{bridge_candidates}
+
+INSTRUCTIONS:
+1. For each R value, analyze ALL candidate S values
+2. Consider both the NPMI score AND the semantic meaning
+3. Higher NPMI = stronger statistical co-occurrence in corpus
+4. But also use common sense about which match makes most semantic sense
+5. Select the ONE best S value for each R value
+
+CRITICAL RULES:
+- The highest NPMI is usually correct, but not always
+- Look for standard codes vs non-standard codes (e.g., "DE" is better than "GE" for Germany - ISO standard)
+- Prefer well-known standards (ISO, FIPS, etc.)
+- Explain WHY you picked each one
+- **IMPORTANT**: You MUST provide a selection for EVERY r_val in the input
+- **IMPORTANT**: The "selected_s_val" MUST be EXACTLY one of the s_val options shown above (copy it exactly, including case and spacing)
+
+OUTPUT FORMAT (JSON):
+{{
+  "recommendations": [
+    {{
+      "r_val": "<EXACTLY as shown above>",
+      "recommended_s_val": "<EXACTLY one of the s_val options, copied verbatim>",
+      "reason": "<why this one>",
+      "confidence": 0.95
+    }}
+  ],
+  "analysis": "<overall reasoning>"
+}}
+
+Example: If you see {{"s_val": "united kingdom", "npmi": 0.21}}, you MUST write "recommended_s_val": "united kingdom" (not "United Kingdom" or "UK")
+
+Respond with ONLY valid JSON, no markdown, no explanation outside the JSON.
