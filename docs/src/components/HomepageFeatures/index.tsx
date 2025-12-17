@@ -37,9 +37,9 @@ const FeatureList: FeatureItem[] = [
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Based on Microsoft Research paper. Pre-computes semantic relationships 
-        from your table corpus, enabling fast joins that understand your data 
-        domain without external knowledge bases.
+        Based on Microsoft Research paper. Stores co-occurrence patterns from
+        your table corpus, then calculates semantic relationships on-demand for
+        fast joins that understand your data domain without external knowledge bases.
       </>
     ),
   },
