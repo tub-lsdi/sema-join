@@ -247,17 +247,6 @@ The history page shows:
 - **Middle section**: Bridge table used for the selected join
 - **Bottom section**: Details of previous table selections and configurations
 
-Click on any history entry to view:
-- Original Table R and Table S data
-- Bridge table that was used
-- Final join result
-- All parameters and settings
-
-This allows you to:
-- Reproduce past joins
-- Compare different join strategies
-- Reference previous successful joins
-
 ---
 
 You now have a complete understanding of how to use Project SEMA-JOIN for semantic table joins. Experiment with different tables, algorithms, and AI features to find the best approach for your data integration needs.
