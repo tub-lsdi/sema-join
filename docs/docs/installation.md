@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 2
 ---
 
 # Installation
@@ -10,11 +10,10 @@ This guide walks you through installing Project SEMA-JOIN on your system.
 
 Ensure your system meets these requirements:
 
-- Python 3.13 or higher
-- Node.js 20 or higher
+- Docker & Docker Compose
+- Python 3.10 or higher
 - uv package manager for Python
-- At least 4GB RAM
-- 2GB free disk space
+- Ollama (optional, for AI features)
 
 ## Installation Steps
 
@@ -27,121 +26,112 @@ git clone https://github.com/tub-lsdi/sema-join.git
 cd sema-join
 ```
 
-### Step 2: Make Script Executable
+### Step 2: Add Corpus Data
 
-Make the management script executable:
+Place your corpus JSON files in the `corpus/data/` directory:
 
 ```bash
-chmod +x sema-join.sh
+# Example structure:
+# corpus/data/tables.json
+# corpus/data/table_0001.json
+# corpus/data/table_0002.json
 ```
 
-### Step 3: Configure Environment
+These files contain the table data used to build semantic relationships through PMI score calculations.
 
-Create a `.env` file in the project root with the required configuration. See the [Environment Setup](./environment-setup.md) guide for details.
+### Step 3: Install Dependencies
 
-At minimum, create `.env` with:
+Install the corpus ingestion dependencies:
 
 ```bash
+cd corpus
+uv sync
+cd ..
+```
+
+### Step 4: Configure Environment
+
+Create a `.env` file in the project root with your configuration settings.
+
+**Note:** The project includes a `.env.example` file that you can copy and modify:
+```bash
+cp .env.example .env
+```
+
+Example `.env` configuration:
+
+```bash
+# Database
 DB_PATH=corpus.db
 LOG_LEVEL=DEBUG
+DUCKDB_MEMORY_LIMIT=25GB
+DUCKDB_TEMP_DIRECTORY=./_temp
 
-# Application Database Configuration
-APP_DB_CONTAINER_NAME=sema_app_db
-APP_DB_HOST=localhost
-APP_DB_PORT=3306
-APP_DB_DATABASE=sema_app_db
-APP_DB_USERNAME=your_username
-APP_DB_PASSWORD=your_password
-APP_DB_ROOT_PASSWORD=your_root_password
+# MySQL
+APP_DB_CONTAINER_NAME="sema_app_db"
+APP_DB_HOST="localhost"
+APP_DB_PORT="3306"
+APP_DB_DATABASE="sema_app_db"
+APP_DB_USERNAME="semajoin"
+APP_DB_PASSWORD="semajoin"
+APP_DB_ROOT_PASSWORD="rootpassword"
+
+# Ollama (optional, for AI features)
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=mistral
+OLLAMA_TIMEOUT=300
+
+# Go Service
+GO_SERVICE_URL=http://localhost:8080
 ```
 
-### Step 4: Install All Dependencies
+### Step 5: Ingest Corpus Data
 
-Install both backend and frontend dependencies:
+Run the corpus ingestion to build the semantic relationship database:
 
 ```bash
-./sema-join.sh install all
+make ingest
 ```
 
 This will:
-- Install Python backend dependencies using uv
-- Install Node.js frontend dependencies
-- Set up the virtual environment
+- Process all JSON files in `corpus/data/`
+- Calculate PMI scores for value pairs
+- Create `corpus.db` in the project root
 
-### Step 5: Start Docker Services
+### Step 6: Build and Start Services
 
-Start the application database using Docker Compose:
-
-```bash
-./sema-join.sh docker run
-```
-
-This will build and start the Docker containers defined in `docker-compose.yml`.
-
-### Step 6: Initialize Application Database
-
-Run Alembic migrations to set up the application database schema:
+Build Docker images and start all services:
 
 ```bash
-./sema-join.sh app_db
+make build
+make up
 ```
 
-This will create the necessary tables for storing join history.
+This will:
+- Build the backend (Python/FastAPI), frontend (Next.js), and Go service containers
+- Start MySQL database for application data
+- Launch all services using docker-compose
 
-### Step 7: Install AI Service (Optional)
+**Services Started:**
+- **Backend Service**: Python/FastAPI application that implements the join algorithms and coordinates operations (port 8000)
+- **Go Service**: High-performance PMI calculation engine using optimized bitmap operations (port 8080)
+- **Frontend**: Next.js web interface (port 3000)
+- **MySQL Database**: Stores application data, uploaded tables, and join history (port 3306)
 
-The AI-powered column matching feature requires Ollama with the Mistral model:
+### Step 7: Verify Installation
 
-```bash
-./sema-join.sh ai setup
-```
+Access the application to verify everything is running:
 
-This will install Ollama and download the Mistral model.
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8000
+- **API Documentation**: http://localhost:8000/docs
+- **Go Service**: http://localhost:8080 (no web interface, API only)
 
-### Step 8: Verify Installation
+### Step 8: Install AI Service (Optional)
 
-Check that all components are properly installed:
+The AI-powered column matching feature requires Ollama with the Mistral model.
 
-```bash
-./sema-join.sh status
-```
-
-## Manual Installation
-
-If you prefer to install components individually:
-
-### Backend Setup
-
-Install Python dependencies:
-
-```bash
-uv sync --extra backend
-```
-
-Activate the virtual environment:
-
-```bash
-source .venv/bin/activate
-```
-
-Or use uv run to execute commands without activating:
-
-```bash
-uv run <command>
-```
-
-### Frontend Setup
-
-Navigate to the frontend directory and install dependencies:
-
-```bash
-cd frontend
-npm install
-```
-
-### AI Setup
-
-Install Ollama for your operating system:
+Install Ollama:
 
 **Linux:**
 ```bash
@@ -153,19 +143,35 @@ curl -fsSL https://ollama.com/install.sh | sh
 brew install ollama
 ```
 
-Pull the Mistral model:
+Or use the make command:
+```bash
+make setup-ollama
+```
 
+Pull the Mistral model and start Ollama:
 ```bash
 ollama pull mistral
+OLLAMA_HOST=0.0.0.0:11434 ollama serve
 ```
 
 ## Troubleshooting
 
 **Port Conflicts**
-The backend uses port 8000 and frontend uses port 3000. Ensure these ports are available.
+Ensure the following ports are available before starting:
+- Port 3000: Frontend (Next.js)
+- Port 8000: Backend API (FastAPI)
+- Port 8080: Go service (PMI calculations)
+- Port 3306: MySQL database
+- Port 11434: Ollama AI service (optional)
+
+**Go Service Not Responding**
+If PMI calculations fail or the Go service is not accessible:
+1. Check if the Go service container is running: `docker ps | grep go-service`
+2. View Go service logs: `docker logs sema-join-go-service-1`
+3. Verify the corpus database exists at the path specified in `.env` (DB_PATH)
 
 **AI Features Not Working**
-The AI-powered column matching requires Ollama to be running on port 11434. Start Ollama with `ollama serve` or use `./sema-join.sh ai serve`.
+The AI-powered column matching requires Ollama to be running on port 11434. Start Ollama with `OLLAMA_HOST=0.0.0.0:11434 ollama serve`.
 
 ## Next Steps
 

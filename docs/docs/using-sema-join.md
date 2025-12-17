@@ -1,22 +1,26 @@
 ---
-sidebar_position: 5
+sidebar_position: 4
 ---
 
 # Using Project SEMA-JOIN
 
 Learn how to perform semantic table joins using the Project SEMA-JOIN interface.
 
-**Prerequisites:** Complete [Environment Setup](./environment-setup), [Installation](./installation), and [Corpus Ingestion](./corpus-ingestion) before proceeding.
+**Prerequisites:** Complete [Installation](./installation) and [Corpus Ingestion](./corpus-ingestion) before proceeding.
 
 ## Starting the Application
 
-Start both the backend service and web interface:
+Start all services using Docker Compose:
 
 ```bash
-./sema-join.sh run
+make up
 ```
 
-The backend will run on port 8000 and the frontend on port 3000.
+This starts:
+- Backend API on port 8000
+- Frontend web interface on port 3000
+- MySQL database for application data
+- Go service for PMI calculations on port 8080
 
 Access the web interface by opening your browser and navigating to:
 
@@ -24,113 +28,236 @@ Access the web interface by opening your browser and navigating to:
 http://localhost:3000
 ```
 
-To start services individually:
+**Start Ollama AI service (optional, for AI features):**
 
 ```bash
-# Start backend only
-./sema-join.sh run backend
-
-# Start frontend only
-./sema-join.sh run frontend
-
-# Start AI service
-./sema-join.sh ai serve
+OLLAMA_HOST=0.0.0.0:11434 ollama serve
 ```
 
-## Uploading Tables
+The Ollama service enables AI-powered column and row recommendations. The application works without it, but you'll need to manually select columns and review all candidate matches.
 
-Project SEMA-JOIN requires two tables to perform a join: Table R and Table S.
+**Other useful commands:**
+
+```bash
+make down      # Stop all services
+make restart   # Restart all services
+make logs      # View service logs
+```
+
+## Overview
+
+When you first open the application, you'll see the SEMA-JOIN overview page explaining how the system works.
+
+![SEMA-JOIN Overview](/img/how_2_sema_join/Sema-Join%20Overview.png)
+
+Two main options are available:
+- **Upload to Database** - Add new tables to your database for joining
+- **View History** - Review past join operations
+
+The system uses semantic relationships based on statistical co-occurrence patterns from large table corpora to automatically determine how values should be joined, even when they use different representations (e.g., country names vs. country codes).
+
+## Uploading Tables to Database
+
+Click "Upload to Database" to add tables to your database.
 
 ### Table Format
 
-Tables should be provided in JSON format with a specific structure. The data consists of a two-dimensional array where the first row contains column headers and subsequent rows contain the data values.
+Tables should be provided in JSON or CSV format. For JSON files, use an array of objects where each object represents a row, with keys as column names and values as the data.
 
-### Upload Methods
+**Example JSON format** (from `/tables/case_1_table_s.json`):
+```json
+[
+  {
+    "continent": "Africa",
+    "area_km2": 30370000,
+    "countries_count": 54
+  },
+  {
+    "continent": "Asia",
+    "area_km2": 44579000,
+    "countries_count": 48
+  },
+  {
+    "continent": "Europe",
+    "area_km2": 10180000,
+    "countries_count": 44
+  }
+]
+```
 
-**File Upload**  
-Click the upload button for Table R or Table S and select your JSON file.
+**Example Tables:** The project includes example table files in the `/tables` directory at the root of the project. You can use these to test semantic joins.
 
-![Upload Tables](/img/how_2_sema_join/upload_tables.png)
+### Upload Process
 
-### Table Preview
+1. Select your JSON or CSV file
+2. Optionally provide a descriptive name
+3. Optionally add a description
+4. Click upload
 
-After uploading, a preview of your table will appear. Verify that columns and data are displayed correctly.
+The table is stored in the database and can be reused for multiple join operations.
 
-![Preview Tables](/img/how_2_sema_join/preview_tables.png)
+## Selecting Tables from Database
+
+After uploading tables, select which tables to join together.
+
+![Select Tables from Database](/img/how_2_sema_join/select_table_from_db_to_join.png)
+
+Click "Select Table R" (left table) or "Select Table S" (right table) to open the selection modal.
+
+**Features:**
+- **Search** - Filter tables by name or column names
+- **Preview** - Click "Preview" to see the full table contents before selecting
+- **Delete** - Remove tables you no longer need
+
+Select a table by clicking its row, then click "Select Table" to confirm.
 
 ## Selecting Join Columns
 
-After uploading both tables, specify which columns to use for joining.
+After loading both tables, you need to specify which columns to use for joining.
+
+![Choose Columns to Join](/img/how_2_sema_join/choose_columns_to_join.png)
+
+The tables display side-by-side, each showing the first few rows.
 
 ### Manual Selection
 
-Review the column headers and select the columns from each table that should be matched. For example, if Table R has a "country_name" column and Table S has a "country_code" column, select these as your join columns.
+Click any column header to select it as the join column. The selected column will be highlighted and shown at the bottom:
+- Table R: "Selected: [column_name]"
+- Table S: "Selected: [column_name]"
 
-![Select Columns Manually](/img/how_2_sema_join/select_columns_manually.png)
+### AI-Powered Column Suggestions
 
-### AI-Powered Suggestions
+If the Ollama AI service is running, you can use automatic column suggestions.
 
-If the AI service is running, use the automatic column suggestion feature. This addresses an area identified in the original research as important future work: determining the joining columns without user input.
+![AI Column Suggestions](/img/how_2_sema_join/AI_column_suggestion.png)
 
-The AI analyzes both tables and recommends which columns to join based on column names, data patterns, and semantic relationships. It provides a confidence score and explanation. Review the suggestion and accept it or manually adjust your selection.
+Click "Get AI Recommendations" to analyze both tables. The AI examines:
+- Column names and data patterns
+- Sample values from both tables
+- Semantic relationships between columns
 
-![AI Suggest Column for Bridge](/img/how_2_sema_join/ai_suggest_column_for_bridge.png)
+**Recommendation Details:**
+- **Confidence Level** - High (≥0.8), Medium (≥0.6), or Low (<0.6)
+- **Suggested Column Pair** - Shows which columns should be joined
+- **Explanation** - Reason for the recommendation
+- **Overall Analysis** - Context about the relationship between tables
+
+Click "✓ Use This Join" to automatically select the suggested columns.
 
 ## Creating the Bridge Table
 
-The bridge table shows potential matches between values from your selected columns.
+The bridge table contains candidate matches between values from your selected columns.
 
 ### Step 1: Choose Algorithm
 
-Select one of two algorithms:
+Select one of two algorithms based on your needs:
 
-**CS-JP-LP**  
-Uses column-level semantic compatibility scores with linear programming optimization to find the optimal solution. Provides the highest quality results (F-score) among all semantic join approaches. Best for smaller tables where maximum accuracy is critical.
+**RS-JP (Row Method) - BASELINE**
 
-**RS-JP**  
-Simplified variant that uses row-level PMI scores for greedy matching. According to the research, RS-JP completes joins in under one second for all tested tasks. While F-score is a few percentage points behind CS-JP-LP, RS-JP is substantially better than traditional similarity-based join techniques, with quality improvements as high as 20 percentage points. Recommended as a reasonable alternative when CS-JP-LP becomes too expensive, or for larger tables requiring faster execution.
+![RS-JP Algorithm](/img/how_2_sema_join/select-algorithm-to-join.png)
 
-![Choose Algorithm](/img/how_2_sema_join/choose_algo_and_top_k.png)
+A greedy, per-row optimization algorithm that independently identifies candidate matches for each value based on pairwise scores derived from corpus co-occurrence statistics.
+
+**CS-JP-LP (Column Method) - ADVANCED**
+
+![CS-JP-LP Algorithm](/img/how_2_sema_join/select-algorithm-2.png)
+
+A global optimization algorithm that formulates join prediction as a Linear Program, maximizing aggregate column-level scores while ensuring consistent mapping assignments across all rows.
 
 ### Step 2: Set Top K Matches
 
-Choose how many candidate matches to show for each value:
+For **RS-JP only**, choose how many candidate matches to show for each value:
 
 - **K = 1**: Automatically uses the best match for each value
-- **K > 1**: Shows multiple candidates, allowing you to manually select the correct matches
+- **K > 1**: Shows multiple candidates, allowing you to review and select
+
+Note: CS-JP-LP always returns exactly one match per value (the globally optimal assignment).
 
 ### Step 3: Create Bridge Table
 
-Click "Create Bridge Table" to generate the matches. The system analyzes semantic relationships and calculates PMI scores for all potential value pairs.
+Click "Create Bridge Table" to generate the matches. The system:
+1. Extracts values from your selected columns
+2. Queries the corpus database for co-occurrence statistics
+3. Calculates matching scores for potential value pairs
+4. Returns candidate matches with their scores
 
-### Step 4: Select Matches (if K > 1)
+### Step 4: AI Row Recommendations (Optional)
 
-If you set K > 1, the bridge table will show multiple candidate matches for each value. Review the candidates and their PMI scores, then manually select which matches to use for the final join.
+If you're using **RS-JP with K > 1**, you can get AI help selecting the best matches.
 
-Higher PMI scores indicate stronger semantic relationships based on corpus co-occurrence patterns.
+![AI Row Recommendations](/img/how_2_sema_join/AI-row-recommendation.png)
 
-![Select Values for Bridge Table](/img/how_2_sema_join/select_values_for_bridge_table.png)
+The bridge table shows:
+- **Select** column - Checkboxes for entries to include in the final join
+- **Recommendation** column - Checkboxes to mark entries for AI analysis
+- **R Value** - Value from Table R
+- **S Value** - Candidate match from Table S
+- **Score** - Match strength (higher is better)
+
+**Using AI Recommendations:**
+1. Check boxes in the "Recommendation" column for entries you want AI to analyze
+2. Click "AI Recommend Best" button
+3. The AI evaluates all candidates and selects the best match for each R value
+4. Results update the "Select" column automatically
+5. You can still manually adjust selections afterward
+
+**Bulk Actions:**
+- "Select All for Recommendation" - Mark all entries for AI analysis
+- "Clear Recommendation" - Uncheck all recommendation boxes
+- "Select All" / "Deselect All" - Manage which entries will be used in the join
+
+### Step 5: Manual Review
+
+Review the bridge table and adjust selections as needed. By default:
+- **RS-JP**: Best match (highest score) per R value is auto-selected
+- **CS-JP-LP**: All entries are selected (optimal solution)
+
+You can change selections before performing the join.
 
 ## Performing the Join
 
-Once you have created your bridge table and selected the matches:
+Once you've created and reviewed your bridge table:
 
 1. Click "Join Tables"
-2. The system joins Table R and Table S using your bridge table mappings
-3. The result shows combined data from both tables
+2. The system performs a three-way join: Table R → Bridge Table → Table S
+3. Results show combined data from both original tables
 
 ## Viewing Results
 
-The joined result table displays:
+The joined result displays all matched records.
 
-- All columns from both original tables
+![Join Results](/img/how_2_sema_join/joining-tables-with-bridge.png)
+
+The result table includes:
+- All columns from Table R
+- Bridge table columns (matching values and scores)
+- All columns from Table S
 - Only rows where matches were found
-- The relationships defined in your bridge table
 
-Review the results to verify they meet your expectations.
+You can review the results to verify they meet your expectations.
 
-![Join Results](/img/how_2_sema_join/join_results.png)
+## Viewing History
 
+Click "View History" from the home page to see past join operations.
 
-You now have a complete understanding of how to use Project SEMA-JOIN for semantic table joins. Experiment with different tables, algorithms, and features to find the best approach for your data integration needs.
+![History View](/img/how_2_sema_join/history.png)
 
+The history page shows:
+- **Top section**: Past joins showing timestamp and columns used
+- **Middle section**: Bridge table used for the selected join
+- **Bottom section**: Details of previous table selections and configurations
+
+Click on any history entry to view:
+- Original Table R and Table S data
+- Bridge table that was used
+- Final join result
+- All parameters and settings
+
+This allows you to:
+- Reproduce past joins
+- Compare different join strategies
+- Reference previous successful joins
+
+---
+
+You now have a complete understanding of how to use Project SEMA-JOIN for semantic table joins. Experiment with different tables, algorithms, and AI features to find the best approach for your data integration needs.

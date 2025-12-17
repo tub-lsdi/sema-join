@@ -22,32 +22,35 @@ For example, Project SEMA-JOIN can discover relationships such as:
 
 These relationships are quantified using Pointwise Mutual Information (PMI) scores calculated from the corpus.
 
+## System Components
+
+**Backend Service (Python/FastAPI)**
+The core orchestration service that coordinates all join operations. It implements the CS-JP-LP and RS-JP algorithms, manages the application database (MySQL), handles table uploads and storage, processes bridge table creation, and calls the Go service for PMI calculations. The backend also manages the Linear Programming solver for CS-JP-LP optimization. Runs on port 8000.
+
+**Go Service**
+High-performance PMI calculation engine that processes co-occurrence statistics from the corpus database. Uses optimized bitmap operations for fast computation of both row-level PMI scores (for RS-JP) and column-level quad scores (for CS-JP-LP). Runs on port 8080.
+
+**Web Interface (Next.js)**
+Provides an intuitive React-based interface for uploading tables, selecting join columns, configuring algorithms, and viewing results. Runs on port 3000.
+
 ## How It Works
 
 Project SEMA-JOIN operates in two stages:
 
-**Stage 1: Corpus Preparation**  
-The system ingests a corpus of tables and calculates PMI scores for all value pairs that co-occur. This creates a statistical foundation capturing semantic relationships present in your data domain.
+**Stage 1: Corpus Preparation**
+The system ingests a corpus of tables and stores co-occurrence patterns in the corpus database. This creates a statistical foundation capturing which values appear together in tables, providing the raw data needed for semantic relationship discovery.
 
-**Stage 2: Table Joining**  
-When joining two tables, Project SEMA-JOIN uses the pre-computed PMI scores to identify which rows have strong semantic relationships, even when values don't match exactly.
-
-## System Components
-
-**Backend Service**  
-Implements the semantic join algorithms, manages the corpus database, and calculates PMI scores.
-
-**Web Interface**  
-Provides an intuitive interface for uploading tables and executing joins.
+**Stage 2: Table Joining**
+When joining two tables, the backend service coordinates the process: it extracts values from selected columns, calls the Go service to calculate PMI scores on-demand for those specific values, then applies the chosen algorithm (RS-JP or CS-JP-LP) to determine the optimal join mappings. The Go service queries the corpus database for co-occurrence patterns and uses optimized bitmap operations to compute PMI scores in real-time. This allows the system to identify which rows have strong semantic relationships, even when values don't match exactly.
 
 ## Relationship to the Research Paper
 
 This implementation is based on the Microsoft Research SEMA-JOIN paper and implements the core algorithms:
 
-- CS-JP-LP for optimal join quality
-- RS-JP for efficient performance
-- PMI-based semantic relationship discovery
-- Bridge table discovery for multi-hop joins
+- **CS-JP-LP (Column Score Join Prediction with Linear Programming)** - Uses column-level semantic compatibility scores with LP optimization to find the optimal join mapping that maximizes aggregate pairwise correlation. Provides the highest quality results (F-score) with a 2-approximation guarantee.
+- **RS-JP (Row Score Join Prediction)** - A simplified variant that uses row-level PMI scores for greedy matching. Optimizes each join decision individually, completing joins in under one second for efficient performance.
+- **PMI-based semantic relationship discovery** - Uses Pointwise Mutual Information (PMI) scores calculated from statistical co-occurrence in a large table corpus (100M+ tables) to quantify semantic relationships at both row-level and column-level.
+- **Automatic bridge table creation** - Creates bridge tables that map semantically related values even when they don't match exactly (e.g., country codes to country names, stock tickers to company names).
 
 This implementation extends the research with additional features:
 
@@ -56,5 +59,5 @@ This implementation extends the research with additional features:
 
 ## Next Steps
 
-Start by completing the installation, then proceed with your environment configuration
+Follow the [Installation](./installation) guide to set up Project SEMA-JOIN, then proceed with [Corpus Ingestion](./corpus-ingestion) to build your semantic relationship database.
 
