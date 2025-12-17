@@ -1,7 +1,3 @@
-"""
-Health check and API information endpoints.
-"""
-
 from fastapi import APIRouter
 
 

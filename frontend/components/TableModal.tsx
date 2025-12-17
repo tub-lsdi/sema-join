@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect } from 'react';
+import { type TableRow } from '@/lib/api';
 import styles from './TableModal.module.css';
 
 interface TableModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  data: Array<Record<string, any>>;
+  data: TableRow[];
   selectedColumn?: string;
 }
 

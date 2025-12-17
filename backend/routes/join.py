@@ -1,5 +1,3 @@
-"""Semantic join endpoints."""
-
 from fastapi import APIRouter, HTTPException, Request
 
 from backend.models import JoinResponse, JoinWithBridgeRequest

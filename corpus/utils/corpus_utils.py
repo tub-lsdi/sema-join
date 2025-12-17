@@ -5,7 +5,7 @@ from typing import Iterator, Any
 import orjson
 from loguru import logger
 
-from backend.utils.normalization import NormalizationStrategy
+from .normalization import NormalizationStrategy
 
 
 class CorpusParser:

@@ -7,31 +7,34 @@ Semantic table joins using PMI-based matching.
 ## Prerequisites
 
 - Docker & docker-compose
+- Python 3.10+ with uv (for corpus ingestion)
 - Ollama (for AI features)
 
 ## Setup
 
 1. Create `.env` file (copy from example below)
-2. Build and start services:
+
+2. Install corpus dependencies (for local ingestion):
+```bash
+cd corpus && uv sync && cd ..
+```
+
+3. Ingest corpus data locally (if you have `corpus/data/tables.json`):
+```bash
+make ingest
+```
+This creates `corpus.db` in the project root.
+
+4. Build and start Docker services:
 ```bash
 make build
 make up
 ```
 
-3. Setup Ollama (if not installed):
+5. Setup Ollama (if not installed):
 ```bash
 make setup-ollama
 OLLAMA_HOST=0.0.0.0:11434 ollama serve
-```
-
-4. Ingest corpus data (if you have `backend/corpus/data/tables.json`):
-```bash
-make ingest
-```
-
-5. Run database migrations:
-```bash
-make db-migrate
 ```
 
 Access:

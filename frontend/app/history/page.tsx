@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import HistoryTable from "./components/HistoryTable";
 import styles from "./page.module.css";
-import { fetchHistory } from "@/lib/api";
+import { fetchHistory, type HistoryEntry } from "@/lib/api";
+import ErrorAlert from "@/components/ErrorAlert";
 
 export default function HistoryPage() {
-  const [entries, setEntries] = useState<any[]>([]);
+  const [entries, setEntries] = useState<HistoryEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     async function loadHistory() {
@@ -16,7 +18,8 @@ export default function HistoryPage() {
         const resp = await fetchHistory();
         setEntries(resp.entries || []);
       } catch (e) {
-        console.error("Failed to load history:", e);
+        const errorMessage = e instanceof Error ? e.message : "Failed to load history";
+        setError(errorMessage);
         setEntries([]);
       } finally {
         setLoading(false);
@@ -31,8 +34,9 @@ export default function HistoryPage() {
         <Header />
 
         <div className={styles.card}>
-          <div style={{ width: "100%" }}>
-            <h2 style={{ margin: 0, marginBottom: "0.75rem" }}>History</h2>
+          <div className={styles.content}>
+            <h2 className={styles.heading}>History</h2>
+            {error && <ErrorAlert message={error} />}
             {loading ? (
               <p>Loading...</p>
             ) : (

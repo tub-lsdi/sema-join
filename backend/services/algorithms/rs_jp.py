@@ -1,7 +1,3 @@
-"""
-RS-JP algorithm implementation.
-"""
-
 from typing import Optional
 from loguru import logger
 from backend.services.PMIService import PMIService

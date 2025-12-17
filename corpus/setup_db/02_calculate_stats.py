@@ -3,12 +3,19 @@ import sys
 from pathlib import Path
 
 
-# Add backend to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
+# Add corpus to path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import duckdb
 from loguru import logger
-from backend.services import get_db_connection
+from config import settings
+
+
+def get_db_connection() -> duckdb.DuckDBPyConnection:
+    """Create a connection to the corpus DuckDB database."""
+    db_path = settings.DEFAULT_DB_PATH
+    logger.info(f"Connecting to DuckDB at: {db_path}")
+    return duckdb.connect(database=str(db_path), read_only=False, config=settings.DEFAULT_DB_CONFIG)
 
 
 def main():

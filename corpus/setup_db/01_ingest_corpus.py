@@ -2,18 +2,17 @@ import os
 import sys
 from pathlib import Path
 
-# Add backend to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
+# Add corpus to path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import duckdb
-from dotenv import load_dotenv
 from loguru import logger
 import polars as pl
 from tqdm import tqdm
 
-from backend.config import settings
-from backend.services import get_db_connection
-from backend.utils import (
+# Import from corpus package
+from config import settings
+from utils import (
     stream_json_tables,
     extract_rows,
     table_hash,
@@ -22,6 +21,13 @@ from backend.utils import (
 )
 
 set_normalization_strategy(NormalizationStrategy.ALPHANUMERIC_STRICT)
+
+
+def get_db_connection() -> duckdb.DuckDBPyConnection:
+    """Create a connection to the corpus DuckDB database."""
+    db_path = settings.DEFAULT_DB_PATH
+    logger.info(f"Connecting to DuckDB at: {db_path}")
+    return duckdb.connect(database=str(db_path), read_only=False, config=settings.DEFAULT_DB_CONFIG)
 
 
 def create_schema(con: duckdb.DuckDBPyConnection):

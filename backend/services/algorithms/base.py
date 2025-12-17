@@ -1,7 +1,3 @@
-"""
-Abstract base class for semantic join algorithms.
-"""
-
 from abc import ABC, abstractmethod
 from typing import Optional
 import duckdb

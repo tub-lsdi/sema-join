@@ -59,9 +59,6 @@ services:
       - DB_PATH=/data/corpus.db
       - DUCKDB_TEMP_DIRECTORY=/app/_temp
       - DUCKDB_MEMORY_LIMIT=${DUCKDB_MEMORY_LIMIT:-20GB}
-      # Batch processing
-      - CELL_BATCH_SIZE=${CELL_BATCH_SIZE:-1000000}
-      - TABLE_BATCH_SIZE=${TABLE_BATCH_SIZE:-50000}
       # MySQL configuration (Docker networking)
       - APP_DB_HOST=mysql
       - APP_DB_PORT=3306

@@ -250,7 +250,6 @@ export default function BridgeTablePanel({
                   onChange={(e) => onTopKChange(parseInt(e.target.value) || 1)}
                   disabled={loading}
                   className={styles.selectCompact}
-                  style={{ width: "80px" }}
                   title="Top K matches per row"
                 />
               )}

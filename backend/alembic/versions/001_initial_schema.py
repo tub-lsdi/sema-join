@@ -1,33 +1,29 @@
-"""create tables for history
-
-Revision ID: 2d8a1db4c906
-Revises:
-Create Date: 2025-11-02 14:38:00.507429
-
-"""
-
 from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy.dialects import mysql
 
 
-# revision identifiers, used by Alembic.
-revision: str = "2d8a1db4c906"
+revision: str = '001_initial_schema'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    """Upgrade schema."""
+    """Create all tables with final schema."""
+
+    # Create table_entry table with LONGTEXT for body column
     op.create_table(
         "table_entry",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
-        sa.Column("body", sa.Text(), nullable=False),
+        sa.Column("body", mysql.LONGTEXT, nullable=False),
         sa.Column("columns", sa.JSON(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
+
+    # Create join_history table
     op.create_table(
         "join_history",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
@@ -61,11 +57,27 @@ def upgrade() -> None:
         ),
         sa.PrimaryKeyConstraint("id"),
     )
-    # ### end Alembic commands ###
+
+    # Create uploaded_table table
+    op.create_table(
+        "uploaded_table",
+        sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
+        sa.Column("name", sa.String(length=255), nullable=False),
+        sa.Column("description", sa.Text(), nullable=True),
+        sa.Column(
+            "upload_timestamp",
+            sa.DateTime(timezone=True),
+            server_default=sa.text("now()"),
+            nullable=False,
+        ),
+        sa.Column("body", mysql.LONGTEXT, nullable=False),
+        sa.Column("columns", sa.JSON(), nullable=False),
+        sa.PrimaryKeyConstraint("id"),
+    )
 
 
 def downgrade() -> None:
-    """Downgrade schema."""
+    """Drop all tables."""
+    op.drop_table("uploaded_table")
     op.drop_table("join_history")
     op.drop_table("table_entry")
-    # ### end Alembic commands ###
