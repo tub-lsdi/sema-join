@@ -62,27 +62,35 @@ Example `.env` configuration:
 
 ```bash
 # Database
-DB_PATH=corpus.db
-LOG_LEVEL=DEBUG
-DUCKDB_MEMORY_LIMIT=25GB
-DUCKDB_TEMP_DIRECTORY=./_temp
+DB_PATH=corpus.db  # Path where DuckDB corpus database will be stored
+LOG_LEVEL=DEBUG    # Options: DEBUG, INFO, WARNING, ERROR
 
-# MySQL
-APP_DB_CONTAINER_NAME="sema_app_db"
-APP_DB_HOST="localhost"
-APP_DB_PORT="3306"
-APP_DB_DATABASE="sema_app_db"
-APP_DB_USERNAME="semajoin"
-APP_DB_PASSWORD="semajoin"
-APP_DB_ROOT_PASSWORD="rootpassword"
+# DuckDB Performance Settings
+DUCKDB_MEMORY_LIMIT=25GB      # Max RAM DuckDB can use (set to ~75% of available system RAM, e.g., 12GB, 24GB, 48GB)
+DUCKDB_TEMP_DIRECTORY=./_temp # Directory for temporary files (requires free disk space during corpus ingestion)
 
-# Ollama (optional, for AI features)
-OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=mistral
-OLLAMA_TIMEOUT=300
+# Corpus Ingestion Batch Sizes
+CELL_BATCH_SIZE=1000000  # Number of cells to process per batch (increase if you have more RAM available)
+TABLE_BATCH_SIZE=50000   # Number of tables to process per batch (increase if you have more RAM available)
 
-# Go Service
-GO_SERVICE_URL=http://localhost:8080
+# MySQL Application Database
+APP_DB_CONTAINER_NAME="sema_app_db"  # Name for the MySQL Docker container
+APP_DB_HOST="localhost"              # Use "localhost" for host access, Docker overrides this to "mysql" internally
+APP_DB_PORT="3306"                   # MySQL port
+APP_DB_DATABASE="sema_app_db"        # Database name
+APP_DB_USERNAME="semajoin"           # MySQL username
+APP_DB_PASSWORD="semajoin"           # MySQL password (change in production!)
+APP_DB_ROOT_PASSWORD="rootpassword"  # MySQL root password (change in production!)
+
+# Ollama AI
+# Runs natively on host for GPU access. Start with: OLLAMA_HOST=0.0.0.0:11434 ollama serve
+# Install first: make setup-ollama
+OLLAMA_BASE_URL=http://localhost:11434  # Ollama server URL
+OLLAMA_MODEL=mistral                    # AI model name (mistral, llama2, etc.)
+OLLAMA_TIMEOUT=300                      # Request timeout in seconds
+
+# Go PMI Service
+GO_SERVICE_URL=http://localhost:8080  # Go service URL (Docker overrides this internally)
 ```
 
 ### Step 5: Ingest Corpus Data
