@@ -2,7 +2,7 @@
 sidebar_position: 4
 ---
 
-# Using Project SEMA-JOIN
+# Performing Semantic Joins
 
 Learn how to perform semantic table joins using the Project SEMA-JOIN interface.
 
@@ -152,13 +152,13 @@ The bridge table contains candidate matches between values from your selected co
 
 Select one of two algorithms based on your needs:
 
-**RS-JP (Row Method) - BASELINE**
+**RS-JP (Row Method)**
 
 ![RS-JP Algorithm](/img/how_2_sema_join/select-algorithm-to-join.png)
 
 A greedy, per-row optimization algorithm that independently identifies candidate matches for each value based on pairwise scores derived from corpus co-occurrence statistics.
 
-**CS-JP-LP (Column Method) - ADVANCED**
+**CS-JP-LP (Column Method)**
 
 ![CS-JP-LP Algorithm](/img/how_2_sema_join/select-algorithm-2.png)
 

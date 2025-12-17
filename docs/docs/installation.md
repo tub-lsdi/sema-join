@@ -103,7 +103,6 @@ make ingest
 
 This will:
 - Process all JSON files in `corpus/data/`
-- Calculate PMI scores for value pairs
 - Create `corpus.db` in the project root
 
 ### Step 6: Build and Start Services
