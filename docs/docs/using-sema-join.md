@@ -137,7 +137,7 @@ Click "Get AI Recommendations" to analyze both tables. The AI examines:
 - Semantic relationships between columns
 
 **Recommendation Details:**
-- **Confidence Level** - High (≥0.8), Medium (≥0.6), or Low (<0.6)
+- **Confidence Level** - High (0.8+), Medium (0.6-0.8), or Low (below 0.6)
 - **Suggested Column Pair** - Shows which columns should be joined
 - **Explanation** - Reason for the recommendation
 - **Overall Analysis** - Context about the relationship between tables

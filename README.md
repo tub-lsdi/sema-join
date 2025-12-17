@@ -69,36 +69,3 @@ make ingest        # Ingest corpus data
 make db-migrate    # Run database migrations
 make clean         # Remove all containers/volumes
 ```
-
-## Environment (.env)
-
-```bash
-# Database
-DB_PATH=corpus.db
-LOG_LEVEL=DEBUG
-DUCKDB_MEMORY_LIMIT=25GB
-DUCKDB_TEMP_DIRECTORY=./_temp
-
-# MySQL
-APP_DB_CONTAINER_NAME="sema_app_db"
-APP_DB_HOST="localhost"
-APP_DB_PORT="3306"
-APP_DB_DATABASE="sema_app_db"
-APP_DB_USERNAME="semajoin"
-APP_DB_PASSWORD="semajoin"
-APP_DB_ROOT_PASSWORD="rootpassword"
-
-# Ollama
-OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=mistral
-OLLAMA_TIMEOUT=300
-
-# Go Service
-GO_SERVICE_URL=http://localhost:8080
-```
-
-## Project Structure
-
-- `/backend` - FastAPI backend
-- `/frontend` - Next.js frontend
-- `/go-service` - PMI calculation service
