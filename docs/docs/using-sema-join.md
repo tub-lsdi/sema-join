@@ -62,6 +62,17 @@ The system uses semantic relationships based on statistical co-occurrence patter
 
 Click "Upload to Database" to add tables to your database.
 
+### Upload Process
+
+![Upload to Database](/img/how_2_sema_join/Upload_to_Database.png)
+
+1. Select your JSON or CSV file
+2. Optionally provide a descriptive name
+3. Optionally add a description
+4. Click upload
+
+The table is stored in the database and can be reused for multiple join operations.
+
 ### Table Format
 
 Tables should be provided in JSON or CSV format. For JSON files, use an array of objects where each object represents a row, with keys as column names and values as the data.
@@ -88,15 +99,6 @@ Tables should be provided in JSON or CSV format. For JSON files, use an array of
 ```
 
 **Example Tables:** The project includes example table files in the `/tables` directory at the root of the project. You can use these to test semantic joins.
-
-### Upload Process
-
-1. Select your JSON or CSV file
-2. Optionally provide a descriptive name
-3. Optionally add a description
-4. Click upload
-
-The table is stored in the database and can be reused for multiple join operations.
 
 ## Selecting Tables from Database
 
