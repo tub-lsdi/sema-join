@@ -83,7 +83,7 @@ ingest:
 	fi
 	@df -h . | tail -1
 	@echo ""
-	@echo "Phase 1: Ingesting corpus data..."
+	@echo "Ingesting corpus data..."
 	corpus/.venv/bin/python corpus/setup_db/01_ingest_corpus_parallel.py
 	@echo ""
 	@echo "Corpus ingestion complete! Database created at: corpus.db"

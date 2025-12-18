@@ -6,15 +6,16 @@ Semantic table joins using PMI-based matching.
 
 ## Prerequisites
 
-- Docker & docker-compose
-- Python 3.10+ with uv
+- Docker & Docker Compose
+- Python 3.10 or higher
+- uv package manager for Python
 - Ollama (optional, for AI features)
 
 ## Quick Setup
 
 1. **Clone repository**
 ```bash
-git clone <repository-url>
+git clone https://github.com/tub-lsdi/sema-join.git
 cd sema-join
 ```
 
@@ -31,13 +32,18 @@ uv sync
 cd ..
 ```
 
-4. **Add corpus data**
+4. **Create data directory and add corpus data**
+
+First, create the data directory:
+```bash
+mkdir -p corpus/data
+```
 
 You can use the Wikipedia Tables dataset ("A dataset of 1.6M Wikipedia Tables in JSON format") from:
 
 📥 http://websail-fe.cs.northwestern.edu/TabEL/
 
-You need to add corpus JSON files to the `corpus/data/` directory. 
+Add corpus JSON files to the `corpus/data/` directory. 
 
 The expected structure looks like:
 

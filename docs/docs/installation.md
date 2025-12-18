@@ -70,8 +70,6 @@ OLLAMA_TIMEOUT=300                      # Request timeout in seconds
 GO_SERVICE_URL=http://localhost:8080  # Go service URL (Docker overrides this internally)
 ```
 
-These files contain the table data used to build semantic relationships through PMI score calculations.
-
 ### Step 3: Install Dependencies
 
 Install the corpus ingestion dependencies:
@@ -82,13 +80,19 @@ uv sync
 cd ..
 ```
 
-### Step 4: Add Corpus Data
+### Step 4: Create Data Directory and Add Corpus Data
+
+First, create the data directory:
+
+```bash
+mkdir -p corpus/data
+```
 
 You can use the Wikipedia Tables dataset ("A dataset of 1.6M Wikipedia Tables in JSON format") from:
 
 📥 http://websail-fe.cs.northwestern.edu/TabEL/
 
-You need to add corpus JSON files to the `corpus/data/` directory. The expected structure looks like:
+Add corpus JSON files to the `corpus/data/` directory. The expected structure looks like:
 
 ```
 # Example structure:
