@@ -8,19 +8,9 @@ from .base import BridgeAlgorithm
 class RSJPAlgorithm(BridgeAlgorithm):
     """
     RS-JP algorithm.
-
-    Greedy algorithm: Each r independently picks its best s based on row-level PMI.
-    Fast and efficient for most use cases.
     """
 
     def __init__(self, db_connection, pmi_service: Optional[PMIService] = None):
-        """
-        Initialize RS-JP algorithm.
-
-        Args:
-            db_connection: DuckDB connection (kept for compatibility, not used if pmi_service is provided)
-            pmi_service: Optional PMIService instance. If not provided, creates one with default config.
-        """
         super().__init__(db_connection, pmi_service)
         if self.pmi_service is None:
             self.pmi_service = PMIService(settings.GO_SERVICE_URL)
@@ -33,8 +23,6 @@ class RSJPAlgorithm(BridgeAlgorithm):
     ) -> list[dict]:
         """
         Create a bridge table using RS-JP algorithm.
-
-        Greedy algorithm: Each r independently picks its best s based on row-level PMI.
 
         Args:
             list_r: Normalized list of strings from R set
@@ -76,7 +64,8 @@ class RSJPAlgorithm(BridgeAlgorithm):
                         {
                             "r_val": r_val,
                             "s_val": candidate["s_val"],
-                            "npmi": candidate["pmi"],  # Use 'npmi' field name for consistency
+                            # Use 'npmi' field name for consistency
+                            "npmi": candidate["pmi"],
                         }
                     )
             else:

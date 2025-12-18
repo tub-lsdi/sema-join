@@ -15,16 +15,6 @@ async def create_bridge_table(request_data: BridgeTableRequest, request: Request
     """
     Create a bridge table using RS-JP or CS-JP-LP algorithm.
 
-    This endpoint finds the best matches for each value in list_r from list_s
-    based on corpus co-occurrence data.
-
-    - RS-JP (row): Independent per-row optimization. Returns top_k candidates per R value.
-      Each R value independently picks its best S matches based on pairwise NPMI scores.
-
-    - CS-JP-LP (column): Global optimization considering all rows together.
-      Returns ONE optimal complete mapping that maximizes aggregate column-level PMI scores.
-      The top_k parameter is ignored for this method.
-
     Args:
         request_data: BridgeTableRequest containing:
             - list_r: values to be matched
@@ -36,10 +26,7 @@ async def create_bridge_table(request_data: BridgeTableRequest, request: Request
     Returns:
         BridgeTableResponse with the best matches.
         - For RS-JP: top_k matches per R value (can have multiple rows per R value)
-        - For CS-JP-LP: one match per R value (optimal global mapping)
-
-    Raises:
-        HTTPException: If the operation fails
+        - For CS-JP-LP: one match per R value
     """
     try:
         join_service: SemanticJoinService = request.app.state.join_service

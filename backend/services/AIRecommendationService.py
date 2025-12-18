@@ -21,32 +21,16 @@ class AIRecommendationService:
     def _build_prompt(self, table_r_schema: dict, table_s_schema: dict) -> str:
         """
         Build a prompt for the LLM to analyze column relationships.
-
-        Args:
-            table_r_schema: Schema of first table with columns and sample values
-            table_s_schema: Schema of second table with columns and sample values
-
-        Returns:
-            Formatted prompt string
         """
         template = self._load_prompt_template("column_recommendation.txt")
         return template.format(
             table_r_schema=json.dumps(table_r_schema, indent=2),
-            table_s_schema=json.dumps(table_s_schema, indent=2)
+            table_s_schema=json.dumps(table_s_schema, indent=2),
         )
 
     def _call_ollama(self, prompt: str) -> dict:
         """
         Call the Ollama API to get LLM response.
-
-        Args:
-            prompt: The prompt to send to the LLM
-
-        Returns:
-            Parsed JSON response from the LLM
-
-        Raises:
-            Exception: If API call fails or response cannot be parsed
         """
         try:
             # Call Ollama API
@@ -59,7 +43,7 @@ class AIRecommendationService:
                     "format": "json",  # Request JSON format
                     "options": {
                         "num_ctx": 8192  # Increase context window to 8192 tokens
-                    }
+                    },
                 },
                 timeout=self.timeout,
             )
@@ -88,8 +72,7 @@ class AIRecommendationService:
                     ) from e
 
         except requests.exceptions.RequestException as e:
-            raise Exception(
-                f"Failed to call Ollama API at {self.base_url}: {str(e)}")
+            raise Exception(f"Failed to call Ollama API at {self.base_url}: {str(e)}")
         except Exception as e:
             raise Exception(f"Error processing LLM response: {str(e)}")
 
@@ -106,10 +89,6 @@ class AIRecommendationService:
 
         Returns:
             Dictionary containing recommended joins and analysis
-
-        Raises:
-            ValueError: If tables are empty or invalid
-            Exception: If LLM call fails
         """
         # Validation
         if not table_r or not table_s:
@@ -229,7 +208,7 @@ class AIRecommendationService:
                     "format": "json",
                     "options": {
                         "num_ctx": 8192  # Increase context window to 8192 tokens
-                    }
+                    },
                 },
                 timeout=self.timeout,
             )
@@ -259,8 +238,7 @@ class AIRecommendationService:
                     # Fallback: Pick highest NPMI
                     entries_for_r = grouped.get(r_val, [])
                     if entries_for_r:
-                        best_entry = max(
-                            entries_for_r, key=lambda e: e.get("npmi", 0))
+                        best_entry = max(entries_for_r, key=lambda e: e.get("npmi", 0))
                         recommended_indices.append(best_entry["index"])
                         print(
                             f"Warning: AI recommended '{recommended_s_val}' for '{r_val}' but it's not in the list. "
@@ -279,8 +257,7 @@ class AIRecommendationService:
                 for r_val in missed_r_vals:
                     entries_for_r = grouped.get(r_val, [])
                     if entries_for_r:
-                        best_entry = max(
-                            entries_for_r, key=lambda e: e.get("npmi", 0))
+                        best_entry = max(entries_for_r, key=lambda e: e.get("npmi", 0))
                         recommended_indices.append(best_entry["index"])
                         recommendations.append(
                             {

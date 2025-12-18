@@ -12,12 +12,7 @@ class CSJPLPAlgorithm:
     """
 
     def __init__(self, pmi_service: Optional[PMIService] = None):
-        """
-        Initialize the CS-JP-LP algorithm.
 
-        Args:
-            pmi_service: Optional PMIService instance. If not provided, creates one with default config.
-        """
         self.pmi_service = pmi_service or PMIService(settings.GO_SERVICE_URL)
 
     def create_bridge(
@@ -77,8 +72,7 @@ class CSJPLPAlgorithm:
         # Step 1: Solve CILP using Algorithm 2 (which constructs CLP, calls Algorithm 1, and converts to integral)
         step1_start = time.time()
         logger.info("CS-JP-LP: Step 1 - Solving CILP (calling Algorithm 2)...")
-        x_star, z_star = self._algorithm_2_solve_cilp(
-            list_r, list_s, w_ijkl_scores)
+        x_star, z_star = self._algorithm_2_solve_cilp(list_r, list_s, w_ijkl_scores)
         step1_duration = time.time() - step1_start
         timings["step1_solve_cilp"] = step1_duration
         logger.info(
@@ -89,8 +83,7 @@ class CSJPLPAlgorithm:
 
         # Step 3: Extract join function
         step2_start = time.time()
-        logger.info(
-            "CS-JP-LP: Step 2 - Extracting join function from solution...")
+        logger.info("CS-JP-LP: Step 2 - Extracting join function from solution...")
         join_mapping = self._extract_join_function(list_r, list_s, x_star)
         step2_duration = time.time() - step2_start
         timings["step2_extract_join"] = step2_duration
@@ -151,8 +144,7 @@ class CSJPLPAlgorithm:
                     f"x_{i}_{j}", lowBound=0, upBound=1, cat="Continuous"
                 )
 
-        logger.info(
-            f"  Creating {len(w_ijkl_scores)} z variables from PMI scores...")
+        logger.info(f"  Creating {len(w_ijkl_scores)} z variables from PMI scores...")
         z_vars = {}
         r_index = {r: i for i, r in enumerate(list_r)}
         s_index = {s: j for j, s in enumerate(list_s)}
@@ -190,13 +182,13 @@ class CSJPLPAlgorithm:
         solver = pulp.HiGHS_CMD(
             msg=1,
             options=[
-                "parallel=on",      # Enable parallel processing
+                "parallel=on",  # Enable parallel processing
                 # Use all available threads (0 = auto-detect)
                 "threads=0",
-                "presolve=on",      # Enable presolve optimization
-                "solver=ipm",       # Use Interior Point Method
-                "time_limit=inf",   # No time limit
-            ]
+                "presolve=on",  # Enable presolve optimization
+                "solver=ipm",  # Use Interior Point Method
+                "time_limit=inf",  # No time limit
+            ],
         )
         prob.solve(solver)
         logger.info(f"  LP solved with status: {pulp.LpStatus[prob.status]}")
@@ -210,8 +202,7 @@ class CSJPLPAlgorithm:
 
         z_bar = {}
         for (ri, sj, rk, sl), var in z_vars.items():
-            z_bar[(ri, sj, rk, sl)
-                  ] = var.varValue if var.varValue is not None else 0.0
+            z_bar[(ri, sj, rk, sl)] = var.varValue if var.varValue is not None else 0.0
 
         return x_bar, z_bar
 

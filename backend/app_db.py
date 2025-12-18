@@ -22,8 +22,7 @@ def create_mysql_engine_and_sessionmaker() -> Tuple[object, sessionmaker]:
     db_user_enc = urllib.parse.quote_plus(db_user)
     db_password_enc = urllib.parse.quote_plus(db_password)
 
-    logger.info(
-        f"Connecting to MySQL at {db_host}:{db_port} as user '{db_user}'")
+    logger.info(f"Connecting to MySQL at {db_host}:{db_port} as user '{db_user}'")
 
     # First, connect without database to create it if needed
     base_url = f"mysql+pymysql://{db_user_enc}:{db_password_enc}@{db_host}:{db_port}"

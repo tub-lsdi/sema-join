@@ -5,7 +5,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import mysql
 
 
-revision: str = '001_initial_schema'
+revision: str = "001_initial_schema"
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None

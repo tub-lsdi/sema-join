@@ -16,20 +16,15 @@ class PMIService:
     """
 
     def __init__(self, go_service_url: str = None):
-        """
-        Initialize the PMI service.
-
-        Args:
-            go_service_url: Base URL of the Go service (e.g., "http://localhost:8080")
-                           If not provided, reads from GO_SERVICE_URL env var or defaults to localhost:8080
-        """
         if go_service_url is None:
             go_service_url = os.getenv("GO_SERVICE_URL", "http://localhost:8080")
 
         self.go_service_url = go_service_url.rstrip("/")
         self.calculate_endpoint = f"{self.go_service_url}/calculate-quad-scores"
         self.row_pmis_endpoint = f"{self.go_service_url}/row-pmis"
-        logger.info(f"PMIService initialized with endpoints: {self.calculate_endpoint}, {self.row_pmis_endpoint}")
+        logger.info(
+            f"PMIService initialized with endpoints: {self.calculate_endpoint}, {self.row_pmis_endpoint}"
+        )
 
     def get_pmi_scores(
         self, list_r: list[str], list_s: list[str]
@@ -44,10 +39,6 @@ class PMIService:
         Returns:
             Dictionary mapping (ri, sj, rk, sl) tuples to PMI scores.
             Only includes quadruples with positive PMI scores (co-occurrence evidence).
-
-        Raises:
-            ValueError: If inputs are invalid
-            requests.RequestException: If the Go service request fails
         """
         if not list_r or not list_s:
             raise ValueError("list_r and list_s must not be empty")
@@ -150,10 +141,6 @@ class PMIService:
         Returns:
             Dictionary mapping (r_i, s_j) tuples to PMI scores.
             Only includes pairs with positive PMI scores (co-occurrence evidence).
-
-        Raises:
-            ValueError: If inputs are invalid
-            requests.RequestException: If the Go service request fails
         """
         if not list_r or not list_s:
             raise ValueError("list_r and list_s must not be empty")
@@ -243,9 +230,6 @@ class PMIService:
     def health_check(self) -> bool:
         """
         Check if the Go service is reachable.
-
-        Returns:
-            True if the service is reachable, False otherwise
         """
         try:
             # Try a simple request with minimal data to check connectivity

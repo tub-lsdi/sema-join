@@ -13,10 +13,6 @@ class BridgeAlgorithm(ABC):
     ):
         """
         Initialize the algorithm with a database connection and optional PMI service.
-
-        Args:
-            db_connection: DuckDB connection for corpus statistics
-            pmi_service: Optional PMIService instance for fetching row-level PMI scores
         """
         self.db_connection = db_connection
         self.pmi_service = pmi_service

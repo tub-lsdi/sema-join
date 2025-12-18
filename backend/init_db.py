@@ -7,10 +7,12 @@ def init_database_tables(engine) -> None:
 
     with engine.connect() as conn:
         # Check if tables already exist
-        result = conn.execute(text(
-            "SELECT COUNT(*) as count FROM information_schema.tables "
-            "WHERE table_schema = DATABASE() AND table_name IN ('table_entry', 'join_history', 'uploaded_table')"
-        ))
+        result = conn.execute(
+            text(
+                "SELECT COUNT(*) as count FROM information_schema.tables "
+                "WHERE table_schema = DATABASE() AND table_name IN ('table_entry', 'join_history', 'uploaded_table')"
+            )
+        )
         existing_tables_count = result.fetchone()[0]
 
         if existing_tables_count == 3:
@@ -20,17 +22,23 @@ def init_database_tables(engine) -> None:
         logger.info("Database tables not found. Creating tables automatically...")
 
         # Create table_entry table
-        conn.execute(text("""
+        conn.execute(
+            text(
+                """
             CREATE TABLE IF NOT EXISTS table_entry (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 body LONGTEXT NOT NULL,
                 columns JSON NOT NULL
             )
-        """))
+        """
+            )
+        )
         logger.info("Created table: table_entry")
 
         # Create join_history table
-        conn.execute(text("""
+        conn.execute(
+            text(
+                """
             CREATE TABLE IF NOT EXISTS join_history (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 list_r_entry_id INT NOT NULL,
@@ -45,11 +53,15 @@ def init_database_tables(engine) -> None:
                 FOREIGN KEY (list_s_entry_id) REFERENCES table_entry(id),
                 FOREIGN KEY (result_entry_id) REFERENCES table_entry(id)
             )
-        """))
+        """
+            )
+        )
         logger.info("Created table: join_history")
 
         # Create uploaded_table table
-        conn.execute(text("""
+        conn.execute(
+            text(
+                """
             CREATE TABLE IF NOT EXISTS uploaded_table (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
@@ -58,8 +70,12 @@ def init_database_tables(engine) -> None:
                 body LONGTEXT NOT NULL,
                 columns JSON NOT NULL
             )
-        """))
+        """
+            )
+        )
         logger.info("Created table: uploaded_table")
 
         conn.commit()
-        logger.info("Database initialization complete! All tables created successfully.")
+        logger.info(
+            "Database initialization complete! All tables created successfully."
+        )
