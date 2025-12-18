@@ -84,9 +84,13 @@ cd ..
 
 ### Step 4: Add Corpus Data
 
-Place your corpus JSON files in the `corpus/data/` directory:
+You can use the Wikipedia Tables dataset ("A dataset of 1.6M Wikipedia Tables in JSON format") from:
 
-```bash
+📥 http://websail-fe.cs.northwestern.edu/TabEL/
+
+You need to add corpus JSON files to the `corpus/data/` directory. The expected structure looks like:
+
+```
 # Example structure:
 # corpus/data/tables.json
 # corpus/data/table_0001.json

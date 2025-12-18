@@ -2,7 +2,7 @@
 
 Semantic table joins using PMI-based matching.
 
-**📚 [Full Documentation](https://tub-lsdi.github.io/sema-join-docs/)**
+**📚 [Full Documentation](https://tub-lsdi.github.io/sema-join-docs/docs/)**
 
 ## Prerequisites
 
@@ -18,10 +18,10 @@ git clone <repository-url>
 cd sema-join
 ```
 
-2. **Add corpus data**
+2. **Create `.env` file**
 ```bash
-# Place your corpus JSON files in corpus/data/ directory
-# Example: corpus/data/tables.json
+cp .env.example .env
+# Then edit .env with your configuration
 ```
 
 3. **Install dependencies**
@@ -31,11 +31,21 @@ uv sync
 cd ..
 ```
 
-4. **Create `.env` file**
-```bash
-cp .env.example .env
-# Then edit .env with your configuration
+4. **Add corpus data**
+
+You can use the Wikipedia Tables dataset ("A dataset of 1.6M Wikipedia Tables in JSON format") from:
+
+📥 http://websail-fe.cs.northwestern.edu/TabEL/
+
+You need to add corpus JSON files to the `corpus/data/` directory. 
+
+The expected structure looks like:
+
 ```
+# Example structure:
+# corpus/data/tables.json
+```
+
 
 5. **Ingest corpus data**
 ```bash
