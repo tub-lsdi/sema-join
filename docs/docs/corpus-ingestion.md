@@ -42,6 +42,7 @@ cd ..
 Use the make command to run the corpus ingestion process:
 
 ```bash
+# Run from project root (sema-join/)
 make ingest
 ```
 
@@ -74,26 +75,20 @@ You should see a database file with size information indicating successful creat
 If you need to re-ingest the corpus, first remove the existing database:
 
 ```bash
+# Run from project root (sema-join/)
 rm corpus.db
 ```
 
 Then run the ingestion process again:
 
 ```bash
+# Run from project root (sema-join/)
 make ingest
 ```
 
 This is useful when updating the corpus with new tables or correcting data issues.
 
-## Custom Corpus
-
-To use your own corpus data, place JSON files in the corpus data directory. Each file should contain tables in the expected format.
-
-The quality of semantic joins depends heavily on corpus coverage. Your corpus should contain representative tables from your data domain. The more tables with relevant value co-occurrences, the better Project SEMA-JOIN can discover semantic relationships.
-
-For example, if you are joining geographic data, your corpus should contain tables with geographic entities. If you are joining product data, include tables with product names, manufacturers, and categories.
 
 ## Next Steps
 
 With corpus ingestion complete, you are ready to start using Project SEMA-JOIN.
-

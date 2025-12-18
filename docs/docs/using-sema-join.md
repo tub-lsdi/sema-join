@@ -13,6 +13,7 @@ Learn how to perform semantic table joins using the Project SEMA-JOIN interface.
 Start all services using Docker Compose:
 
 ```bash
+# Run from project root (sema-join/)
 make up
 ```
 
@@ -39,6 +40,7 @@ The Ollama service enables AI-powered column and row recommendations. The applic
 **Other useful commands:**
 
 ```bash
+# Run from project root (sema-join/)
 make down      # Stop all services
 make restart   # Restart all services
 make logs      # View service logs

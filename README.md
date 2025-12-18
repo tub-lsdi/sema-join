@@ -19,7 +19,10 @@ cd sema-join
 ```
 
 2. **Add corpus data**
-   - Place your corpus JSON files in `corpus/data/` directory
+```bash
+Place your corpus JSON files in corpus/data/ directory
+# Example: corpus/data/tables.json
+```
 
 3. **Install dependencies**
 ```bash
@@ -49,6 +52,7 @@ make up
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:8000
 - API Documentation: http://localhost:8000/docs
+- Go Service: http://localhost:8080
 
 **Optional - Setup Ollama (for AI features):**
 ```bash

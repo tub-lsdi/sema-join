@@ -98,6 +98,7 @@ GO_SERVICE_URL=http://localhost:8080  # Go service URL (Docker overrides this in
 Run the corpus ingestion to build the semantic relationship database:
 
 ```bash
+# Run from project root (sema-join/)
 make ingest
 ```
 
@@ -110,6 +111,7 @@ This will:
 Build Docker images and start all services:
 
 ```bash
+# Run from project root (sema-join/)
 make build
 make up
 ```
@@ -152,6 +154,7 @@ brew install ollama
 
 Or use the make command:
 ```bash
+# Run from project root (sema-join/)
 make setup-ollama
 ```
 
