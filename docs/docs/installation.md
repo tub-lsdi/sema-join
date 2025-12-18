@@ -102,9 +102,35 @@ Run the corpus ingestion to build the semantic relationship database:
 make ingest
 ```
 
-This will:
-- Process all JSON files in `corpus/data/`
-- Create `corpus.db` in the project root
+This runs a parallel ingestion process in three phases:
+- **Phase 1**: Process JSON files in parallel, extract table data to temporary Parquet files
+- **Phase 2**: Ingest Parquet data into DuckDB (tables_meta and cells tables)
+- **Phase 3**: Create database indexes for fast querying
+- Result: `corpus.db` created in the project root
+
+**Verify the corpus database was created:**
+
+```bash
+ls -lh corpus.db
+```
+
+You should see a database file with size information indicating successful creation.
+
+**Re-running Ingestion (if needed):**
+
+If you need to re-ingest the corpus with updated data, first remove the existing database:
+
+```bash
+# Run from project root (sema-join/)
+rm corpus.db
+```
+
+Then run the ingestion process again:
+
+```bash
+# Run from project root (sema-join/)
+make ingest
+```
 
 ### Step 6: Build and Start Services
 
@@ -185,4 +211,4 @@ The AI-powered column matching requires Ollama to be running on port 11434. Star
 
 ## Next Steps
 
-After installation, proceed to corpus ingestion to build the semantic join database.
+After installation, you can start using the application. See [Using SEMA-JOIN](./using-sema-join) to learn how to perform semantic joins.

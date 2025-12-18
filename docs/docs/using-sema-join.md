@@ -6,7 +6,7 @@ sidebar_position: 4
 
 Learn how to perform semantic table joins using the Project SEMA-JOIN interface.
 
-**Prerequisites:** Complete [Installation](./installation) and [Corpus Ingestion](./corpus-ingestion) before proceeding.
+**Prerequisites:** Complete [Installation](./installation) before proceeding.
 
 ## Starting the Application
 

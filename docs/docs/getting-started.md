@@ -59,5 +59,4 @@ This implementation extends the research with additional features:
 
 ## Next Steps
 
-Follow the [Installation](./installation) guide to set up Project SEMA-JOIN, then proceed with [Corpus Ingestion](./corpus-ingestion) to build your semantic relationship database.
-
+Follow the [Installation](./installation) guide to set up Project SEMA-JOIN and build your semantic relationship database.

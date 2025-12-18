@@ -16,7 +16,6 @@ const sidebars: SidebarsConfig = {
   tutorialSidebar: [
     'getting-started',
     'installation',
-    'corpus-ingestion',
     'using-sema-join',
   ],
 };
