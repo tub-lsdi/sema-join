@@ -20,7 +20,7 @@ cd sema-join
 
 2. **Add corpus data**
 ```bash
-Place your corpus JSON files in corpus/data/ directory
+# Place your corpus JSON files in corpus/data/ directory
 # Example: corpus/data/tables.json
 ```
 
@@ -34,7 +34,7 @@ cd ..
 4. **Create `.env` file**
 ```bash
 cp .env.example .env
-# Then edit .env with your configuration (see example below)
+# Then edit .env with your configuration
 ```
 
 5. **Ingest corpus data**
