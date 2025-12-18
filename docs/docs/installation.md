@@ -26,30 +26,7 @@ git clone https://github.com/tub-lsdi/sema-join.git
 cd sema-join
 ```
 
-### Step 2: Add Corpus Data
-
-Place your corpus JSON files in the `corpus/data/` directory:
-
-```bash
-# Example structure:
-# corpus/data/tables.json
-# corpus/data/table_0001.json
-# corpus/data/table_0002.json
-```
-
-These files contain the table data used to build semantic relationships through PMI score calculations.
-
-### Step 3: Install Dependencies
-
-Install the corpus ingestion dependencies:
-
-```bash
-cd corpus
-uv sync
-cd ..
-```
-
-### Step 4: Configure Environment
+### Step 2: Configure Environment
 
 Create a `.env` file in the project root with your configuration settings.
 
@@ -93,6 +70,29 @@ OLLAMA_TIMEOUT=300                      # Request timeout in seconds
 GO_SERVICE_URL=http://localhost:8080  # Go service URL (Docker overrides this internally)
 ```
 
+These files contain the table data used to build semantic relationships through PMI score calculations.
+
+### Step 3: Install Dependencies
+
+Install the corpus ingestion dependencies:
+
+```bash
+cd corpus
+uv sync
+cd ..
+```
+
+### Step 4: Add Corpus Data
+
+Place your corpus JSON files in the `corpus/data/` directory:
+
+```bash
+# Example structure:
+# corpus/data/tables.json
+# corpus/data/table_0001.json
+# corpus/data/table_0002.json
+```
+
 ### Step 5: Ingest Corpus Data
 
 Run the corpus ingestion to build the semantic relationship database:
@@ -107,30 +107,6 @@ This runs a parallel ingestion process in three phases:
 - **Phase 2**: Ingest Parquet data into DuckDB (tables_meta and cells tables)
 - **Phase 3**: Create database indexes for fast querying
 - Result: `corpus.db` created in the project root
-
-**Verify the corpus database was created:**
-
-```bash
-ls -lh corpus.db
-```
-
-You should see a database file with size information indicating successful creation.
-
-**Re-running Ingestion (if needed):**
-
-If you need to re-ingest the corpus with updated data, first remove the existing database:
-
-```bash
-# Run from project root (sema-join/)
-rm corpus.db
-```
-
-Then run the ingestion process again:
-
-```bash
-# Run from project root (sema-join/)
-make ingest
-```
 
 ### Step 6: Build and Start Services
 
@@ -153,16 +129,7 @@ This will:
 - **Frontend**: Next.js web interface (port 3000)
 - **MySQL Database**: Stores application data, uploaded tables, and join history (port 3306)
 
-### Step 7: Verify Installation
-
-Access the application to verify everything is running:
-
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:8000
-- **API Documentation**: http://localhost:8000/docs
-- **Go Service**: http://localhost:8080 (no web interface, API only)
-
-### Step 8: Install AI Service (Optional)
+### Step 7: Install AI Service (Optional)
 
 The AI-powered column matching feature requires Ollama with the Mistral model.
 
