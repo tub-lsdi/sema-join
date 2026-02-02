@@ -38,17 +38,17 @@ Provides an intuitive React-based interface for uploading tables, selecting join
 Project SEMA-JOIN operates in two stages:
 
 **Stage 1: Corpus Preparation**
-The system ingests a corpus of tables and stores co-occurrence patterns in the corpus database. This creates a statistical foundation capturing which values appear together in tables, providing the raw data needed for semantic relationship discovery.
+The system ingests a corpus of tables and stores the values with additional metadata (e.g., tableID, rowID, columnID) in order to caluculate the co-occurrence statistics later on. For now, the data is just structured and stored.
 
 **Stage 2: Table Joining**
-When joining two tables, the backend service coordinates the process: it extracts values from selected columns, calls the Go service to calculate PMI scores on-demand for those specific values, then applies the chosen algorithm (RS-JP or CS-JP-LP) to determine the optimal join mappings. The Go service queries the corpus database for co-occurrence patterns and uses optimized bitmap operations to compute PMI scores in real-time. This allows the system to identify which rows have strong semantic relationships, even when values don't match exactly.
+When joining two tables, the backend service coordinates the process: it extracts values from selected columns, calls the Go service to calculate PMI scores on-demand for those specific values, then applies the chosen algorithm (RS-JP or CS-JP-LP) to determine the optimal join mappings. The Go service queries the corpus database for specific tables and uses optimized bitmap operations to compute PMI scores in real-time. This allows the system to identify which rows have strong semantic relationships, even when values don't match exactly.
 
 ## Relationship to the Research Paper
 
 This implementation is based on the Microsoft Research SEMA-JOIN paper and implements the core algorithms:
 
 - **CS-JP-LP (Column Score Join Prediction with Linear Programming)** - Uses column-level semantic compatibility scores with LP optimization to find the optimal join mapping that maximizes aggregate pairwise correlation. Provides the highest quality results (F-score) with a 2-approximation guarantee.
-- **RS-JP (Row Score Join Prediction)** - A simplified variant that uses row-level PMI scores for greedy matching. Optimizes each join decision individually, completing joins in under one second for efficient performance.
+- **RS-JP (Row Score Join Prediction)** - A simplified variant that uses row-level PMI scores for greedy matching. Optimizes each join decision individually and provides high performance, but is suseptible to missing global context.
 - **PMI-based semantic relationship discovery** - Uses Pointwise Mutual Information (PMI) scores calculated from statistical co-occurrence in a large table corpus (100M+ tables) to quantify semantic relationships at both row-level and column-level.
 - **Automatic bridge table creation** - Creates bridge tables that map semantically related values even when they don't match exactly (e.g., country codes to country names, stock tickers to company names).
 

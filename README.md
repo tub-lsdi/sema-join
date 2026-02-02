@@ -31,9 +31,17 @@ cd corpus
 uv sync
 cd ..
 ```
+4.1 **Download pre-built databases**
+If you want to ingest data from JSON files, proceed with step 4.2. If you already have a database, adding the path to it in the `.env` file is sufficient.
+You may also download our pre-built databases from:
 
-If you want to ingest data from JSON files, proceed with step four. If you already have a database, adding the path to it in the `.env` file is sufficient. You can continure from step six.
-4. **Create data directory and add corpus data**
+1. **Wiki Corpus**: https://tubcloud.tu-berlin.de/s/XYDeqCGcC25pWKg
+2. **Git Tables Corpus**: https://tubcloud.tu-berlin.de/s/y7rYRZR74ECAjs3
+
+The downloaded files are .zip archives. Extract them first, then place it at the location you specified in the `.env` file.
+You can continure from step 6.
+
+4.2 **Create data directory and add corpus data**
 
 First, create the data directory:
 ```bash
