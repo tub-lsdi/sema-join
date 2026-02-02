@@ -32,6 +32,7 @@ uv sync
 cd ..
 ```
 
+If you want to ingest data from JSON files, proceed with step four. If you already have a database, adding the path to it in the `.env` file is sufficient. You can continure from step six.
 4. **Create data directory and add corpus data**
 
 First, create the data directory:
@@ -58,6 +59,7 @@ The expected structure looks like:
 make ingest
 ```
 
+If you are using MacOS or Windows, ensure that the docker deamon is running before continuing.
 6. **Build and start services**
 ```bash
 make build
