@@ -31,8 +31,17 @@ cd corpus
 uv sync
 cd ..
 ```
+4.1 **Download pre-built databases**
+If you want to ingest data from JSON files, proceed with step 4.2. If you already have a database, adding the path to it in the `.env` file is sufficient.
+You may also download our pre-built databases from:
 
-4. **Create data directory and add corpus data**
+1. **Wiki Corpus**: https://tubcloud.tu-berlin.de/s/XYDeqCGcC25pWKg
+2. **Git Tables Corpus**: https://tubcloud.tu-berlin.de/s/y7rYRZR74ECAjs3
+
+The downloaded files are .zip archives. Extract them first, then place it at the location you specified in the `.env` file.
+You can continure from step 6.
+
+4.2 **Create data directory and add corpus data**
 
 First, create the data directory:
 ```bash
@@ -58,6 +67,7 @@ The expected structure looks like:
 make ingest
 ```
 
+If you are using MacOS or Windows, ensure that the docker deamon is running before continuing.
 6. **Build and start services**
 ```bash
 make build
@@ -75,6 +85,29 @@ make up
 make setup-ollama
 OLLAMA_HOST=0.0.0.0:11434 ollama serve
 ```
+
+## Usage
+
+After installation, start the application:
+
+```bash
+make up
+```
+
+Access the web interface at http://localhost:3000
+
+**Basic workflow:**
+1. Upload tables to the database (JSON or CSV format)
+   - Example tables are provided in `/tables` directory for testing
+2. Select two tables to join
+3. Choose join columns (manually or with AI recommendations)
+4. Create a bridge table using RS-JP or CS-JP-LP algorithm
+5. Review and adjust matches
+6. Perform the join
+
+**📖 [Complete Usage Guide](https://tub-lsdi.github.io/sema-join-docs/docs/using-sema-join)**
+
+For detailed instructions including AI-powered recommendations, algorithm selection, and advanced features, see the full usage documentation.
 
 ## Commands
 

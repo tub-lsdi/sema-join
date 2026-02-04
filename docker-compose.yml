@@ -14,7 +14,16 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u${APP_DB_USERNAME}", "-p${APP_DB_PASSWORD}"]
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u${APP_DB_USERNAME}",
+          "-p${APP_DB_PASSWORD}",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -29,12 +38,15 @@ services:
     container_name: sema-go-service
     restart: unless-stopped
     environment:
-      - DUCKDB_PATH=/data/corpus.db
+      - DUCKDB_PATH=/app/corpus.db
       - SERVER_PORT=8080
     ports:
       - "8080:8080"
     volumes:
-      - ./corpus.db:/data/corpus.db:ro
+      - type: bind
+        source: ${DB_PATH}
+        target: /app/corpus.db
+        read_only: true
     healthcheck:
       test: ["CMD", "pgrep", "server"]
       interval: 10s
@@ -56,8 +68,8 @@ services:
       - "host.docker.internal:host-gateway"
     environment:
       # DuckDB configuration
-      - DB_PATH=/data/corpus.db
-      - DUCKDB_TEMP_DIRECTORY=/app/_temp
+      - DB_PATH=/app/corpus.db
+      - DUCKDB_TEMP_DIRECTORY=${DUCKDB_TEMP_DIRECTORY}
       - DUCKDB_MEMORY_LIMIT=${DUCKDB_MEMORY_LIMIT:-20GB}
       # MySQL configuration (Docker networking)
       - APP_DB_HOST=mysql
@@ -76,8 +88,11 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./corpus.db:/data/corpus.db:ro
-      - backend_temp:/app/_temp
+      - type: bind
+        source: ${DB_PATH}
+        target: /app/corpus.db
+        read_only: true
+      - ${DUCKDB_TEMP_DIRECTORY}:/app/_temp
     depends_on:
       mysql:
         condition: service_healthy
@@ -107,7 +122,15 @@ services:
       backend:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:3000",
+        ]
       interval: 15s
       timeout: 5s
       retries: 3
@@ -117,8 +140,6 @@ services:
 
 volumes:
   mysql_data:
-    driver: local
-  backend_temp:
     driver: local
 
 networks:
