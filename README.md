@@ -86,6 +86,29 @@ make setup-ollama
 OLLAMA_HOST=0.0.0.0:11434 ollama serve
 ```
 
+## Usage
+
+After installation, start the application:
+
+```bash
+make up
+```
+
+Access the web interface at http://localhost:3000
+
+**Basic workflow:**
+1. Upload tables to the database (JSON or CSV format)
+   - Example tables are provided in `/tables` directory for testing
+2. Select two tables to join
+3. Choose join columns (manually or with AI recommendations)
+4. Create a bridge table using RS-JP or CS-JP-LP algorithm
+5. Review and adjust matches
+6. Perform the join
+
+**📖 [Complete Usage Guide](https://tub-lsdi.github.io/sema-join-docs/docs/using-sema-join)**
+
+For detailed instructions including AI-powered recommendations, algorithm selection, and advanced features, see the full usage documentation.
+
 ## Commands
 
 ```bash
