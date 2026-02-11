@@ -68,6 +68,7 @@ make ingest
 ```
 
 If you are using MacOS or Windows, ensure that the docker deamon is running before continuing.
+
 6. **Build and start services**
 ```bash
 make build
